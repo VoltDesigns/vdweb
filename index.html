@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+    rel="stylesheet"
+/>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <title>Portfolio</title>
+</head>
+<body>
+<div class="bgfixed">
+    <div class="bg"></div>
+</div>
+
+    <!-- Left Section -->
+
+    <div class="left">
+        <form name="submit-to-google-sheet" action="/submit" id="myForm">
+            <div class="image">
+                <img src="new_logo.png" />
+            </div>
+            
+            <!-- <label for="fn">Full Name</label><br /> -->
+            <input id="fn" type="text" placeholder="Enter your full name" name="full-name" required/><br />
+            <!-- <label for="email">E-mail</label><br /> -->
+            <input id="email" type="email" placeholder="Enter your email" name="email" required /><br />
+            <!-- <label for="pd">Project Description</label><br /> -->
+            <textarea id="pd" rows="3" placeholder="Describe your project" name="project-description"></textarea><br>
+            <input type="hidden" id="submitTime" name="submitTime">
+            <!-- <p>
+              We respect your privacy. Your information is safe and will never
+              be shared.
+            </p> -->
+            <span id="msg"></span>
+            <button type="submit">Start a Project →</button><br>
+        </form> 
+       
+    </div>
+
+    <!-- Right Section -->
+    
+    <!-- Navigation  -->
+
+    <div class="right">
+        <header id="header">
+            <nav class="navbar">
+                <ul id="sidemenu">
+                    <li><a href="#rec">Portfolio</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#mission">Mission</a></li>
+                    <li><a href="#faq">FAQ?</a></li>
+                </ul>
+            </nav>
+        </header>
+        <br>
+        
+        <!-- Recent Work -->
+
+        <section class="recent-works" id="rec">
+            <h1></h1>
+            <p><span></span></p>
+            <div class="carousel">
+                <button class="carousel-btn prev" onclick="moveCarousel(-1)">&#10094;</button>
+                <div class="carousel-container">
+                    <div class="carousel-track">
+                        <div class="work-item">
+                            <a href="https://www.behance.net/gallery/203522245/Vegan-Paradise-Cafe" target="_blank">
+                                <img src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/2d5316203522245.6698a90438d01.jpg"></a>
+                                <h2>Vegan Paradise Cafe</h2>
+                                <h3>Bharatpur, Chitwan</h3>
+                                <p>This design was created for a local restaurant looking to engage their audience, with a minimalist aesthetic.</p>
+                        </div>
+                        <div class="work-item">
+                            <a href="https://www.behance.net/gallery/205277667/The-White-Lotus-Cafe" target="_blank">
+                            <img src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/cdcd54205277667.66b84faa82c57.jpg"></a>
+                            <h2>The White Lotus Cafe</h2>
+                            <h3>Sanepa, Kathmandu</h3>
+                            <p>This design was created for a local restaurant looking to engage their audience, with a minimalist aesthetic.</p>
+                        </div>
+                        <div class="work-item">
+                            <a href="https://www.behance.net/gallery/204038645/Fine-Diners" target="_blank">
+                            <img src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/777f95204038645.66be49668978f.jpg"></a> 
+                            <h2>Fine Diners</h2>
+                            <h3>Bharatpur, Chitwan</h3>
+                            <p>This design was created for a local restaurant looking to engage their audience, with a minimalist aesthetic.</p>
+                        </div>
+                        <div class="work-item">
+                            <a href="https://www.behance.net/gallery/204482389/Eatwell" target="_blank">
+                            <img src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/d0c11f204482389.66ac895bb0d9d.jpg"></a>
+                            <h2>Eatwell</h2>
+                            <h3>Sanepa, Kathmandu</h3>
+                            <p>This design was created for a local restaurant looking to engage their audience, with a minimalist aesthetic.</p>
+                        </div>
+                        
+                    </div>
+                </div>
+                <button class="carousel-btn next" onclick="moveCarousel(1)">&#10095;</button>
+            </div>
+            <a href="https://www.behance.net/voltdesignsofficial" target="_blank" class="view-all-works">View All Works</a>
+        </section>
+
+        <!-- Why Choose Volt
+
+        <div class="container1">
+            <header>
+                <h1>Why Choose Volt Designs?</h1>
+                <p>We combine creativity with strategy to deliver designs that resonate with your audience.</p>
+            </header>
+            <div class="image-container">
+                <img src="pic1.jpg" alt="Scenic view">
+            </div>
+        </div> -->
+
+
+            <!-- Our Services -->
+
+
+            <div class="services-container" id="services">
+                <header>
+                    <h1>Our Services</h1>
+                    <p>We offer a range of design services to meet your needs.</p>
+                </header>
+                <div class="services">
+                    <div class="service-card">
+                        <h2>Social Media Post Design</h2>
+                        <p>We create engaging, modern, minimalist social media posts that resonates with customers.</p>
+                    </div>
+                    <div class="service-card">
+                        <h2>Brand Identity Design</h2>
+                        <p>We help businesses create a strong brand identity through logo design, color schemes, and more.</p>
+                    </div>
+                    <div class="service-card">
+                        <h2>Graphic Design</h2>
+                        <p>From brochures to business cards, we provide a range of graphic design services.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Our Pricing  -->
+
+
+            <div class="pricing-container" id="pricing">
+                <header>
+                    <h1>Our Pricing</h1>
+                    <p>Choose a plan that suits your needs.</p>
+                </header>
+                <!-- <div class="toggle-container">
+                    <button class="toggle-button active">Monthly</button>
+                    <button class="toggle-button">Yearly</button>
+                </div> -->
+                <div class="pricing-plans">
+                    <div class="plan-card">
+                        <div class="plan-header">
+                            <div class="icon"></div><br>
+                            <h2>Pay Once</h2>
+                            <h2>Get Your Content</h2><br>
+                            <p style="text-align: center;">Affordable One-Time-Price starting from Rs.1313*.</p>
+                            <!-- <p style="text-align: center;"> Static/Animated Image, Video Posts also available.</p> -->
+                            <br>
+                            <a href="mailto:sharmanibesh@outlook.com?subject=One%20Time%20Prices%20Plan&body=Hello,%0A%0AI%20am%20interested%20in%20your%20service/s.%0A%0AONE%20TIME%20PRICES:%0A%0AImage%20Post:%0A(IP001)%201%20Image%20Post%20:%20Rs.1313%0A(IPA001)%201%20Animated%20Image%20Post%20:%20Rs.1666%0A%0A%0AVideo%20Post(Non-negotiable):%0A(VE001)%201%20Video%20EDITING(video%20by%20client)%20:%20Rs.6666%0A(VC001)%201%20Video%20CREATION%20:%20Rs.13666%0A-----------------------------------------------------------------------%0A%0APlease%20find%20my/our%20information%20in%20the%20attached%20form/the%20form%20provided%20below:%0A%0A(Fill%20the%20form)%0A%0AName%20of%20the%20Organization/Person:%0AContact%20Number:%0AInterested%20in%20Service%20ID:%0ASocial%20Media%20of%20Choice:%0AContent%20Type%20(Story/Post/Reel,%20etc.):%0APayment%20Method%20(Cash/E-Wallet/Bank%20Transfer):%0APayment%20Schedule(Full%20Advance/Half%20Now-Half%20Later):%0A%0A%0A%0ATerms%20and%20Conditions:%0A1.Personalized%20caption%20will%20be%20provided%20for%20FREE%20on%20every%20ordered%20post.%0A2.Two%20redesigns%20per%20project%20will%20be%20provided%20for%20clients'%20satisfaction.%0A3.13%%20discount%20for%20full%20Advance-Payments%20will%20be%20Provided.%0A4.SNS%20Content%20will%20be%20forwarded%20to%20client%20by%20email.%0A5.Half%20payment%20should%20be%20done%20in%20advance,%20Remaining%20after%20completion%20of%20job/schedule.%0A6.Overlapping%20Discounts%20provision%20exclusively%20on%20Volt%20Designs'%20discretion.%0A7.Products%20for%20the%20above-mentioned%20post/s%20and/or%20video/s%20must%20be%20provided%20by%20client.%0A8.All%20other%20Rights%20Reserve%20by%20VoltDesigns.%0A%0A%0ABy%20Sending%20this%20email%20you%20agree%20to%20the%20terms%20and%20conditions%20of%20Volt%20Designs." class="button">Send Email</a>
+                        </div>
+                        
+                    </div>
+                    <div class="plan-card">
+                        <div class="plan-header">
+                            <div class="icon1"></div><br>
+                            <h2>Discounted Prices</h2>
+                            <h2> Bulk Order</h2><br>
+                            <p style="text-align: center;">Save upto Rs.9390* by Selecting Combo-Bundle.</p><br>
+                            <a href="mailto:sharmanibesh@outlook.com?subject=Combo%20Prices%20Plan&body=Hello,%0A%0AI%20am%20interested%20in%20your%20service/s.%0A%0ACOMBO%20PRICES%20(Non-negotiable):%0A%0A(IP007)%207%20Image%20Post%20:%20Rs.7000(Save%20Rs.2191)%0A(IP030)%2030%20Image%20Post%20:%20Rs.30000(Save%20Rs.9390)%0A%0A(VIP104)%204%20Image%20Post%201%20Video%20Post%20:%20Rs.13666(Save%20Rs.5252)%0A(VIP216)%2016%20Image%20Post%202%20Video%20:%20Rs.41775(Save%20Rs.6565)%0A-------------------------------------------------------------------------------------%0A%0APlease%20find%20my/our%20information%20in%20the%20attached%20form/the%20form%20provided%20below:%0A%0A(Fill%20the%20form)%0A%0AName%20of%20the%20Organization/Person:%0AContact%20Number:%0AInterested%20in%20Service%20ID:%0ASocial%20Media%20of%20Choice:%0AContent%20Type%20(Story/Post/Reel,%20etc.):%0APayment%20Method%20(Cash/E-Wallet/Bank%20Transfer):%0APayment%20Schedule(Full%20Advance/Half%20Now-Half%20Later):%0A%0A%0A%0ATerms%20and%20Conditions:%0A1.Personalized%20caption%20will%20be%20provided%20for%20FREE%20on%20every%20ordered%20post.%0A2.Two%20redesigns%20per%20project%20will%20be%20provided%20for%20clients'%20satisfaction.%0A3.13%%20discount%20for%20full%20Advance-Payments%20will%20be%20Provided.%0A4.SNS%20Content%20will%20be%20forwarded%20to%20client%20by%20email.%0A5.Half%20payment%20should%20be%20done%20in%20advance,%20Remaining%20after%20completion%20of%20job/schedule.%0A6.Overlapping%20Discounts%20provision%20exclusively%20on%20Volt%20Designs'%20discretion.%0A7.Products%20for%20the%20above-mentioned%20post/s%20and/or%20video/s%20must%20be%20provided%20by%20client.%0A8.All%20other%20Rights%20Reserve%20by%20VoltDesigns.%0A%0A%0ABy%20Sending%20this%20email%20you%20agree%20to%20the%20terms%20and%20conditions%20of%20Volt%20Designs." class="button">Send Email</a>
+                        </div>
+                    </div>
+                    <div class="plan-card">
+                        <div class="plan-header">
+                            <div class="icon2"></div><br>
+                            <h2>Social Media Handling Prices</h2><br>
+                            <p style="text-align: center;">From uploading Posts to Replying Messages starting from Rs.666*.</p><br>
+                            <a href="mailto:sharmanibesh@outlook.com?subject=Social%20Media%20Handling%20Plan&body=Hello,%0A%0AI%20am%20interested%20in%20your%20service/s.%0A%0ASOCIAL%20MEDIA%20HANDLING:%0A(Monthly,Non-negotiable,No%20Post%20Creation)%0A%0A%0AUploading%20Post:%0A(UP004)%204%20Posts%20:%20Rs.666%0A(UP012)%2012%20Posts%20:%20Rs.1313(Save%20Rs.685)%0A%0AMessage%20Replying:%0A(RM108)%20Replying%20messages%20(10AM-8PM)%20:%20Rs.6666%0A%0ACombo%20Service:%0A(PMR108)%20Posting%20and%20Replying%20messages%20(10AM-8PM)%20:%20Rs.13666%0A-------------------------------------------------------------------------------------------%0A%0APlease%20find%20my/our%20information%20in%20the%20attached%20form/the%20form%20provided%20below:%0A%0A(Fill%20the%20form)%0A%0AName%20of%20the%20Organization/Person:%0AContact%20Number:%0AInterested%20in%20Service%20ID:%0ASocial%20Media%20of%20Choice:%0AContent%20Type%20(Story/Post/Reel,%20etc.):%0APayment%20Method%20(Cash/E-Wallet/Bank%20Transfer):%0APayment%20Schedule(Full%20Advance/Half%20Now-Half%20Later):%0A%0A%0A%0ATerms%20and%20Conditions:%0A1.Personalized%20caption%20will%20be%20provided%20for%20FREE%20on%20every%20ordered%20post.%0A2.Two%20redesigns%20per%20project%20will%20be%20provided%20for%20clients'%20satisfaction.%0A3.13%%20discount%20for%20full%20Advance-Payments%20will%20be%20Provided.%0A4.SNS%20Content%20will%20be%20forwarded%20to%20client%20by%20email.%0A5.Half%20payment%20should%20be%20done%20in%20advance,%20Remaining%20after%20completion%20of%20job/schedule.%0A6.Overlapping%20Discounts%20provision%20exclusively%20on%20Volt%20Designs'%20discretion.%0A7.Products%20for%20the%20above-mentioned%20post/s%20and/or%20video/s%20must%20be%20provided%20by%20client.%0A8.All%20other%20Rights%20Reserve%20by%20VoltDesigns.%0A%0A%0ABy%20Sending%20this%20email%20you%20agree%20to%20the%20terms%20and%20conditions%20of%20Volt%20Designs." class="button">Send Email</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Our Mission -->
+
+
+            <div class="mission-container" id="mission">
+                <div class="mission-section">
+                    <div class="content">
+                        <h1>Our Mission</h1><br>
+                        <p>Providing businesses with high-quality, modern, minimalist social media posts that engage their audience and drive growth. 
+                            Aiding businesses with much needed online Brand-Establishment and to make the switch towards Plant-Based-Business-Practices. 
+                            Promoting Plant-Based Food, Apperal, and various other products via available online platform. 
+                            Being on the right side of history by helping the animal liberation movement happening locally and around the world.</p>
+                    </div>
+                    <!-- <div class="image-container">
+                        <img src="mission.jpg">
+                    </div>  -->
+                </div>
+            </div>
+
+            <!-- Design Process -->
+
+<!--        <div class="design-container">
+                <h1>Our Design Process</h1>
+                <p>Watch this video to learn more about how we work</p>
+                <div class="video-container">
+                  <iframe id="videoFrame" width="560" height="315" src="https://www.youtube.com/embed/WX7DBPcsiEs?si=qLZbbZnMC1AbACoM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+                <div class="video">
+                    <button class="watch-now" onclick="playVideo('WX7DBPcsiEs')">Video 1</button>
+                    <button class="watch-now" onclick="playVideo('Kn60bRAxun8')">Video 2</button>
+                    <button class="watch-now" onclick="playVideo('KzclmnHJcvs')">Video 3</button>
+                    <button class="watch-now" onclick="playVideo('i6bI8MRkxBc')">Video 4</button>
+                </div>
+            </div> -->
+
+            <!-- FAQ -->
+
+
+            <div class="faq-container" id="faq">
+                <h1>Frequently Asked Questions</h1>
+                <p>Have a question? We've got answers.</p>
+                <input type="text" id="search-bar" placeholder="Search for a question..." onkeyup="searchQuestions()">
+                <div id="faq-list">
+                    <div class="faq-item">
+                        <div class="faq-question">How long does it take to create a design?</div>
+                        <div class="faq-answer">The time required to create a design depends on the complexity and scope of the project. Typically, it can take anywhere from a few days for image post to few weeks for video post.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Can I request revisions?</div>
+                        <div class="faq-answer">Yes, revisions are part of the design process to ensure the final product meets your expectations. Maximum of two revisions per post are available at your disposal.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Do you offer discounts for multiple designs?</div>
+                        <div class="faq-answer">We offer discounts for bulk orders. Please visit Pricing section to get a quote in your email client which you can direclty send to start a project after filling the information section there.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">What if I'm not satisfied with the design?</div>
+                        <div class="faq-answer">If you are not satisfied with the design, we will work with you to make it right. Your satisfaction is our priority. Maximum of two revisions per post are available at your disposal.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Have more queries?</div>
+                        <div class="faq-answer">If yes then kindly fill out the form.</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Footer -->
+
+            <div class="down-container">
+                <div style="text-align: center;"> © 2024 Volt Designs.<br>
+                    All rights reserved.</div>
+                    <div class="social-icons">
+                        <div class="social-icon"><a href="https://www.facebook.com/voltdesignsofficial" target="_blank"><img src="facebook.png"></div></a>
+                        <div class="social-icon"><a href="https://www.instagram.com/voltdesignsofficial" target="_blank"><img src="instagram.png"></div></a>
+                        <div class="social-icon"><a href="https://www.linkedin.com/in/nibesh-sharma-467193155" target="_blank"><img src="linkedin.png"></div></a>
+                    </div>      
+            </div>
+
+            
+              
+
+
+            <!-- <a href="#rec" class="go-top-button" id="goTopBtn"><img src="gototop.png"></a> -->
+    </div>
+
+    <script> 
+         const scriptURL = 'https://script.google.com/macros/s/AKfycbx2JohinVNn9DFPFyeMbsPAPBPz7jBO_oHqSxiPYijdRSby3Gd_Rv-3wXJYDNXqp9v8/exec';
+         const form = document.forms['submit-to-google-sheet'];
+         const msg = document.getElementById("msg");
+
+         form.addEventListener('submit', e => {
+           e.preventDefault();
+           const now = new Date();
+           const dateString = now.toLocaleString();
+           document.getElementById('submitTime').value = dateString;
+
+           fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+             .then(response => {
+             msg.innerHTML = "Message sent successfully";
+             setTimeout(function(){
+                 msg.innerHTML=""
+             },3000);
+             form.reset();
+             })
+             .catch(error => console.error('Error!', error.message));
+            }); 
+
+    </script>
+
+</body>
+</html>

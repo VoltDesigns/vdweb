@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Aggregator</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* Define CSS variables for colors */
@@ -31,18 +29,17 @@
             --scroll-btn-hover-bg: #3e6a9e; /* Darker blue */
             --progress-bar-bg: #4F85C5; /* Blue */
 
-            --general-button-bg: #ffffff; /* Default for non-active buttons, matching tab background */
-            --general-button-text: #1a202c; /* Default text for non-active buttons, matching tab text */
-            --general-button-hover-bg: #e6f2fb; /* Hover for general buttons, matching tab hover */
+            --general-button-bg: #ffffff;
+            --general-button-text: #1a202c;
+            --general-button-hover-bg: #e6f2fb;
 
-            --login-signup-btn-active-bg: #4F85C5; /* Matches active tab blue */
+            --login-signup-btn-active-bg: #4F85C5;
             --login-signup-btn-active-text: #ffffff;
             --login-signup-btn-hover-bg: #3e6a9e; /* Consistent darker blue for hover */
 
             /* New for subtle underlines */
-            --tab-underline-color: #4F85C5; /* Blue for active underline */
+            --tab-underline-color: #4F85C5;
             --tab-underline-height: 3px;
-            
             /* Checkbox colors */
             --checkbox-border-color: #4F85C5;
             --checkbox-checked-bg: #4F85C5;
@@ -296,6 +293,8 @@
         }
 
 
+
+
         .font-size-controls {
             display: flex;
             gap: 0.25rem;
@@ -327,6 +326,7 @@
             outline: 2px solid var(--link-color);
             outline-offset: 2px;
         }
+
 
         .auth-buttons-container {
             display: flex;
@@ -405,6 +405,7 @@
             transition: background-color 0.3s ease;
         }
 
+
         .news-item {
             background-color: var(--card-bg);
             border-radius: 0.75rem;
@@ -441,6 +442,7 @@
             text-decoration: underline;
         }
 
+
         .header-content {
             display: flex;
             flex-direction: column;
@@ -449,6 +451,7 @@
             margin-bottom: 2rem;
             gap: 1rem;
         }
+
 
         .tab-button-group {
             display: flex;
@@ -466,12 +469,14 @@
             transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
+
         .tab-button {
             padding: 0.6rem 1rem;
             font-size: calc(var(--base-font-size) * 0.95);
             font-weight: 500;
             color: var(--tab-button-text);
-            background-color: transparent; /* Default state for all tabs */
+            background-color: transparent;
+            /* Default state for all tabs */
             transition: all 0.2s ease-in-out;
             cursor: pointer;
             border: none;
@@ -486,10 +491,12 @@
             outline-offset: 2px;
         }
 
+
         .tab-button:hover:not(.active) { /* Hover for non-active */
             background-color: var(--tab-button-hover-bg);
             color: var(--headline-color);
         }
+
 
         /* Base style for the underline bar */
         .tab-button::after {
@@ -504,6 +511,7 @@
             transition: transform 0.3s ease, background-color 0.3s ease;
             transform-origin: bottom center;
         }
+
 
         /* Active tab underline */
         .tab-button.active::after {
@@ -524,6 +532,7 @@
             100% { transform: rotate(360deg); }
         }
 
+
         .collapsible-content {
             max-height: 0;
             overflow: hidden;
@@ -538,6 +547,7 @@
             padding-top: 0.5rem;
             padding-bottom: 1rem;
         }
+
 
         .toggle-details-button {
             background-color: transparent;
@@ -625,6 +635,7 @@
             outline: none;
         }
 
+
         #scroll-navigation-btn:hover,
         #scroll-navigation-btn:focus-visible {
             background-color: var(--scroll-btn-hover-bg);
@@ -641,6 +652,7 @@
             height: 20px;
             margin: 0.125rem 0;
         }
+
 
         /* Dark Mode Toggle Button - repositioned and restyled */
         #dark-mode-toggle {
@@ -665,6 +677,7 @@
             outline: none;
         }
 
+
         #dark-mode-toggle:hover {
             background-color: var(--scroll-btn-hover-bg);
             opacity: 1;
@@ -674,10 +687,12 @@
             outline-offset: 2px;
         }
 
+
         #dark-mode-toggle svg {
             width: 18px;
             height: 18px;
         }
+
 
         /* Error message styling */
         #error-message {
@@ -686,6 +701,7 @@
             color: var(--error-text);
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         }
+
 
         /* Login Modal Styling */
         .modal {
@@ -775,6 +791,8 @@
         }
 
 
+
+
         @media (max-width: 768px) {
             .header-content-wrapper {
                 flex-direction: column;
@@ -855,21 +873,17 @@
     </style>
 </head>
 <body class="min-h-screen">
-    <!-- Reading Progress Bar -->
     <div id="reading-progress-bar"></div>
-
-    <!-- Header (full width background, centered content) -->
+    
     <header class="main-header">
         <div class="header-content-wrapper">
             <div class="header-left">
-                <!-- Hamburger Menu Button -->
                 <button id="hamburger-menu-btn" aria-label="Open preferences menu" tabindex="0">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                     </svg>
                 </button>
                 <h1 class="font-bold" id="mainTitle">📰 News Aggregator</h1>
-                <!-- Font Size Controls -->
                 <div class="font-size-controls" role="group" aria-label="Adjust font size">
                     <button id="font-size-decrease" aria-label="Decrease font size" tabindex="0">A-</button>
                     <button id="font-size-reset" aria-label="Reset font size" tabindex="0">A</button>
@@ -886,18 +900,15 @@
         </div>
     </header>
 
-    <!-- Off-canvas Preferences Menu -->
     <aside id="off-canvas-menu" role="dialog" aria-modal="true" aria-label="News Preferences">
         <button class="close-button" aria-label="Close preferences menu">&times;</button>
         <h3>Your News Feed Preferences</h3>
         <p class="text-sm mb-4" id="pref-menu-status">Login to save your preferences.</p>
         <div id="preferences-checkbox-list">
-            <!-- Checkboxes will be dynamically loaded here -->
-        </div>
+            </div>
     </aside>
     <div class="overlay" id="overlay"></div>
 
-    <!-- Main Content Area (News, Tabs, Loading, Error, Infinite Scroll) -->
     <main class="site-main-content">
         <div class="content-area">
             <div class="header-content">
@@ -911,23 +922,17 @@
                     <button class="tab-button" data-source="WSJ" tabindex="0" role="tab" aria-selected="false">Wall Street Journal</button>
                 </div>
             </div>
-
             <div id="loading" class="flex justify-center items-center h-40" style="display: none;" role="status" aria-live="polite">
                 <div class="loading-spinner"></div>
                 <p class="ml-4 text-lg text-gray-600">Loading news...</p>
             </div>
-
             <div id="news-container" class="space-y-6" role="feed">
-                <!-- News articles will be loaded here -->
-            </div>
-
-            <!-- Infinite Scroll Loading Indicator -->
+                </div>
             <div id="infinite-scroll-loading" class="flex justify-center items-center h-24" style="display: none;" role="status" aria-live="polite">
                 <div class="loading-spinner"></div>
                 <p class="ml-4 text-lg text-gray-600">Loading more news...</p>
             </div>
             <p id="no-more-news-message" class="infinite-scroll-message" style="display: none;" role="status" aria-live="polite">No more news to load.</p>
-
             <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md relative mt-6" role="alert" tabindex="-1">
                 <strong class="font-bold">Error!</strong>
                 <span class="block sm:inline" id="error-text"></span>
@@ -935,7 +940,6 @@
         </div>
     </main>
 
-    <!-- Login/Signup Modal -->
     <div id="login-modal" class="modal">
         <div class="modal-content">
             <button class="close-button" aria-label="Close login modal">&times;</button>
@@ -950,9 +954,7 @@
         </div>
     </div>
 
-    <!-- Floating Dark Mode Toggle Button -->
     <button id="dark-mode-toggle" aria-label="Toggle dark mode" tabindex="0">
-        <!-- Moon icon for light mode (default), changes to sun in dark mode -->
         <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.61.764-3.778a9.735 9.735 0 00-6.711 8.923 9.718 9.718 0 009.75 9.75 9.735 9.735 0 008.923-6.711z" />
         </svg>
@@ -960,8 +962,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12H5.25m-.386-6.364l1.591 1.591M12 12a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
     </button>
-
-    <!-- Unified Scroll Navigation Button -->
+    
     <button id="scroll-navigation-btn" aria-label="Scroll navigation" tabindex="0">
         <svg class="scroll-up-arrow" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
@@ -976,7 +977,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
+        
         // --- Firebase Configuration (REPLACE with YOUR actual firebaseConfig from Firebase Console) ---
         // This object must contain your project-specific Firebase details.
         const firebaseConfig = {
@@ -986,781 +987,139 @@
             storageBucket: "news-aggregator-25e10.firebasestorage.app",
             messagingSenderId: "793900965133",
             appId: "1:793900965133:web:8ce58f3abc789dfd01a444",
-            measurementId: "G-3P1SVT79L6"
+            measurementId: "G-3P...",
         };
-        // --- End Firebase Configuration ---
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        // Firebase App and Services
-        let app, auth, db;
-        let userId = null; // Will store UID
-        let userEmail = null; // Will store email if logged in with email/password, or null for anonymous
-        let userPreferences = []; // Stores user's preferred source keys
-
+        // Constants and State
         const RSS_FEEDS = {
-            DW: { name: 'DW News', url: 'https://rss.dw.com/rdf/rss-en-all' },
-            BBC: { name: 'BBC News', url: 'http://feeds.bbci.co.uk/news/rss.xml' },
-            'The Hill': { name: 'The Hill', url: 'https://thehill.com/rss/' },
-            Forbes: { name: 'Forbes', url: 'https://www.forbes.com/business/feed/' },
-            WSJ: { name: 'Wall Street Journal', url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml' }
+            'DW': 'https://rss.app/feeds/u5mEaQ6p3i1rP2t0.xml',
+            'BBC': 'https://rss.app/feeds/u9gJ4a6a2x4rP1o0.xml',
+            'The Hill': 'https://rss.app/feeds/z1xK5g1j5w4rD6j9.xml',
+            'Forbes': 'https://rss.app/feeds/f5dD5j4c9j4rE2b1.xml',
+            'WSJ': 'https://rss.app/feeds/k2lA7q3p2i6rS2s8.xml',
+            'Business News': 'https://rss.app/feeds/sqjWiWfLhrldtI6j.xml',
         };
-
-        const translations = {
-            appTitle: 'News Aggregator',
-            mainTitle: '📰 News Aggregator',
-            tabAllNews: 'All News',
-            tabMyFeed: 'My Feed',
-            tabDW: 'DW News',
-            tabBBC: 'BBC News',
-            tabTheHill: 'The Hill',
-            tabForbes: 'Forbes',
-            tabWSJ: 'Wall Street Journal',
-            loadingMessage: 'Loading news...',
-            errorTitle: 'Error!',
-            readOriginal: 'Read Original Article →',
-            published: 'Published:',
-            noNewsFound: 'No news found for this selection.',
-            failedSources: 'Some news sources failed to load:',
-            couldNotLoad: 'Could not load news from',
-            tryAgain: 'Please try again later. (Details:',
-            couldNotLoadAny: 'Could not load any news sources. Please check your internet connection and try again.',
-            unknownSource: 'Unknown Source',
-            noDescriptionAvailable: 'No description available.',
-            showDetails: 'Show Details',
-            hideDetails: 'Hide Details',
-            loadingMoreNews: 'Loading more news...',
-            noMoreNews: 'No more news to load.',
-            displayingAvailableNews: 'Displaying available news.',
-            apiError: 'API error. Please check configuration.',
-            loginSignup: 'Login/Signup',
-            logout: 'Logout',
-            prefSaved: 'Preferences saved!',
-            prefLoadError: 'Could not load preferences.',
-            prefSaveError: 'Failed to save preferences.',
-            enterEmailPassword: 'Please enter both email and password.',
-            invalidEmailPass: 'Invalid email or password.',
-            emailExists: 'Email already in use. Please login or use a different email.',
-            weakPassword: 'Password should be at least 6 characters.',
-            anonymousUser: 'Anonymous',
-            prefMenuStatusLoggedIn: 'Select sources for your customized "My Feed".',
-            prefMenuStatusLoggedOut: 'Login to save your preferences.'
+        
+        const RSS_FEED_CATEGORIES = {
+            'DW': ['General', 'World News'],
+            'BBC': ['General', 'World News'],
+            'The Hill': ['Politics'],
+            'Forbes': ['Business', 'Technology'],
+            'WSJ': ['Business', 'Finance'],
+            'Business News': ['Business'],
         };
+        
+        const PAGE_SIZE = 10;
+        const DEFAULT_SOURCE = 'All';
+        const DEFAULT_FONT_SIZE = 16;
+        const MIN_FONT_SIZE = 12;
+        const MAX_FONT_SIZE = 24;
+        const FONT_SIZE_STEP = 2;
 
-        let allArticlesFromAllSources = [];
+        let currentSource = DEFAULT_SOURCE;
+        let allArticles = [];
         let currentlyDisplayedArticles = [];
         let displayedArticleCount = 0;
-        const articlesPerLoad = 10;
+        let lastLoadedCount = 0;
         let isLoadingMore = false;
-        let currentActiveTab = 'All'; // Track the currently active content-viewing tab
-
+        let userPreferences = {};
+        let currentUser = null;
+        let baseFontSize = localStorage.getItem('baseFontSize') ? parseInt(localStorage.getItem('baseFontSize')) : DEFAULT_FONT_SIZE;
+        const root = document.documentElement;
+        
+        // DOM Elements
         const newsContainer = document.getElementById('news-container');
-        const newsSourcesDiv = document.getElementById('news-sources');
-        const initialLoadingIndicator = document.getElementById('loading');
-        const infiniteScrollLoadingIndicator = document.getElementById('infinite-scroll-loading');
+        const loadingSpinner = document.getElementById('loading');
+        const errorContainer = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
+        const newsSourcesContainer = document.getElementById('news-sources');
+        const infiniteScrollLoading = document.getElementById('infinite-scroll-loading');
         const noMoreNewsMessage = document.getElementById('no-more-news-message');
-        const errorMessageDiv = document.getElementById('error-message');
-        const errorTextSpan = document.getElementById('error-text');
-        const scrollNavigationBtn = document.getElementById('scroll-navigation-btn');
+        const hamburgerMenuBtn = document.getElementById('hamburger-menu-btn');
+        const offCanvasMenu = document.getElementById('off-canvas-menu');
+        const overlay = document.getElementById('overlay');
+        const closeMenuBtn = offCanvasMenu.querySelector('.close-button');
+        const preferencesCheckboxList = document.getElementById('preferences-checkbox-list');
+        const prefMenuStatus = document.getElementById('pref-menu-status');
+        const loginSignupBtn = document.getElementById('login-signup-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginModal = document.getElementById('login-modal');
+        const loginForm = document.getElementById('login-form');
+        const modalCloseBtn = loginModal.querySelector('.close-button');
+        const modalErrorMessage = document.getElementById('modal-error-message');
+        const modalInfoMessage = document.getElementById('modal-info-message');
+        const userIdDisplay = document.getElementById('user-id-display');
         const darkModeToggle = document.getElementById('dark-mode-toggle');
         const moonIcon = document.getElementById('moon-icon');
         const sunIcon = document.getElementById('sun-icon');
         const readingProgressBar = document.getElementById('reading-progress-bar');
-        const loginSignupBtn = document.getElementById('login-signup-btn');
-        const logoutBtn = document.getElementById('logout-btn');
-        const userIdDisplay = document.getElementById('user-id-display');
-        const loginModal = document.getElementById('login-modal');
-        const loginForm = document.getElementById('login-form');
-        const closeLoginModalBtn = loginModal.querySelector('.close-button');
-        const modalEmailInput = document.getElementById('email');
-        const modalPasswordInput = document.getElementById('password');
-        const modalErrorMessage = document.getElementById('modal-error-message');
-        const modalInfoMessage = document.getElementById('modal-info-message');
-        const myFeedTab = document.querySelector('[data-source="MyFeed"]');
-
-        // New elements for hamburger menu
-        const hamburgerMenuBtn = document.getElementById('hamburger-menu-btn');
-        const offCanvasMenu = document.getElementById('off-canvas-menu');
-        const closeOffCanvasBtn = offCanvasMenu.querySelector('.close-button');
-        const overlay = document.getElementById('overlay');
-        const preferencesCheckboxList = document.getElementById('preferences-checkbox-list');
-        const prefMenuStatus = document.getElementById('pref-menu-status');
-
-
         const fontSizeDecreaseBtn = document.getElementById('font-size-decrease');
         const fontSizeResetBtn = document.getElementById('font-size-reset');
         const fontSizeIncreaseBtn = document.getElementById('font-size-increase');
-        const root = document.documentElement;
-        let baseFontSize = parseFloat(getComputedStyle(root).getPropertyValue('--base-font-size')) || 16;
-        const FONT_SIZE_STEP = 2;
-        const MAX_FONT_SIZE = 24;
-        const MIN_FONT_SIZE = 12;
-        const DEFAULT_FONT_SIZE = 16;
-
-        window.onerror = function(message, source, lineno, colno, error) {
-            console.error("Caught a global error:", { message, source, lineno, colno, error });
-            showErrorMessage(`An unexpected error occurred: ${message}. Check console for details.`);
-            return true;
-        };
-
-        function showInitialLoading(show) {
-            initialLoadingIndicator.style.display = show ? 'flex' : 'none';
-        }
-
-        function showInfiniteScrollLoading(show) {
-            infiniteScrollLoadingIndicator.style.display = show ? 'flex' : 'none';
-            noMoreNewsMessage.style.display = 'none';
-        }
-
-        function showNoMoreNewsMessage() {
-            infiniteScrollLoadingIndicator.style.display = 'none';
-            noMoreNewsMessage.textContent = translations.noMoreNews;
-            noMoreNewsMessage.style.display = 'block';
-        }
-
-        function showErrorMessage(message) {
-            errorTextSpan.setAttribute('data-original-error', message);
-            let displayedMessage = message;
-
-            if (message.includes('Could not load news from')) {
-                const sourceNameMatch = message.match(/Could not load news from (\w[\w\s.-]*)\./);
-                if (sourceNameMatch) {
-                    const sourceKey = Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === sourceNameMatch[1]);
-                    const sourceDisplayName = sourceKey ? RSS_FEEDS[key].name : sourceNameMatch[1];
-                    const detailsPart = message.substring(message.indexOf('(Details:'));
-                    displayedMessage = `${translations.couldNotLoad} ${sourceDisplayName}. ${translations.tryAgain} ${detailsPart}`;
-                }
-            } else if (message.includes('Could not load any news sources.')) {
-                displayedMessage = translations.couldNotLoadAny;
-            } else if (message.includes('Some news sources failed to load:')) {
-                const failedSourcesText = message.substring(message.indexOf(':') + 1, message.indexOf('. Displaying available news.'));
-                const failedSourceNames = failedSourcesText.split(', ').map(s => s.trim());
-
-                const failedSourceNamesDisplay = failedSourceNames.map(name => {
-                    const originalKey = Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === name);
-                    return originalKey ? RSS_FEEDS[originalKey].name : name;
-                });
-                displayedMessage = `${translations.failedSources} ${failedSourceNamesDisplay.join(', ')}. ${translations.displayingAvailableNews}`;
-            } else if (message.includes('API error.')) {
-                 displayedMessage = translations.apiError;
-            } else if (message.includes('Authentication/Authorization error with API.')) {
-                 displayedMessage = `Authentication/Authorization error with API. Please ensure your environment is configured correctly.`;
-            } else if (message.includes('API Key is not configured.')) {
-                 displayedMessage = `API Key is not configured. Please check environment.`;
-            } else if (message.includes('An unexpected error occurred:')) {
-                displayedMessage = `An unexpected error occurred. Check console for details.`;
-            }
-
-            errorTextSpan.textContent = displayedMessage;
-            errorMessageDiv.classList.remove('hidden');
-            errorMessageDiv.focus();
-        }
-
-        function hideErrorMessage() {
-            errorMessageDiv.classList.add('hidden');
-            errorTextSpan.removeAttribute('data-original-error');
-        }
-
-        function showModalMessage(message, isError = false) {
-            if (isError) {
-                modalErrorMessage.textContent = message;
-                modalErrorMessage.classList.remove('hidden');
-                modalInfoMessage.classList.add('hidden');
-            } else {
-                modalInfoMessage.textContent = message;
-                modalInfoMessage.classList.remove('hidden');
-                modalErrorMessage.classList.add('hidden');
-            }
-            loginModal.style.display = 'flex'; // Show modal
-            setTimeout(() => {
-                if (isError) modalErrorMessage.focus();
-                else modalInfoMessage.focus();
-            }, 100);
-        }
-
-        function hideModalMessages() {
-            modalErrorMessage.classList.add('hidden');
-            modalInfoMessage.classList.add('hidden');
-        }
-
-
-        function extractImageUrl(item) {
-            if (item.thumbnail) {
-                return item.thumbnail;
-            }
-            if (item.enclosure && item.enclosure.link && item.enclosure.type && item.enclosure.type.startsWith('image/')) {
-                return item.enclosure.link;
-            }
-            if (item.description) {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(item.description, 'text/html');
-                const img = doc.querySelector('img');
-                if (img && img.src) {
-                    return img.src;
-                }
-            }
-            return null;
-        }
-
-        function stripHtmlTags(htmlString) {
-            const doc = new DOMParser().parseFromString(htmlString, 'text/html');
-            return doc.body.textContent || "";
-        }
-
-        async function fetchNewsForSource(rssUrl, sourceDisplayName) {
-            try {
-                const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
-                const response = await fetch(proxyUrl);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (data.status === 'error') {
-                    throw new Error(data.message || 'Failed to fetch news from proxy.');
-                }
-
-                return data.items.map(item => ({ ...item, sourceName: sourceDisplayName }));
-
-            } catch (error) {
-                console.error(`Error fetching news for ${sourceDisplayName}:`, error);
-                throw new Error(`Could not load news from ${sourceDisplayName}. (Details: ${error.message})`);
-            }
-        }
-
-        async function fetchAllNewsAndPrepareForInfiniteScroll() {
-            showInitialLoading(true);
-            hideErrorMessage();
-            newsContainer.innerHTML = '';
-            showInfiniteScrollLoading(false);
-            noMoreNewsMessage.style.display = 'none';
-
-            let combinedArticles = [];
-            let failedSources = [];
-
-            const fetchPromises = Object.entries(RSS_FEEDS).map(async ([key, config]) => {
-                try {
-                    const articles = await fetchNewsForSource(config.url, config.name);
-                    return articles;
-                } catch (error) {
-                    failedSources.push(config.name);
-                    return null;
-                }
-            });
-
-            const results = await Promise.allSettled(fetchPromises);
-
-            results.forEach(result => {
-                if (result.status === 'fulfilled' && result.value) {
-                    combinedArticles = combinedArticles.concat(result.value);
-                }
-            });
-
-            if (combinedArticles.length === 0) {
-                showErrorMessage(translations.couldNotLoadAny);
-                showInitialLoading(false);
-                return;
-            }
-            
-            allArticlesFromAllSources = combinedArticles.map(item => ({
-                ...item,
-                title: item.title || 'No Title',
-                description: stripHtmlTags(item.description || translations.noDescriptionAvailable)
-            }));
-
-            const interleavedArticles = [];
-            let sourcesWithArticles = {};
-            allArticlesFromAllSources.forEach(article => {
-                const sourceKey = Object.keys(RSS_FEEDS).find(key => 
-                    RSS_FEEDS[key].name === article.sourceName
-                );
-                if (sourceKey) {
-                    if (!sourcesWithArticles[sourceKey]) {
-                        sourcesWithArticles[sourceKey] = [];
-                    }
-                    sourcesWithArticles[sourceKey].push(article);
-                }
-            });
-
-            let activeSources = Object.keys(sourcesWithArticles).filter(key => sourcesWithArticles[key].length > 0);
-            let lastSourceKey = null;
-            let attemptLimit = 1000;
-
-            while (activeSources.length > 0 && attemptLimit > 0) {
-                attemptLimit--;
-                let eligibleSources = activeSources.filter(sourceKey => sourceKey !== lastSourceKey);
-                if (eligibleSources.length === 0) {
-                    eligibleSources = activeSources;
-                }
-                if (eligibleSources.length === 0) break;
-
-                const randomIndex = Math.floor(Math.random() * eligibleSources.length);
-                const currentSourceKey = eligibleSources[randomIndex];
-
-                if (currentSourceKey && sourcesWithArticles[currentSourceKey] && sourcesWithArticles[currentSourceKey].length > 0) {
-                    interleavedArticles.push(sourcesWithArticles[currentSourceKey].shift());
-                    lastSourceKey = currentSourceKey;
-                    if (sourcesWithArticles[currentSourceKey].length === 0) {
-                        activeSources = activeSources.filter(key => key !== currentSourceKey);
-                    }
-                } else {
-                    activeSources = activeSources.filter(key => key !== currentSourceKey);
-                }
-            }
-            
-            allArticlesFromAllSources = interleavedArticles;
-
-            if (failedSources.length > 0) {
-                const failedSourceNamesDisplay = failedSources.map(name => {
-                    const originalKey = Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === name);
-                    return originalKey ? RSS_FEEDS[originalKey].name : name;
-                });
-                showErrorMessage(`${translations.failedSources} ${failedSourceNamesDisplay.join(', ')}. ${translations.displayingAvailableNews}`);
-            } else {
-                hideErrorMessage();
-            }
-
-            applyNewsFilterAndDisplay(currentActiveTab); 
-            showInitialLoading(false);
-        }
-
-        function displayNextBatchOfNews() {
-            if (isLoadingMore) return;
-            isLoadingMore = true;
-            showInfiniteScrollLoading(true);
-
-            setTimeout(() => {
-                const startIndex = displayedArticleCount;
-                const endIndex = startIndex + articlesPerLoad;
-                const articlesToRender = currentlyDisplayedArticles.slice(startIndex, endIndex);
-
-                if (articlesToRender.length === 0 && displayedArticleCount > 0) {
-                    showNoMoreNewsMessage();
-                    isLoadingMore = false;
-                    return;
-                }
-                if (articlesToRender.length === 0 && displayedArticleCount === 0) {
-                    newsContainer.innerHTML = `<p class="text-center text-lg">${translations.noNewsFound}</p>`;
-                    showInfiniteScrollLoading(false);
-                    isLoadingMore = false;
-                    return;
-                }
-
-                articlesToRender.forEach(article => {
-                    const newsItem = document.createElement('div');
-                    newsItem.classList.add('news-item');
-                    newsItem.setAttribute('tabindex', '0');
-
-                    const fullDescription = article.description;
-                    const imageUrl = extractImageUrl(article);
-
-                    const imageHtml = imageUrl ? 
-                        `<img src="${imageUrl}" alt="${article.title || 'News Image'}" class="news-image">` : 
-                        '';
-
-                    newsItem.innerHTML = `
-                        <div class="news-item-header">
-                            ${imageHtml}
-                            <div class="news-item-content">
-                                <h2 class="font-semibold">${article.title}</h2>
-                                <span class="source-name">${article.sourceName || translations.unknownSource}</span>
-                            </div>
-                        </div>
-                        <div class="collapsible-container">
-                            <button class="toggle-details-button" data-full-description="${escapeHtml(fullDescription)}" tabindex="0" aria-expanded="false">
-                                <span>${translations.showDetails}</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </button>
-                            <div class="collapsible-content" role="region" aria-hidden="true">
-                                <p class="text-base mb-4">${fullDescription}</p>
-                                <a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer" class="hover:underline mt-4 block" tabindex="0">${translations.readOriginal}</a>
-                                ${article.pubDate ? `<p class="text-sm mt-2">${new Date(article.pubDate).toLocaleString()}</p>` : ''}
-                            </div>
-                        </div>
-                    `;
-                    newsContainer.appendChild(newsItem);
-                });
-
-                document.querySelectorAll('.news-item:nth-last-child(-n+' + articlesToRender.length + ') .toggle-details-button').forEach(button => {
-                    button.addEventListener('click', () => {
-                        const content = button.closest('.collapsible-container').querySelector('.collapsible-content');
-                        const spanText = button.querySelector('span');
-                        
-                        if (content.classList.contains('expanded')) {
-                            content.classList.remove('expanded');
-                            spanText.textContent = translations.showDetails;
-                            button.classList.remove('expanded');
-                            button.setAttribute('aria-expanded', 'false');
-                            content.setAttribute('aria-hidden', 'true');
-                        } else {
-                            spanText.textContent = translations.hideDetails;
-                            content.classList.add('expanded');
-                            button.classList.add('expanded');
-                            button.setAttribute('aria-expanded', 'true');
-                            content.setAttribute('aria-hidden', 'false');
-                        }
-                    });
-                });
-
-                displayedArticleCount += articlesToRender.length;
-                showInfiniteScrollLoading(false);
-                isLoadingMore = false;
-
-                if (displayedArticleCount >= currentlyDisplayedArticles.length) {
-                    showNoMoreNewsMessage();
-                }
-
-            }, 500);
-        }
-
-        function escapeHtml(text) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
-            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
-        }
-
-        newsSourcesDiv.addEventListener('click', (event) => {
-            const button = event.target.closest('.tab-button'); // Ensure we get the tab button itself
-            if (!button) return;
-
-            const sourceKey = button.dataset.source;
-
-            // Step 1: Update the 'active' class (underline) for the currently viewed content tab.
-            document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
-                btn.classList.remove('active');
-                btn.setAttribute('aria-selected', 'false');
-            });
-            button.classList.add('active');
-            button.setAttribute('aria-selected', 'true');
-            currentActiveTab = sourceKey; // Update current active tab state
-            
-            // Step 2: Apply the news filter based on the newly active tab.
-            applyNewsFilterAndDisplay(sourceKey);
+        
+        // Event Listeners
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchNewsForSource(DEFAULT_SOURCE);
+            renderSourceTabs();
+            renderPreferencesCheckboxes();
+            applyInitialFontSize();
+            updateDarkModeIcon(document.body.classList.contains('dark-mode'));
         });
 
-        function applyNewsFilterAndDisplay(filterKey) {
-            newsContainer.innerHTML = '';
-            displayedArticleCount = 0;
-            noMoreNewsMessage.style.display = 'none';
-            hideErrorMessage();
-
-            if (filterKey === 'All') {
-                currentlyDisplayedArticles = allArticlesFromAllSources;
-            } else if (filterKey === 'MyFeed') {
-                if (userPreferences.length > 0) {
-                    currentlyDisplayedArticles = allArticlesFromAllSources.filter(article =>
-                        userPreferences.includes(Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === article.sourceName))
-                    );
-                } else {
-                    currentlyDisplayedArticles = [];
-                    newsContainer.innerHTML = `<p class="text-center text-lg">Select your preferred sources in the preferences menu (☰) to customize your feed.</p>`;
+        newsSourcesContainer.addEventListener('click', (event) => {
+            if (event.target.classList.contains('tab-button')) {
+                const newSource = event.target.dataset.source;
+                if (newSource !== currentSource) {
+                    currentSource = newSource;
+                    setActiveTab(newSource);
+                    fetchNewsForSource(newSource);
                 }
-            } else { // Specific source tab clicked
-                currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => article.sourceName === RSS_FEEDS[filterKey].name);
             }
-            displayNextBatchOfNews();
-        }
-
-        // Function to populate the off-canvas menu with checkboxes
-        function populatePreferencesMenu() {
-            preferencesCheckboxList.innerHTML = ''; // Clear existing
-            Object.keys(RSS_FEEDS).forEach(sourceKey => {
-                const sourceDisplayName = RSS_FEEDS[sourceKey].name;
-                const itemDiv = document.createElement('div');
-                itemDiv.classList.add('menu-source-item');
-                itemDiv.innerHTML = `
-                    <label for="pref-checkbox-${sourceKey}">
-                        ${sourceDisplayName}
-                    </label>
-                    <input type="checkbox" id="pref-checkbox-${sourceKey}" data-source="${sourceKey}" class="preference-checkbox">
-                `;
-                preferencesCheckboxList.appendChild(itemDiv);
-
-                const checkbox = itemDiv.querySelector('.preference-checkbox');
-                checkbox.checked = userPreferences.includes(sourceKey); // Set initial state
-
-                // Add event listener for instant saving
-                checkbox.addEventListener('change', async (event) => {
-                    const changedSourceKey = event.target.dataset.source;
-                    if (!userId) {
-                        event.target.checked = !event.target.checked; // Revert checkbox state
-                        showModalMessage(translations.prefMenuStatusLoggedOut, true); // Use specific translation
-                        return;
-                    }
-
-                    if (event.target.checked) {
-                        if (!userPreferences.includes(changedSourceKey)) {
-                            userPreferences.push(changedSourceKey);
-                        }
-                    } else {
-                        userPreferences = userPreferences.filter(pref => pref !== changedSourceKey);
-                    }
-                    console.log(`Preferences updated for ${changedSourceKey}:`, userPreferences);
-                    await saveUserPreferences(); // Save instantly
-
-                    // If 'My Feed' is the active tab, refresh it
-                    if (currentActiveTab === 'MyFeed') {
-                        applyNewsFilterAndDisplay('MyFeed');
-                    }
-                });
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            document.title = translations.appTitle;
-            document.getElementById('mainTitle').textContent = translations.mainTitle;
-
-            document.querySelector('[data-source="All"]').textContent = translations.tabAllNews;
-            myFeedTab.textContent = translations.tabMyFeed;
-            document.querySelector('[data-source="DW"]').textContent = translations.tabDW;
-            document.querySelector('[data-source="BBC"]').textContent = translations.tabBBC;
-            document.querySelector('[data-source="The Hill"]').textContent = translations.tabTheHill;
-            document.querySelector('[data-source="Forbes"]').textContent = translations.tabForbes;
-            document.querySelector('[data-source="WSJ"]').textContent = translations.tabWSJ;
-            loginSignupBtn.textContent = translations.loginSignup;
-            logoutBtn.textContent = translations.logout;
-            
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-
-            // Initial state: Anonymous user display
-            userIdDisplay.textContent = translations.anonymousUser;
-            userIdDisplay.classList.remove('hidden'); // Ensure it's visible by default
-
-            onAuthStateChanged(auth, async (user) => {
-                console.log("onAuthStateChanged triggered. User:", user ? user.uid : "null");
-                if (user) {
-                    userId = user.uid;
-                    userEmail = user.email; // Capture email
-                    userIdDisplay.textContent = userEmail ? `Logged in as: ${userEmail}` : `User ID: ${userId}`;
-                    userIdDisplay.classList.remove('hidden');
-                    loginSignupBtn.classList.add('hidden');
-                    logoutBtn.classList.remove('hidden');
-                    myFeedTab.style.display = 'block';
-                    prefMenuStatus.textContent = translations.prefMenuStatusLoggedIn; // Update menu status
-                    
-                    await loadUserPreferences(userId);
-                    populatePreferencesMenu(); // Populate and set checked states
-
-                    applyNewsFilterAndDisplay(currentActiveTab);
-
-                } else {
-                    userId = null;
-                    userEmail = null;
-                    userIdDisplay.textContent = translations.anonymousUser; // Set to "Anonymous" on logout
-                    loginSignupBtn.classList.remove('hidden');
-                    logoutBtn.classList.add('hidden');
-                    myFeedTab.style.display = 'none';
-                    prefMenuStatus.textContent = translations.prefMenuStatusLoggedOut; // Update menu status
-                    userPreferences = [];
-                    populatePreferencesMenu(); // Clear checkboxes on logout
-
-                    // Reset active tab to 'All' on logout if 'My Feed' was active
-                    if (currentActiveTab === 'MyFeed' || !document.querySelector('.tab-button.active')) {
-                        document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
-                            btn.classList.remove('active');
-                            btn.setAttribute('aria-selected', 'false');
-                        });
-                        document.querySelector('.tab-button[data-source="All"]').classList.add('active');
-                        document.querySelector('.tab-button[data-source="All"]').setAttribute('aria-selected', 'true');
-                        currentActiveTab = 'All';
-                        applyNewsFilterAndDisplay('All');
-                    }
-                }
-            });
-
-            // No automatic anonymous sign-in here. `onAuthStateChanged` handles initial user state.
-
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-                updateDarkModeIcons(true);
-            } else {
-                updateDarkModeIcons(false);
-            }
-
-            const savedFontSize = parseFloat(localStorage.getItem('baseFontSize'));
-            if (!isNaN(savedFontSize)) {
-                updateFontSize(savedFontSize);
-            } else {
-                updateFontSize(DEFAULT_FONT_SIZE);
-            }
-
-            infiniteScrollLoadingIndicator.querySelector('p').textContent = translations.loadingMoreNews;
-            
-            await fetchAllNewsAndPrepareForInfiniteScroll();
-            populatePreferencesMenu(); // Initial population for anonymous users too
         });
 
-
-        async function loadUserPreferences(uid) {
-            if (!uid) return;
-            console.log("Loading preferences for user:", uid);
-            try {
-                const prefDocRef = doc(db, `artifacts/${firebaseConfig.projectId}/users/${uid}/preferences`, 'sources');
-                const prefDocSnap = await getDoc(prefDocRef);
-                if (prefDocSnap.exists()) {
-                    userPreferences = prefDocSnap.data().preferredSources || [];
-                    console.log("Preferences loaded:", userPreferences);
-                } else {
-                    userPreferences = [];
-                    console.log("No preferences found for user.");
-                }
-            } catch (error) {
-                console.error("Error loading user preferences:", error);
-                showErrorMessage(translations.prefLoadError);
-                userPreferences = [];
-            }
-        }
-
-        async function saveUserPreferences() {
-            if (!userId) {
-                console.error("Attempted to save preferences without a userId.");
-                return;
-            }
-            try {
-                const prefDocRef = doc(db, `artifacts/${firebaseConfig.projectId}/users/${userId}/preferences`, 'sources');
-                await setDoc(prefDocRef, { preferredSources: userPreferences }, { merge: true });
-                console.log("Preferences saved successfully!");
-            } catch (error) {
-                console.error("Error saving user preferences:", error);
-                showErrorMessage(translations.prefSaveError);
-            }
-        }
-
-        // Hamburger Menu Event Listeners
         hamburgerMenuBtn.addEventListener('click', () => {
             offCanvasMenu.classList.add('open');
             overlay.style.display = 'block';
-            offCanvasMenu.focus(); // Focus the menu for accessibility
         });
 
-        closeOffCanvasBtn.addEventListener('click', () => {
+        closeMenuBtn.addEventListener('click', closeOffCanvasMenu);
+        overlay.addEventListener('click', closeOffCanvasMenu);
+        function closeOffCanvasMenu() {
             offCanvasMenu.classList.remove('open');
             overlay.style.display = 'none';
-        });
+        }
 
-        overlay.addEventListener('click', () => {
-            offCanvasMenu.classList.remove('open');
-            overlay.style.display = 'none';
-        });
-
-        // Close menu on Escape key
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && offCanvasMenu.classList.contains('open')) {
-                offCanvasMenu.classList.remove('open');
-                overlay.style.display = 'none';
-            }
-        });
-
-
-        loginSignupBtn.addEventListener('click', () => {
-            loginModal.style.display = 'flex';
-            modalEmailInput.value = '';
-            modalPasswordInput.value = '';
-            hideModalMessages();
-            loginModal.focus(); // Focus the modal for accessibility
-        });
-
-        closeLoginModalBtn.addEventListener('click', () => {
-            loginModal.style.display = 'none';
-            hideModalMessages();
-        });
-
-        loginModal.addEventListener('click', (event) => {
-            if (event.target === loginModal) {
-                loginModal.style.display = 'none';
-                hideModalMessages();
-            }
-        });
-
-        loginForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            hideModalMessages();
-            const email = modalEmailInput.value;
-            const password = modalPasswordInput.value;
-
-            if (!email || !password) {
-                showModalMessage(translations.enterEmailPassword, true);
-                return;
-            }
-
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                showModalMessage(translations.loginSuccess);
-                loginModal.style.display = 'none';
-            } catch (signInError) {
-                if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/wrong-password') {
-                    showModalMessage(translations.invalidEmailPass, true);
-                } else if (signInError.code === 'auth/invalid-email') {
-                    showModalMessage(translations.invalidEmailPass, true);
-                } else if (signInError.code === 'auth/too-many-requests') {
-                    showModalMessage('Access to this account has been temporarily disabled due to many failed login attempts. Please try again later.', true);
+        // Click handler for news item details toggle
+        newsContainer.addEventListener('click', (event) => {
+            const toggleButton = event.target.closest('.toggle-details-button');
+            if (toggleButton) {
+                const content = toggleButton.previousElementSibling;
+                const isExpanded = content.classList.toggle('expanded');
+                toggleButton.classList.toggle('expanded', isExpanded);
+                if (isExpanded) {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    toggleButton.innerHTML = `Hide Details <svg xmlns="http://www.w3.000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" /></svg>`;
                 } else {
-                    try {
-                        await createUserWithEmailAndPassword(auth, email, password);
-                        showModalMessage(translations.signupSuccess);
-                        loginModal.style.display = 'none';
-                    } catch (signUpError) {
-                        if (signUpError.code === 'auth/email-already-in-use') {
-                            showModalMessage(translations.emailExists, true);
-                        } else if (signUpError.code === 'auth/weak-password') {
-                            showModalMessage(translations.weakPassword, true);
-                        } else if (signUpError.code === 'auth/invalid-email') {
-                            showModalMessage(translations.invalidEmailPass, true);
-                        } else {
-                            console.error("Auth Error (Signup):", signUpError);
-                            showModalMessage(`Authentication failed: ${signUpError.message}`, true);
-                        }
-                    }
+                    content.style.maxHeight = '0';
+                    toggleButton.innerHTML = `Show Details <svg xmlns="http://www.w3.000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>`;
                 }
             }
         });
 
-        logoutBtn.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                showModalMessage(translations.logoutSuccess);
-                // After logout, reset all tab states and revert to 'All News'
-                document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
-                    btn.classList.remove('active'); // Remove active class
-                    btn.setAttribute('aria-selected', 'false');
-                });
-                document.querySelector('.tab-button[data-source="All"]').classList.add('active'); // Set 'All News' as active
-                document.querySelector('.tab-button[data-source="All"]').setAttribute('aria-selected', 'true');
-                currentActiveTab = 'All'; // Update state
-                applyNewsFilterAndDisplay('All'); // Display all news
-            } catch (error) {
-                console.error("Logout Error:", error);
-                showErrorMessage(`Logout failed: ${error.message}`);
-            }
-        });
-
-        scrollNavigationBtn.addEventListener('click', (event) => {
-            const btnRect = scrollNavigationBtn.getBoundingClientRect();
-            const clickY = event.clientY - btnRect.top;
-
-            if (clickY < btnRect.height / 2) {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-                window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-            }
-        });
-
+        // Toggle dark mode
         darkModeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-            updateDarkModeIcons(isDarkMode);
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            updateDarkModeIcon(isDarkMode);
         });
 
-        function updateDarkModeIcons(isDarkMode) {
+        // Update the icon based on the mode
+        function updateDarkModeIcon(isDarkMode) {
             if (isDarkMode) {
                 moonIcon.classList.add('hidden');
                 sunIcon.classList.remove('hidden');
@@ -1770,10 +1129,12 @@
             }
         }
 
+
         window.addEventListener('scroll', () => {
             const totalScrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolledPercentage = (window.scrollY / totalScrollHeight) * 100;
             readingProgressBar.style.width = scrolledPercentage + '%';
+
 
             if (!isLoadingMore && (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500)) {
                 if (displayedArticleCount < currentlyDisplayedArticles.length) {
@@ -1784,11 +1145,13 @@
             }
         });
 
+
         function updateFontSize(newSize) {
             baseFontSize = Math.min(MAX_FONT_SIZE, Math.max(MIN_FONT_SIZE, newSize));
             root.style.setProperty('--base-font-size', `${baseFontSize}px`);
             localStorage.setItem('baseFontSize', baseFontSize);
         }
+
 
         fontSizeDecreaseBtn.addEventListener('click', () => updateFontSize(baseFontSize - FONT_SIZE_STEP));
         fontSizeResetBtn.addEventListener('click', () => updateFontSize(DEFAULT_FONT_SIZE));

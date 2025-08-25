@@ -842,9 +842,9 @@
         });
 
         goToTopBtn.addEventListener('click', () => {
-            // Immediately hide the button on click
-            goToTopBtn.classList.remove('show');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Removed explicit goToTopBtn.classList.remove('show');
+            // The scroll listener will now handle hiding the button once window.scrollY is 0.
         });
 
         goToBottomBtn.addEventListener('click', () => {

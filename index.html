@@ -12,8 +12,8 @@
         /* Define CSS variables for colors */
         :root {
             --body-bg: #e6f2fb; /* Light grayish blue */
-            --container-bg: #ffffff;
-            --news-item-bg: #ffffff;
+            --header-bg: #ffffff; /* Header background for light mode */
+            --main-content-bg: #e6f2fb; /* Background for main content section (light mode) */
             --headline-color: #1a202c; /* Darker text */
             --source-name-color: #4a5568;
             --link-color: #4F85C5; /* UN Blue */
@@ -25,42 +25,85 @@
             --pagination-button-hover-bg: #e6f2fb;
             --loading-spinner-color: #4F85C5;
             --toggle-details-button-border: #d1e1f3;
+            --error-bg: #ffe0e0; /* light red */
+            --error-border: #ff8080; /* medium red */
+            --error-text: #cc0000; /* dark red */
+            --box-shadow-color: rgba(0, 0, 0, 0.05); /* Light mode shadow color */
         }
 
         /* Dark Mode overrides */
         body.dark-mode {
-            --body-bg: #1a202c; /* Dark charcoal */
-            --container-bg: #2d3748; /* Slightly lighter dark grey */
-            --news-item-bg: #2d3748;
-            --headline-color: #edf2f7; /* Light text */
-            --source-name-color: #a0aec0; /* Lighter grey */
+            --body-bg: #000000; /* Pure Black background */
+            --header-bg: #000000; /* Header background for dark mode */
+            --main-content-bg: #000000; /* Background for main content section (dark mode) */
+            --headline-color: #ffffff; /* White text */
+            --source-name-color: #ffffff; /* White text for source name */
             --link-color: #90cdf4; /* Lighter blue */
-            --tab-button-hover-bg: #4a5568;
-            --tab-button-text: #edf2f7;
-            --collapsible-text: #cbd5e0;
-            --border-color: #4a5568;
-            --pagination-button-text: #edf2f7;
-            --pagination-button-hover-bg: #4a5568;
+            --tab-button-hover-bg: #1a1a1a; /* Very dark grey for hover */
+            --tab-button-text: #ffffff; /* White text */
+            --collapsible-text: #ffffff; /* White text for collapsible content */
+            --border-color: #333333; /* Darker border */
+            --pagination-button-text: #ffffff; /* White text */
+            --pagination-button-hover-bg: #1a1a1a;
             --loading-spinner-color: #90cdf4;
-            --toggle-details-button-border: #4a5568;
+            --toggle-details-button-border: #333333;
+            --error-bg: #330000; /* Darker red for error */
+            --error-border: #660000; /* Darker red border */
+            --error-text: #ff6666; /* Lighter red text */
+            --box-shadow-color: rgba(255, 255, 255, 0.1); /* White shadow for dark mode */
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--body-bg);
             transition: background-color 0.3s ease; /* Smooth transition for theme change */
+            color: var(--headline-color); /* Default text color for body */
+            margin: 0; /* Remove default body margin */
+            padding: 0; /* Remove default body padding */
         }
-        .container {
-            max-width: 900px;
-            margin: auto;
-            position: relative;
-            background-color: var(--container-bg);
+
+        .main-header {
+            width: 100%; /* Full width */
+            background-color: var(--header-bg); /* Dynamic header background */
+            box-shadow: 0 2px 4px var(--box-shadow-color); /* Subtle shadow for separation */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            position: sticky; /* Keep header visible on scroll */
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content-wrapper {
+            max-width: 900px; /* Max width for centered content */
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1rem 1rem; /* Padding inside the centered header content */
+            position: relative; /* For absolute positioning of toggle button */
+            display: flex; /* Flexbox for alignment */
+            justify-content: center; /* Center the title */
+            align-items: center;
+        }
+
+        .site-main-content {
+            background-color: var(--main-content-bg); /* Full width background for the whole content area */
+            padding: 1rem; /* Padding for the main content section, consistent with body padding */
             transition: background-color 0.3s ease;
         }
+
+        .content-area {
+            max-width: 900px; /* Max width for the card-like content */
+            margin: 0 auto; /* Center the content area */
+            background-color: var(--header-bg); /* Uses header-bg for the card background */
+            border-radius: 0.75rem; /* Rounded corners for the content area */
+            box-shadow: 0 4px 6px var(--box-shadow-color); /* Dynamic shadow color */
+            padding: 1.5rem; /* Content padding */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Rest of your CSS remains mostly the same, ensuring variables are used */
         .news-item {
             background-color: var(--news-item-bg);
             border-radius: 0.75rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Lighter shadow */
+            box-shadow: 0 4px 6px var(--box-shadow-color); /* Dynamic shadow color */
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             transition: transform 0.2s ease-in-out, background-color 0.3s ease, box-shadow 0.3s ease;
@@ -78,7 +121,7 @@
         .news-item .source-name {
             font-size: 0.9rem;
             font-weight: 500;
-            color: var(--source-name-color);
+            color: var(--source-name-color); /* Dynamic source name color */
             margin-bottom: 0.75rem;
             display: block;
             transition: color 0.3s ease;
@@ -93,11 +136,11 @@
             text-decoration: underline;
         }
 
-        .header-content {
+        .header-content { /* For the tab group, now within .content-area */
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 2rem;
+            margin-top: 0rem; /* Adjusted as it's inside content-area now */
             margin-bottom: 2rem;
             gap: 1rem;
         }
@@ -106,16 +149,16 @@
             display: flex;
             flex-wrap: wrap;
             gap: 0.05rem;
-            background-color: transparent;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: var(--header-bg); /* Uses the card background */
+            box-shadow: 0 2px 5px var(--box-shadow-color); /* Dynamic shadow color */
             overflow: hidden;
             flex-grow: 1;
             justify-content: center;
             width: 100%;
-            max-width: 900px;
+            max-width: 900px; /* This will be redundant if parent is max-width 900px, but kept for safety */
             border-radius: 0;
             border: 1px solid var(--border-color);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .tab-button {
@@ -163,7 +206,7 @@
             overflow: hidden;
             transition: max-height 0.3s ease-out;
             padding: 0 1rem;
-            color: var(--collapsible-text);
+            color: var(--collapsible-text); /* Dynamic collapsible text color */
             line-height: 1.6;
             transition: color 0.3s ease;
         }
@@ -226,15 +269,15 @@
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            margin-top: 2rem;
             gap: 0.05rem;
-            background-color: transparent;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: var(--header-bg); /* Uses the card background */
+            box-shadow: 0 2px 5px var(--box-shadow-color); /* Dynamic shadow color */
             overflow: hidden;
             padding: 0.5rem;
             border-radius: 0;
             border: 1px solid var(--border-color);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            margin-top: 2rem; /* Adjusted margin for separation from news items */
         }
         .pagination-button {
             padding: 0.6rem 1rem;
@@ -310,6 +353,11 @@
             justify-content: center;
             color: var(--headline-color); /* Inherit color from theme */
             transition: color 0.3s ease, background-color 0.2s ease;
+            position: absolute; /* Positioned relative to .header-content-wrapper */
+            top: 50%; /* Center vertically */
+            right: 0; /* Align to the right of the wrapper */
+            transform: translateY(-50%); /* Adjust for perfect vertical centering */
+            flex-shrink: 0; /* Prevent button from shrinking */
         }
 
         #dark-mode-toggle:hover {
@@ -324,16 +372,29 @@
             height: 24px;
         }
 
+        /* Error message styling */
+        #error-message {
+            background-color: var(--error-bg);
+            border-color: var(--error-border);
+            color: var(--error-text);
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
 
         @media (max-width: 768px) {
-            .flex.justify-center.items-center.mb-4.relative {
-                flex-direction: column;
+            .header-content-wrapper {
+                flex-direction: column; /* Stack title and toggle on small screens */
                 align-items: center;
-                margin-bottom: 0.5rem;
+                padding: 0.5rem 1rem; /* Smaller padding on mobile */
+            }
+            #dark-mode-toggle {
+                position: static; /* Revert to static for flow within column */
+                transform: none;
+                margin-top: 0.5rem; /* Space between title and toggle */
             }
             h1 {
                 text-align: center;
-                margin-bottom: 0.5rem;
+                margin-bottom: 0;
             }
             .header-content {
                 margin-top: 1rem;
@@ -373,15 +434,22 @@
                 width: 40px; /* Slightly smaller button on mobile */
                 height: 80px; /* Adjusted height for mobile */
             }
+            .site-main-content {
+                padding: 0.5rem; /* Smaller padding for main content on mobile */
+            }
+            .content-area {
+                padding: 1rem; /* Smaller inner padding for content card */
+            }
         }
     </style>
 </head>
-<body class="bg-gray-100 p-4 min-h-screen">
-    <div class="container bg-white rounded-xl shadow-lg p-6 md:p-8">
-        <div class="flex justify-center items-center mb-4 relative">
-            <h1 class="text-4xl font-bold text-gray-800" id="mainTitle">📰 News Aggregator</h1>
+<body class="p-4 min-h-screen">
+    <!-- Header (full width background, centered content) -->
+    <header class="main-header">
+        <div class="header-content-wrapper">
+            <h1 class="text-4xl font-bold" id="mainTitle">📰 News Aggregator</h1>
             <!-- Dark Mode Toggle Button -->
-            <button id="dark-mode-toggle" class="absolute right-4 top-1/2 -translate-y-1/2" aria-label="Toggle dark mode">
+            <button id="dark-mode-toggle" aria-label="Toggle dark mode">
                 <!-- Moon icon for light mode (default), changes to sun in dark mode -->
                 <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.61.764-3.778a9.735 9.735 0 00-6.711 8.923 9.718 9.718 0 009.75 9.75 9.735 9.735 0 008.923-6.711z" />
@@ -391,36 +459,41 @@
                 </svg>
             </button>
         </div>
+    </header>
 
-        <div class="header-content">
-            <div id="news-sources" class="tab-button-group">
-                <button class="tab-button active" data-source="All">All News</button>
-                <button class="tab-button" data-source="DW">DW News</button>
-                <button class="tab-button" data-source="BBC">BBC News</button>
-                <button class="tab-button" data-source="The Hill">The Hill</button>
-                <button class="tab-button" data-source="Forbes">Forbes</button>
-                <button class="tab-button" data-source="WSJ">Wall Street Journal</button>
+    <!-- Main Content Area (News, Tabs, Loading, Error, Pagination) -->
+    <main class="site-main-content">
+        <div class="content-area">
+            <div class="header-content">
+                <div id="news-sources" class="tab-button-group">
+                    <button class="tab-button active" data-source="All">All News</button>
+                    <button class="tab-button" data-source="DW">DW News</button>
+                    <button class="tab-button" data-source="BBC">BBC News</button>
+                    <button class="tab-button" data-source="The Hill">The Hill</button>
+                    <button class="tab-button" data-source="Forbes">Forbes</button>
+                    <button class="tab-button" data-source="WSJ">Wall Street Journal</button>
+                </div>
+            </div>
+
+            <div id="loading" class="flex justify-center items-center h-40" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p class="ml-4 text-lg text-gray-600">Loading news...</p>
+            </div>
+
+            <div id="news-container" class="space-y-6">
+                <!-- News articles will be loaded here -->
+            </div>
+
+            <div id="pagination-container" class="pagination-container">
+                <!-- Pagination buttons will be rendered here -->
+            </div>
+
+            <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md relative mt-6" role="alert">
+                <strong class="font-bold">Error!</strong>
+                <span class="block sm:inline" id="error-text"></span>
             </div>
         </div>
-
-        <div id="loading" class="flex justify-center items-center h-40" style="display: none;">
-            <div class="loading-spinner"></div>
-            <p class="ml-4 text-lg text-gray-600">Loading news...</p>
-        </div>
-
-        <div id="news-container" class="space-y-6">
-            <!-- News articles will be loaded here -->
-        </div>
-
-        <div id="pagination-container" class="pagination-container">
-            <!-- Pagination buttons will be rendered here -->
-        </div>
-
-        <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md relative mt-6" role="alert">
-            <strong class="font-bold">Error!</strong>
-            <span class="block sm:inline" id="error-text"></span>
-        </div>
-    </div>
+    </main>
 
     <!-- Unified Scroll Navigation Button -->
     <button id="scroll-navigation-btn" aria-label="Scroll navigation">
@@ -720,7 +793,7 @@
             const articlesToDisplay = articles.slice(startIndex, endIndex);
 
             if (articlesToDisplay.length === 0) {
-                newsContainer.innerHTML = `<p class="text-center text-gray-500 text-lg">${translations.noNewsFound}</p>`;
+                newsContainer.innerHTML = `<p class="text-center text-lg">${translations.noNewsFound}</p>`;
                 return;
             }
 
@@ -739,7 +812,7 @@
                     <div class="news-item-header">
                         ${imageHtml}
                         <div class="news-item-content">
-                            <h2 class="text-2xl font-semibold text-gray-900">${article.title}</h2>
+                            <h2 class="text-2xl font-semibold">${article.title}</h2>
                             <span class="source-name">${article.sourceName || translations.unknownSource}</span>
                         </div>
                     </div>
@@ -749,9 +822,9 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
                         <div class="collapsible-content">
-                            <p class="text-gray-700 text-base mb-4">${fullDescription}</p>
-                            <a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline mt-4 block">${translations.readOriginal}</a>
-                            ${article.pubDate ? `<p class="text-sm text-gray-500 mt-2">${new Date(article.pubDate).toLocaleString()}</p>` : ''}
+                            <p class="text-base mb-4">${fullDescription}</p>
+                            <a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer" class="hover:underline mt-4 block">${translations.readOriginal}</a>
+                            ${article.pubDate ? `<p class="text-sm mt-2">${new Date(article.pubDate).toLocaleString()}</p>` : ''}
                         </div>
                     </div>
                 `;

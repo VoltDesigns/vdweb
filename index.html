@@ -9,7 +9,7 @@
     <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Define CSS variables for colors */
+        /* Define CSS variables for colors and heights */
         :root {
             --body-bg: #e6f2fb;
             --section-bg: #ffffff;
@@ -56,6 +56,9 @@
 
             /* Font Size Variables for Accessibility */
             --base-font-size: 14px; 
+
+            /* Header height for sticky calculations */
+            --main-header-height: 80px; /* min-height (48px) + 2*padding (2*16px) */
         }
 
         /* Dark Mode overrides */
@@ -548,125 +551,6 @@
         .news-item a:hover {
             text-decoration: underline;
         }
-
-        .header-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 0rem;
-            margin-bottom: 1.5rem; /* Default for desktop */
-            gap: 0.75rem; 
-        }
-
-        /* Tab button group (desktop styles - remains as is) */
-        .tab-button-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.05rem;
-            background-color: var(--card-bg);
-            box-shadow: 0 2px 5px var(--box-shadow-color);
-            overflow: hidden;
-            flex-grow: 1;
-            justify-content: center;
-            width: 100%;
-            max-width: 900px;
-            border-radius: 0;
-            border: 1px solid var(--border-color);
-            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        body.dark-mode .tab-button-group {
-            box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); 
-        }
-
-        .tab-button {
-            padding: 0.5rem 0.8rem; /* Default for desktop */
-            font-size: calc(var(--base-font-size) * 0.9); 
-            font-weight: 500;
-            color: var(--tab-button-text);
-            background-color: transparent; 
-            transition: all 0.2s ease-in-out;
-            cursor: pointer;
-            border: none;
-            outline: none;
-            flex-grow: 1;
-            text-align: center;
-            white-space: nowrap;
-            position: relative; 
-        }
-        .tab-button:focus-visible {
-            outline: 2px solid var(--link-color);
-            outline-offset: 2px;
-        }
-
-        .tab-button:hover:not(.active) { 
-            background-color: var(--tab-button-hover-bg);
-            color: var(--headline-color);
-        }
-
-        .tab-button::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: var(--tab-underline-height);
-            background-color: var(--tab-underline-color);
-            transform: scaleX(0); 
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            transform-origin: bottom center;
-        }
-
-        .tab-button.active::after {
-            transform: scaleX(1); 
-        }
-        
-        .loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: var(--loading-spinner-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            transition: border-left-color 0.3s ease;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .collapsible-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            padding: 0 0.75rem; 
-            color: var(--collapsible-text);
-            line-height: 1.6;
-            transition: color 0.3s ease;
-        }
-        .collapsible-content.expanded {
-            max-height: 500px; 
-            padding-top: 0.4rem; 
-            padding-bottom: 0.8rem; /* Default for desktop */
-        }
-        /* For responsive YouTube embeds */
-        .video-container {
-            width: 240px; 
-            height: 140px; 
-            position: relative;
-            overflow: hidden;
-            margin-right: 1.5rem; 
-            flex-shrink: 0;
-            border-radius: 0.5rem;
-            border: 1px solid var(--border-color);
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none; 
-        }
         
         .toggle-details-button {
             background-color: transparent;
@@ -730,7 +614,7 @@
             transition: color 0.3s ease;
         }
 
-        /* Floating Buttons Wrapper (Desktop) */
+        /* Desktop: Floating Buttons Wrapper */
         #floating-buttons-wrapper {
             position: fixed;
             top: 75%; /* 50% downwards from middle (50% + 50%*0.5 = 75%) */
@@ -780,6 +664,16 @@
             height: 20px;
             margin: 0.125rem 0;
         }
+        /* Hide one arrow based on scroll position */
+        #scroll-navigation-btn.scrolled-to-top .scroll-up-arrow,
+        #scroll-navigation-btn:not(.scrolled-to-top) .scroll-down-arrow {
+            display: none;
+        }
+        #scroll-navigation-btn.scrolled-to-top .scroll-down-arrow,
+        #scroll-navigation-btn:not(.scrolled-to-top) .scroll-up-arrow {
+            display: block;
+        }
+
 
         /* Desktop: Dark Mode Toggle Button - repositioned and restyled */
         #dark-mode-toggle {
@@ -911,6 +805,42 @@
             font-size: calc(var(--base-font-size) * 0.9);
         }
 
+
+        /* Desktop view for tab bar: sticky below main header */
+        @media (min-width: 769px) {
+            #mobile-tab-bar {
+                position: sticky;
+                top: var(--main-header-height); /* Position right below the main header */
+                z-index: 99; /* Ensure it stays above other content but below main header */
+                background-color: var(--section-bg);
+                box-shadow: 0 2px 4px var(--box-shadow-color);
+                transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                padding: 0.5rem 0; /* Adjust padding for desktop layout */
+                border-top: none; /* No top border */
+                border-bottom: 1px solid var(--border-color); /* Add a bottom border */
+                width: 100%; /* Full width */
+                height: auto; /* Allow height to adjust */
+            }
+
+            body.dark-mode #mobile-tab-bar {
+                box-shadow: 0 1px 2px 0.5px var(--box-shadow-color);
+            }
+
+            #news-sources {
+                max-width: 900px; /* Constrain content width */
+                margin: 0 auto; /* Center content */
+                background-color: transparent; /* No background here */
+                box-shadow: none; /* No shadow here */
+                border: none; /* No border here */
+                padding: 0;
+                justify-content: center; /* Center the tab buttons */
+            }
+
+            #news-sources .tab-button {
+                padding: 0.5rem 0.8rem; /* Restore desktop padding */
+                font-size: calc(var(--base-font-size) * 0.9); /* Restore desktop font size */
+            }
+        }
 
         @media (max-width: 768px) {
             /* Mobile-specific variables */
@@ -1126,6 +1056,13 @@
     </aside>
     <div class="overlay" id="overlay"></div>
 
+    <!-- Tab selection section (Desktop - sticky below header, Mobile - fixed at bottom) -->
+    <nav id="mobile-tab-bar"> 
+        <div id="news-sources" class="tab-button-group" role="tablist">
+            <!-- Tabs will be dynamically loaded here -->
+        </div>
+    </nav>
+
     <!-- Main Content Area (News, Tabs, Loading, Error, Infinite Scroll) -->
     <main class="site-main-content">
         <div class="content-area">
@@ -1190,13 +1127,6 @@
             </svg>
         </button>
     </div>
-
-    <!-- Tab selection section (Mobile Only - fixed at bottom) -->
-    <nav id="mobile-tab-bar" class="w-full max-w-none"> 
-        <div id="news-sources" class="tab-button-group" role="tablist">
-            <!-- Tabs will be dynamically loaded here -->
-        </div>
-    </nav>
 
     <script type="module">
         // Firebase Imports
@@ -1694,7 +1624,7 @@
                     });
                 } else {
                     currentlyDisplayedArticles = [];
-                    newsContainer.innerHTML = `<p class="text-center text-lg text-gray-500">Select your preferred sources in the preferences menu (☰) to customize your feed.</p>`;
+                    newsContainer.innerHTML = `<p class="text-center text-lg text-gray-500">No news found for this selection.</p>`;
                 }
             } else if (filterKey === 'YouTube') { 
                 currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => article.isYouTube);
@@ -2089,18 +2019,24 @@
             }
         });
 
+        // Function to update scroll button icon
+        function updateScrollButtonIcon() {
+            if (window.scrollY > 0) {
+                scrollNavigationBtn.classList.remove('scrolled-to-top');
+            } else {
+                scrollNavigationBtn.classList.add('scrolled-to-top');
+            }
+        }
 
-        scrollNavigationBtn.addEventListener('click', (event) => {
-            const totalScrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrollUpThreshold = 0.5 * window.innerHeight; // Scroll up if click is in top half of screen
-
-            if (event.clientY < scrollUpThreshold) {
+        scrollNavigationBtn.addEventListener('click', () => {
+            if (window.scrollY > 0) {
+                // Currently scrolled down, go to top
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
+                // Currently at top, go to bottom
                 window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
             }
         });
-
 
         darkModeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
@@ -2126,6 +2062,9 @@
             const scrolledPercentage = (window.scrollY / totalScrollHeight) * 100;
             readingProgressBar.style.width = scrolledPercentage + '%';
 
+            // Update scroll button icon on scroll
+            updateScrollButtonIcon();
+
             if (!isLoadingMore && (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500)) {
                 if (displayedArticleCount < currentlyDisplayedArticles.length) {
                     displayNextBatchOfNews();
@@ -2134,6 +2073,9 @@
                 }
             }
         });
+
+        // Initial update of scroll button icon on page load
+        window.addEventListener('load', updateScrollButtonIcon);
 
 
         function updateFontSize(newSize) {

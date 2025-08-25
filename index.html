@@ -130,29 +130,29 @@
         }
 
         .toggle-details-button {
-            background-color: transparent; /* Matched to tab-button-group background */
-            color: #1a202c; /* Matched to inactive tab text color */
+            background-color: transparent;
+            color: #1a202c;
             padding: 0.5rem 1rem;
-            border-radius: 0; /* Removed rounded corners */
-            border: 1px solid #d1e1f3; /* Added border to match group outline */
+            border-radius: 0;
+            border: 1px solid #d1e1f3;
             cursor: pointer;
             transition: all 0.2s ease-in-out;
             margin-top: 1rem;
             display: inline-flex;
             align-items: center;
             font-weight: 500;
-            box-shadow: none; /* No shadow by default */
+            box-shadow: none;
             font-size: 0.9rem;
         }
         .toggle-details-button:hover {
-            background-color: #e6f2fb; /* Matched to inactive tab hover */
-            color: #000000; /* Matched to inactive tab hover */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); /* Subtle shadow on hover */
+            background-color: #e6f2fb;
+            color: #000000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
         }
         .toggle-details-button:active {
-            background-color: #4F85C5; /* Matched to active tab */
-            color: #ffffff; /* Matched to active tab */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Matched to active tab */
+            background-color: #4F85C5;
+            color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         .toggle-details-button svg {
             margin-left: 0.5rem;
@@ -217,6 +217,72 @@
             opacity: 0.6;
         }
 
+        /* Go to Top Button Styling */
+        #go-to-top-btn {
+            position: fixed;
+            bottom: 6rem; /* Above pagination, leaving space for go-to-bottom */
+            right: 1rem;
+            background-color: #4F85C5; /* UN Blue */
+            color: #ffffff;
+            border: none;
+            border-radius: 50%; /* Circular */
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0; /* Hidden by default */
+            pointer-events: none; /* Disables clicks when hidden */
+            transition: opacity 0.3s ease-in-out, transform 0.2s ease-in-out;
+            z-index: 1000; /* Ensure it's above other content */
+        }
+
+        #go-to-top-btn:hover {
+            background-color: #3e6a9e; /* Darker blue on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+        }
+
+        #go-to-top-btn.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Go to Bottom Button Styling */
+        #go-to-bottom-btn {
+            position: fixed;
+            bottom: 1rem; /* Right above the pagination container */
+            right: 1rem;
+            background-color: #4F85C5; /* UN Blue */
+            color: #ffffff;
+            border: none;
+            border-radius: 50%; /* Circular */
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0; /* Hidden by default */
+            pointer-events: none; /* Disables clicks when hidden */
+            transition: opacity 0.3s ease-in-out, transform 0.2s ease-in-out;
+            z-index: 1000; /* Ensure it's above other content */
+        }
+
+        #go-to-bottom-btn:hover {
+            background-color: #3e6a9e; /* Darker blue on hover */
+            transform: translateY(2px); /* Slight push down effect */
+        }
+
+        #go-to-bottom-btn.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
         @media (max-width: 768px) {
             .flex.justify-center.items-center.mb-4.relative {
                 flex-direction: column;
@@ -259,6 +325,18 @@
                 width: 100%;
                 text-align: center;
             }
+            #go-to-top-btn {
+                bottom: 5.5rem; /* Adjust for potentially tighter mobile layout */
+                right: 0.5rem; /* Slightly less margin on mobile */
+                width: 40px; /* Slightly smaller button on mobile */
+                height: 40px;
+            }
+            #go-to-bottom-btn {
+                bottom: 0.5rem; /* Adjust for potentially tighter mobile layout */
+                right: 0.5rem; /* Slightly less margin on mobile */
+                width: 40px; /* Slightly smaller button on mobile */
+                height: 40px;
+            }
         }
     </style>
 </head>
@@ -297,6 +375,20 @@
             <span class="block sm:inline" id="error-text"></span>
         </div>
     </div>
+
+    <!-- Go to Top Button -->
+    <button id="go-to-top-btn" aria-label="Go to top">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+
+    <!-- Go to Bottom Button -->
+    <button id="go-to-bottom-btn" aria-label="Go to bottom">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+    </button>
 
     <script>
         const RSS_FEEDS = {
@@ -345,6 +437,9 @@
         const errorMessageDiv = document.getElementById('error-message');
         const errorTextSpan = document.getElementById('error-text');
         const paginationContainer = document.getElementById('pagination-container');
+        const goToTopBtn = document.getElementById('go-to-top-btn');
+        const goToBottomBtn = document.getElementById('go-to-bottom-btn');
+
 
         window.onerror = function(message, source, lineno, colno, error) {
             console.error("Caught a global error:", { message, source, lineno, colno, error });
@@ -716,6 +811,34 @@
                     showErrorMessage(`Could not load news from ${sourceKey}.`);
                 }
             }
+        });
+
+        // Go to Top/Bottom Button Logic
+        window.addEventListener('scroll', () => {
+            const scrollThreshold = 200; // Pixels scrolled to show/hide buttons
+            const scrollFromBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
+
+            // Go to Top button visibility
+            if (window.scrollY > scrollThreshold && scrollFromBottom > scrollThreshold) {
+                goToTopBtn.classList.add('show');
+            } else {
+                goToTopBtn.classList.remove('show');
+            }
+
+            // Go to Bottom button visibility
+            if (window.scrollY < scrollThreshold && scrollFromBottom > scrollThreshold) {
+                goToBottomBtn.classList.add('show');
+            } else {
+                goToBottomBtn.classList.remove('show');
+            }
+        });
+
+        goToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        goToBottomBtn.addEventListener('click', () => {
+            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
         });
 
         document.addEventListener('DOMContentLoaded', () => {

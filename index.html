@@ -965,6 +965,7 @@
 
             /* Reposition scroll navigation and dark mode toggle buttons */
             #scroll-navigation-btn {
+                display: flex !important; /* Ensure visibility */
                 position: fixed;
                 bottom: calc(var(--mobile-tabs-height) + var(--mobile-controls-spacing)); /* Above the tabs with spacing */
                 left: 0.5rem; /* Position on the left */
@@ -978,7 +979,7 @@
                 box-sizing: border-box;
                 justify-content: center;
                 opacity: 1; /* Always visible */
-                z-index: 100;
+                z-index: 1002; /* Higher z-index to ensure visibility */
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             }
             #scroll-navigation-btn svg {
@@ -986,6 +987,7 @@
             }
 
             #dark-mode-toggle {
+                display: flex !important; /* Ensure visibility */
                 position: fixed;
                 bottom: calc(var(--mobile-tabs-height) + var(--mobile-controls-spacing)); /* Above the tabs with spacing */
                 right: 0.5rem; /* Position on the right */
@@ -994,7 +996,7 @@
                 height: var(--mobile-controls-height); /* Fixed height for the controls area */
                 border-radius: 50%; /* Retain circular shape */
                 opacity: 1; /* Always visible */
-                z-index: 100;
+                z-index: 1003; /* Higher z-index to ensure visibility */
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             }
             
@@ -1043,7 +1045,8 @@
                 margin-top: 0.5rem;
             }
             #mainTitle {
-                margin-right: 0;
+                text-align: center;
+                margin-bottom: 0;
             }
             .font-size-controls {
                 margin-left: 0;
@@ -1171,7 +1174,7 @@
         </svg>
     </button>
 
-    <!-- Unified Scroll Navigation Button (Remains separate for desktop positioning) -->
+    <!-- Unified Scroll Navigation Button -->
     <button id="scroll-navigation-btn" aria-label="Scroll navigation" tabindex="0">
         <svg class="scroll-up-arrow" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
@@ -1772,29 +1775,29 @@
                 const checkbox = itemDiv.querySelector('.preference-checkbox');
                 checkbox.checked = userPreferences.rss.includes(sourceKey); 
 
-                checkbox.addEventListener('change', async (event) => {
-                    const changedSourceKey = event.target.dataset.source;
-                    if (!userId) {
-                        event.target.checked = !event.target.checked; 
-                        showModalMessage('Login to save your preferences.', true);
-                        return;
-                    }
-
-                    if (event.target.checked) {
-                        if (!userPreferences.rss.includes(changedSourceKey)) {
-                            userPreferences.rss.push(changedSourceKey);
+                    checkbox.addEventListener('change', async (event) => {
+                        const changedSourceKey = event.target.dataset.source;
+                        if (!userId) {
+                            event.target.checked = !event.target.checked; 
+                            showModalMessage('Login to save your preferences.', true);
+                            return;
                         }
-                    } else {
-                        userPreferences.rss = userPreferences.rss.filter(pref => pref !== changedSourceKey);
-                    }
-                    await saveUserPreferences(); 
 
-                    if (currentActiveTab === 'MyFeed') {
-                        applyNewsFilterAndDisplay('MyFeed');
-                    }
+                        if (event.target.checked) {
+                            if (!userPreferences.rss.includes(changedSourceKey)) {
+                                userPreferences.rss.push(changedSourceKey);
+                            }
+                        } else {
+                            userPreferences.rss = userPreferences.rss.filter(pref => pref !== changedSourceKey);
+                        }
+                        await saveUserPreferences(); 
+
+                        if (currentActiveTab === 'MyFeed') {
+                            applyNewsFilterAndDisplay('MyFeed');
+                        }
+                    });
                 });
-            });
-        }
+            }
 
         function generateNewsSourceTabs() {
             newsSourcesDiv.innerHTML = ''; 

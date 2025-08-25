@@ -1350,7 +1350,7 @@
             if (!uid) return;
             try {
                 // Use firebaseConfig.projectId instead of __app_id
-                const prefDocRef = doc(db, `artifacts/${firebaseConfig.projectId}/users/${uid}/preferences`, 'sources');
+                const prefDocRef = doc(db, \artifacts/news-aggregator-25e10/users/{uid}/preferences`, 'sources');`
                 const prefDocSnap = await getDoc(prefDocRef);
                 if (prefDocSnap.exists()) {
                     userPreferences = prefDocSnap.data().preferredSources || [];
@@ -1368,7 +1368,9 @@
             if (!userId) return;
             try {
                 // Use firebaseConfig.projectId instead of __app_id
-                const prefDocRef = doc(db, `artifacts/${firebaseConfig.projectId}/users/${userId}/preferences`, 'sources');
+                const prefDocRef = doc(db, \artifacts/news-aggregator-25e10/users/{uid}/preferences`, 'sources');`
+
+
                 await setDoc(prefDocRef, { preferredSources: userPreferences }, { merge: true });
                 showModalMessage(translations.prefSaved);
             } catch (error) {

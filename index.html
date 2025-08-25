@@ -742,7 +742,7 @@
             width: 36px;
             height: 75px;
             display: flex;
-            flex-direction: column;
+            flex-direction: column; /* Default for desktop */
             justify-content: space-around;
             align-items: center;
             font-size: 1.5rem;
@@ -910,36 +910,36 @@
 
 
         @media (max-width: 768px) {
-            /* Define height for the fixed tab bar in mobile */
-            --mobile-tabs-height: 50px; 
+            /* Mobile-specific variables */
+            --mobile-tabs-height: 35px; /* Combined height of tabs + its own padding */
+            --mobile-controls-height: 40px; /* Height for the fixed buttons bar */
+            --mobile-controls-spacing: 0.5rem; /* Space between fixed buttons and tabs */
 
             body {
-                padding-bottom: var(--mobile-tabs-height); /* Space for the fixed bottom tab bar */
+                padding-bottom: calc(var(--mobile-tabs-height) + var(--mobile-controls-height) + var(--mobile-controls-spacing));
             }
 
             .header-content {
-                margin-bottom: 0.5rem; /* Reduce margin when tabs are fixed to bottom */
+                margin-bottom: 0; /* Remove margin where tabs used to be */
             }
             
-            /* Styles for the new mobile fixed tab bar wrapper */
+            /* Make the news sources tab bar fixed at the bottom */
             #mobile-tab-bar {
                 position: fixed;
                 bottom: 0;
                 left: 0;
                 width: 100%;
-                height: var(--mobile-tabs-height);
-                background-color: var(--section-bg); /* Match header/main bg */
+                height: var(--mobile-tabs-height); /* Set fixed height */
+                background-color: var(--section-bg);
                 box-shadow: 0 -2px 5px var(--box-shadow-color); /* Shadow on top */
-                z-index: 100; /* Ensure it's above other content */
-                display: flex; /* Make it a flex container */
-                padding: 0; /* Remove padding from wrapper, individual tabs will have it */
-                box-sizing: border-box; /* Include padding in width */
+                z-index: 100;
+                padding: 0.5rem 0.5rem; /* Padding for the entire fixed bar */
+                box-sizing: border-box; /* Include padding in width/height */
                 border-top: 1px solid var(--border-color); /* Subtle border */
                 border-radius: 0; /* No rounded corners for fixed bar */
                 transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
             }
 
-            /* Dark mode specific shadow for fixed tab bar */
             body.dark-mode #mobile-tab-bar {
                 box-shadow: 0 -1px 2px 0.5px var(--box-shadow-color);
             }
@@ -963,33 +963,41 @@
                 font-size: calc(var(--base-font-size) * 0.85); /* Slightly smaller font for compact tabs */
             }
 
-            /* Floating button positions for mobile (reverted to Milestone+10 positions) */
+            /* Reposition scroll navigation and dark mode toggle buttons */
             #scroll-navigation-btn {
-                bottom: calc(1rem + var(--mobile-tabs-height)); /* Adjust to be above the new fixed tab bar */
-                right: 0.5rem;
-                width: 30px;
-                height: 60px;
-                flex-direction: column; /* Vertical stack for mobile */
-                gap: 0; /* No gap for vertical stack */
-                padding: 0.25rem 0; /* Adjusted padding */
-                border-radius: 50px; /* Rounded pill shape */
+                position: fixed;
+                bottom: calc(var(--mobile-tabs-height) + var(--mobile-controls-spacing)); /* Above the tabs with spacing */
+                left: 0.5rem; /* Position on the left */
+                right: auto;
+                width: auto; /* Auto width to fit content */
+                height: var(--mobile-controls-height); /* Fixed height for the controls area */
+                flex-direction: row; /* Make it horizontal */
+                gap: 0.5rem;
+                border-radius: 30px; /* Adjust border-radius for horizontal bar */
+                padding: 0.25rem 0.75rem; /* Adjusted padding */
+                box-sizing: border-box;
+                justify-content: center;
+                opacity: 1; /* Always visible */
+                z-index: 100;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             }
             #scroll-navigation-btn svg {
-                width: 16px;
-                height: 16px;
-                margin: 0.125rem 0;
-            }
-            #dark-mode-toggle {
-                bottom: calc(4.75rem + var(--mobile-tabs-height)); /* Adjust to be above the new fixed tab bar */
-                right: 0.5rem;
-                width: 30px;
-                height: 30px;
-            }
-            #dark-mode-toggle svg {
-                width: 16px;
-                height: 16px;
+                margin: 0; /* Remove extra margin for horizontal layout */
             }
 
+            #dark-mode-toggle {
+                position: fixed;
+                bottom: calc(var(--mobile-tabs-height) + var(--mobile-controls-spacing)); /* Above the tabs with spacing */
+                right: 0.5rem; /* Position on the right */
+                left: auto;
+                width: 36px; /* Retain original width */
+                height: var(--mobile-controls-height); /* Fixed height for the controls area */
+                border-radius: 50%; /* Retain circular shape */
+                opacity: 1; /* Always visible */
+                z-index: 100;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            
             /* General mobile adjustments for news cards spacing */
             .news-item {
                 margin-bottom: 0.5rem; /* Half of desktop default */
@@ -1152,7 +1160,7 @@
         </div>
     </div>
 
-    <!-- Floating Dark Mode Toggle Button -->
+    <!-- Floating Dark Mode Toggle Button (Remains separate for desktop positioning) -->
     <button id="dark-mode-toggle" aria-label="Toggle dark mode" tabindex="0">
         <!-- Moon icon for light mode (default), changes to sun in dark mode -->
         <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -1163,7 +1171,7 @@
         </svg>
     </button>
 
-    <!-- Unified Scroll Navigation Button -->
+    <!-- Unified Scroll Navigation Button (Remains separate for desktop positioning) -->
     <button id="scroll-navigation-btn" aria-label="Scroll navigation" tabindex="0">
         <svg class="scroll-up-arrow" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />

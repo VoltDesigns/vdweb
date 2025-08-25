@@ -1049,8 +1049,8 @@
         };
 
         const YOUTUBE_FEEDS = {
-            'BreakingPoints': { name: 'Breaking Points', type: 'channelId', value: 'UCDRIjKy6eZOvKtOELtTdeUA' },
-            'AssociatedPress': { name: 'Associated Press', type: 'channelId', value: 'UCF0y-U3h5WwN_S9bN6zHkLA' }
+            'BreakingPoints': { name: 'Breaking Points', type: 'channelId', value: 'UCDRIjKy6eZOvKtOELtTdeUA' }
+            // 'AssociatedPress' has been removed
         };
 
         // Helper function to get YouTube RSS URL from config
@@ -1596,7 +1596,7 @@
                 const sourceDisplayName = YOUTUBE_FEEDS[sourceKey].name;
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('menu-source-item');
-                item.innerHTML = `
+                itemDiv.innerHTML = `
                     <label for="pref-checkbox-${sourceKey}">
                         ${sourceDisplayName}
                     </label>
@@ -1669,13 +1669,16 @@
             });
 
             // Add dynamic "YouTube Videos" tab
-            youtubeVideosTab = document.createElement('button');
-            youtubeVideosTab.classList.add('tab-button');
-            youtubeVideosTab.dataset.source = 'YouTube';
-            youtubeVideosTab.setAttribute('tabindex', '0');
-            youtubeVideosTab.setAttribute('role', 'tab');
-            youtubeVideosTab.textContent = 'YouTube Videos';
-            newsSourcesDiv.appendChild(youtubeVideosTab);
+            // Only add this tab if there are YouTube feeds configured
+            if (Object.keys(YOUTUBE_FEEDS).length > 0) {
+                youtubeVideosTab = document.createElement('button');
+                youtubeVideosTab.classList.add('tab-button');
+                youtubeVideosTab.dataset.source = 'YouTube';
+                youtubeVideosTab.setAttribute('tabindex', '0');
+                youtubeVideosTab.setAttribute('role', 'tab');
+                youtubeVideosTab.textContent = 'YouTube Videos';
+                newsSourcesDiv.appendChild(youtubeVideosTab);
+            }
 
 
             // Set 'All News' as active by default initially

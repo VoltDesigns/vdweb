@@ -21,8 +21,8 @@
             --tab-button-text: #1a202c;
             --collapsible-text: #4a5568;
             --border-color: #d1e1f3;
-            --pagination-button-text: #1a202c;
-            --pagination-button-hover-bg: #e6f2fb;
+            --pagination-button-text: #1a202c; /* Not used, but kept for consistency */
+            --pagination-button-hover-bg: #e6f2fb; /* Not used, but kept for consistency */
             --loading-spinner-color: #4F85C5;
             --toggle-details-button-border: #d1e1f3;
             --error-bg: #ffe0e0; /* light red */
@@ -31,6 +31,10 @@
             --box-shadow-color: rgba(0, 0, 0, 0.05); /* Light mode shadow color */
             --scroll-btn-bg: #4F85C5;
             --scroll-btn-hover-bg: #3e6a9e;
+            --progress-bar-bg: #4F85C5; /* Progress bar color */
+
+            /* Font Size Variables for Accessibility */
+            --base-font-size: 16px;
         }
 
         /* Dark Mode overrides */
@@ -45,8 +49,6 @@
             --tab-button-text: #ffffff; /* White text */
             --collapsible-text: #ffffff; /* White text for collapsible content */
             --border-color: #333333; /* Darker border */
-            --pagination-button-text: #ffffff; /* White text */
-            --pagination-button-hover-bg: #1a1a1a;
             --loading-spinner-color: #90cdf4;
             --toggle-details-button-border: #333333;
             --error-bg: #330000; /* Darker red for error */
@@ -55,6 +57,7 @@
             --box-shadow-color: rgba(255, 255, 255, 0.1); /* White shadow for dark mode */
             --scroll-btn-bg: #3a3a3a; /* Darker scroll button in dark mode */
             --scroll-btn-hover-bg: #555555;
+            --progress-bar-bg: #90cdf4; /* Progress bar color for dark mode */
         }
 
         body {
@@ -64,7 +67,17 @@
             color: var(--headline-color); /* Default text color for body */
             margin: 0; /* Remove default body margin */
             padding: 0; /* Remove default body padding from Tailwind's p-4 */
+            font-size: var(--base-font-size); /* Base font size for accessibility */
+            line-height: 1.6; /* Default line height for readability */
         }
+
+        /* Adjust font sizes relative to --base-font-size */
+        h1 { font-size: calc(var(--base-font-size) * 2.25); } /* 4xl equivalent */
+        h2 { font-size: calc(var(--base-font-size) * 1.5); } /* 2xl equivalent */
+        .text-lg { font-size: calc(var(--base-font-size) * 1.125); }
+        .text-base { font-size: var(--base-font-size); }
+        .text-sm { font-size: calc(var(--base-font-size) * 0.875); }
+        .text-xs { font-size: calc(var(--base-font-size) * 0.75); }
 
         .main-header {
             width: 100%; /* Full width */
@@ -86,7 +99,42 @@
             justify-content: center; /* Center the title */
             align-items: center;
             min-height: 48px; /* Ensure enough height for the title */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
         }
+
+        .font-size-controls {
+            display: flex;
+            gap: 0.25rem; /* Reduced gap */
+            align-items: center;
+            margin-left: 1rem; /* Space from title */
+            flex-shrink: 0;
+            color: var(--headline-color);
+            border: none; /* Removed border */
+            border-radius: 0.25rem; /* Slightly less rounded */
+            padding: 0.125rem 0.25rem; /* Reduced padding */
+            transition: color 0.3s ease; /* Only color transition */
+        }
+        .font-size-controls button {
+            background: none;
+            border: none; /* Removed border */
+            color: var(--headline-color);
+            font-weight: 600;
+            padding: 0.125rem 0.375rem; /* Reduced padding for smaller buttons */
+            font-size: calc(var(--base-font-size) * 0.875); /* Smaller font in buttons */
+            cursor: pointer;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            outline: none; /* For keyboard navigation */
+        }
+        .font-size-controls button:hover {
+            background-color: var(--tab-button-hover-bg);
+            color: var(--link-color);
+        }
+        .font-size-controls button:focus-visible { /* For keyboard focus indicator */
+            outline: 2px solid var(--link-color);
+            outline-offset: 2px;
+        }
+
 
         .site-main-content {
             background-color: var(--section-bg); /* Full width background for the whole content area, matches header */
@@ -105,6 +153,18 @@
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
+        /* Reading Progress Bar */
+        #reading-progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px; /* Thin bar */
+            background-color: var(--progress-bar-bg); /* Dynamic color */
+            width: 0%;
+            z-index: 101; /* Above header */
+            transition: background-color 0.3s ease;
+        }
+
         /* Rest of your CSS remains mostly the same, ensuring variables are used */
         .news-item {
             background-color: var(--news-item-bg);
@@ -118,14 +178,14 @@
             transform: translateY(-5px);
         }
         .news-item h2 {
-            font-size: 1.5rem;
+            font-size: calc(var(--base-font-size) * 1.5); /* 2xl equivalent */
             font-weight: 600;
             color: var(--headline-color);
             margin-bottom: 0.25rem;
             transition: color 0.3s ease;
         }
         .news-item .source-name {
-            font-size: 0.9rem;
+            font-size: calc(var(--base-font-size) * 0.9);
             font-weight: 500;
             color: var(--source-name-color); /* Dynamic source name color */
             margin-bottom: 0.75rem;
@@ -169,7 +229,7 @@
 
         .tab-button {
             padding: 0.6rem 1rem;
-            font-size: 0.95rem;
+            font-size: calc(var(--base-font-size) * 0.95);
             font-weight: 500;
             color: var(--tab-button-text);
             background-color: transparent;
@@ -181,6 +241,11 @@
             text-align: center;
             white-space: nowrap;
         }
+        .tab-button:focus-visible { /* For keyboard focus indicator */
+            outline: 2px solid var(--link-color);
+            outline-offset: 2px;
+        }
+
 
         .tab-button:hover:not(.active) {
             background-color: var(--tab-button-hover-bg);
@@ -217,7 +282,7 @@
             transition: color 0.3s ease;
         }
         .collapsible-content.expanded {
-            max-height: 500px;
+            max-height: 500px; /* Adjusted from 1000px for better transition, can be increased if content is very long */
             padding-top: 0.5rem;
             padding-bottom: 1rem;
         }
@@ -235,7 +300,8 @@
             align-items: center;
             font-weight: 500;
             box-shadow: none;
-            font-size: 0.9rem;
+            font-size: calc(var(--base-font-size) * 0.9);
+            outline: none; /* For keyboard navigation */
         }
         .toggle-details-button:hover {
             background-color: var(--tab-button-hover-bg); /* Now uses dynamic tab button hover background */
@@ -246,6 +312,10 @@
             background-color: #4F85C5;
             color: #ffffff;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .toggle-details-button:focus-visible { /* For keyboard focus indicator */
+            outline: 2px solid var(--link-color);
+            outline-offset: 2px;
         }
         .toggle-details-button svg {
             margin-left: 0.5rem;
@@ -271,46 +341,14 @@
             transition: border-color 0.3s ease;
         }
         
-        .pagination-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 0.05rem;
-            background-color: var(--card-bg); /* Pagination uses card background */
-            box-shadow: 0 2px 5px var(--box-shadow-color); /* Dynamic shadow color */
-            overflow: hidden;
-            padding: 0.5rem;
-            border-radius: 0;
-            border: 1px solid var(--border-color);
-            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-            margin-top: 2rem; /* Adjusted margin for separation from news items */
-        }
-        .pagination-button {
-            padding: 0.6rem 1rem;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--pagination-button-text);
-            background-color: transparent;
-            transition: all 0.2s ease-in-out;
-            cursor: pointer;
-            border: none;
-            outline: none;
-            min-width: 40px;
+        .infinite-scroll-message {
             text-align: center;
+            font-size: calc(var(--base-font-size) * 1.125); /* text-lg */
+            color: var(--source-name-color);
+            padding: 2rem 0;
+            transition: color 0.3s ease;
         }
-        .pagination-button:hover:not(.active):not(:disabled) {
-            background-color: var(--pagination-button-hover-bg);
-            color: var(--headline-color);
-        }
-        .pagination-button.active {
-            background-color: #4F85C5;
-            color: #ffffff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        .pagination-button:disabled {
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
+
 
         /* Unified Scroll Navigation Button Styling */
         #scroll-navigation-btn {
@@ -333,14 +371,20 @@
             opacity: 0.7; /* Translucent by default */
             transition: opacity 0.3s ease-in-out, background-color 0.3s ease; /* Smooth transition for opacity and background */
             z-index: 1000; /* Ensure it's above other content */
+            outline: none; /* For keyboard navigation */
         }
 
         #scroll-navigation-btn:hover,
-        #scroll-navigation-btn:focus { /* Make opaque on hover or focus */
+        #scroll-navigation-btn:focus-visible { /* Make opaque on hover or focus */
             background-color: var(--scroll-btn-hover-bg); /* Darker blue on hover */
             opacity: 1; /* Fully opaque */
-            outline: none; /* Remove default focus outline for aesthetics */
+            outline: 2px solid var(--link-color); /* Focus outline */
+            outline-offset: 2px;
         }
+        #scroll-navigation-btn:hover {
+            outline: none; /* Remove outline on hover if already focused */
+        }
+        
         /* No transform on hover for unified button */
 
         #scroll-navigation-btn svg {
@@ -367,11 +411,16 @@
             transition: opacity 0.3s ease-in-out, background-color 0.3s ease, color 0.3s ease;
             z-index: 1001; /* Higher than scroll button */
             flex-shrink: 0; /* Prevent distortion */
+            outline: none; /* For keyboard navigation */
         }
 
         #dark-mode-toggle:hover {
             background-color: var(--scroll-btn-hover-bg); /* Darker on hover */
             opacity: 1; /* Fully opaque on hover */
+        }
+        #dark-mode-toggle:focus-visible { /* For keyboard focus indicator */
+            outline: 2px solid var(--link-color);
+            outline-offset: 2px;
         }
 
         #dark-mode-toggle svg {
@@ -394,7 +443,10 @@
                 align-items: center;
                 padding: 0.5rem 1rem; /* Smaller padding on mobile */
             }
-            /* Dark mode toggle now fixed, so no need to adjust its position within header-content-wrapper for mobile */
+            .font-size-controls {
+                margin-left: 0; /* Remove left margin on mobile */
+                margin-top: 0.5rem; /* Add top margin below title */
+            }
             h1 {
                 text-align: center;
                 margin-bottom: 0;
@@ -407,12 +459,8 @@
             .tab-button-group {
                 width: 100%;
             }
-            .pagination-container {
-                padding: 0.25rem;
-            }
-            .pagination-button {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.85rem;
+            .infinite-scroll-message {
+                padding: 1rem 0; /* Smaller padding on mobile */
             }
             .toggle-details-button {
                  margin-top: 0.5rem;
@@ -449,45 +497,58 @@
             .content-area {
                 padding: 1rem; /* Smaller inner padding for content card */
             }
-        }
+        </media>
     </style>
 </head>
 <body class="min-h-screen">
+    <!-- Reading Progress Bar -->
+    <div id="reading-progress-bar"></div>
+
     <!-- Header (full width background, centered content) -->
     <header class="main-header">
         <div class="header-content-wrapper">
-            <h1 class="text-4xl font-bold" id="mainTitle">📰 News Aggregator</h1>
+            <h1 class="font-bold" id="mainTitle">📰 News Aggregator</h1>
+            <!-- Font Size Controls -->
+            <div class="font-size-controls" role="group" aria-label="Adjust font size">
+                <button id="font-size-decrease" aria-label="Decrease font size" tabindex="0">A-</button>
+                <button id="font-size-reset" aria-label="Reset font size" tabindex="0">A</button>
+                <button id="font-size-increase" aria-label="Increase font size" tabindex="0">A+</button>
+            </div>
         </div>
     </header>
 
-    <!-- Main Content Area (News, Tabs, Loading, Error, Pagination) -->
+    <!-- Main Content Area (News, Tabs, Loading, Error, Infinite Scroll) -->
     <main class="site-main-content">
         <div class="content-area">
             <div class="header-content">
-                <div id="news-sources" class="tab-button-group">
-                    <button class="tab-button active" data-source="All">All News</button>
-                    <button class="tab-button" data-source="DW">DW News</button>
-                    <button class="tab-button" data-source="BBC">BBC News</button>
-                    <button class="tab-button" data-source="The Hill">The Hill</button>
-                    <button class="tab-button" data-source="Forbes">Forbes</button>
-                    <button class="tab-button" data-source="WSJ">Wall Street Journal</button>
+                <div id="news-sources" class="tab-button-group" role="tablist">
+                    <button class="tab-button active" data-source="All" tabindex="0" role="tab" aria-selected="true">All News</button>
+                    <button class="tab-button" data-source="DW" tabindex="0" role="tab" aria-selected="false">DW News</button>
+                    <button class="tab-button" data-source="BBC" tabindex="0" role="tab" aria-selected="false">BBC News</button>
+                    <button class="tab-button" data-source="The Hill" tabindex="0" role="tab" aria-selected="false">The Hill</button>
+                    <button class="tab-button" data-source="Forbes" tabindex="0" role="tab" aria-selected="false">Forbes</button>
+                    <button class="tab-button" data-source="WSJ" tabindex="0" role="tab" aria-selected="false">Wall Street Journal</button>
                 </div>
             </div>
 
-            <div id="loading" class="flex justify-center items-center h-40" style="display: none;">
+            <div id="loading" class="flex justify-center items-center h-40" style="display: none;" role="status" aria-live="polite">
                 <div class="loading-spinner"></div>
                 <p class="ml-4 text-lg text-gray-600">Loading news...</p>
             </div>
 
-            <div id="news-container" class="space-y-6">
+            <div id="news-container" class="space-y-6" role="feed">
                 <!-- News articles will be loaded here -->
             </div>
 
-            <div id="pagination-container" class="pagination-container">
-                <!-- Pagination buttons will be rendered here -->
+            <!-- Infinite Scroll Loading Indicator -->
+            <div id="infinite-scroll-loading" class="flex justify-center items-center h-24" style="display: none;" role="status" aria-live="polite">
+                <div class="loading-spinner"></div>
+                <p class="ml-4 text-lg text-gray-600">Loading more news...</p>
             </div>
+            <p id="no-more-news-message" class="infinite-scroll-message" style="display: none;" role="status" aria-live="polite">No more news to load.</p>
 
-            <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md relative mt-6" role="alert">
+
+            <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md relative mt-6" role="alert" tabindex="-1">
                 <strong class="font-bold">Error!</strong>
                 <span class="block sm:inline" id="error-text"></span>
             </div>
@@ -495,7 +556,7 @@
     </main>
 
     <!-- Floating Dark Mode Toggle Button -->
-    <button id="dark-mode-toggle" aria-label="Toggle dark mode">
+    <button id="dark-mode-toggle" aria-label="Toggle dark mode" tabindex="0">
         <!-- Moon icon for light mode (default), changes to sun in dark mode -->
         <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.61.764-3.778a9.735 9.735 0 00-6.711 8.923 9.718 9.718 0 009.75 9.75 9.735 9.735 0 008.923-6.711z" />
@@ -506,7 +567,7 @@
     </button>
 
     <!-- Unified Scroll Navigation Button -->
-    <button id="scroll-navigation-btn" aria-label="Scroll navigation">
+    <button id="scroll-navigation-btn" aria-label="Scroll navigation" tabindex="0">
         <svg class="scroll-up-arrow" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
         </svg>
@@ -546,26 +607,41 @@
             noDescriptionAvailable: 'No description available.',
             showDetails: 'Show Details',
             hideDetails: 'Hide Details',
-            prev: 'Prev',
-            next: 'Next',
+            loadingMoreNews: 'Loading more news...',
+            noMoreNews: 'No more news to load.',
             displayingAvailableNews: 'Displaying available news.',
-            apiError: 'API error. Please check configuration.'
+            apiError: 'API error. Please check configuration.',
         };
 
-        const newsPerPage = 10;
-        let currentPage = 1;
-        let currentArticles = [];
+        let allArticlesFromAllSources = []; // Stores all fetched articles
+        let currentlyDisplayedArticles = []; // Stores articles for the current tab
+        let displayedArticleCount = 0; // Number of articles currently rendered in DOM
+        const articlesPerLoad = 10; // How many articles to load at once for infinite scroll
+        let isLoadingMore = false; // Flag to prevent multiple simultaneous loads
 
         const newsContainer = document.getElementById('news-container');
         const newsSourcesDiv = document.getElementById('news-sources');
-        const loadingIndicator = document.getElementById('loading');
+        const initialLoadingIndicator = document.getElementById('loading');
+        const infiniteScrollLoadingIndicator = document.getElementById('infinite-scroll-loading');
+        const noMoreNewsMessage = document.getElementById('no-more-news-message');
         const errorMessageDiv = document.getElementById('error-message');
         const errorTextSpan = document.getElementById('error-text');
-        const paginationContainer = document.getElementById('pagination-container');
         const scrollNavigationBtn = document.getElementById('scroll-navigation-btn');
         const darkModeToggle = document.getElementById('dark-mode-toggle');
         const moonIcon = document.getElementById('moon-icon');
         const sunIcon = document.getElementById('sun-icon');
+        const readingProgressBar = document.getElementById('reading-progress-bar');
+
+        // Font size accessibility controls
+        const fontSizeDecreaseBtn = document.getElementById('font-size-decrease');
+        const fontSizeResetBtn = document.getElementById('font-size-reset');
+        const fontSizeIncreaseBtn = document.getElementById('font-size-increase');
+        const root = document.documentElement;
+        let baseFontSize = parseFloat(getComputedStyle(root).getPropertyValue('--base-font-size')) || 16;
+        const FONT_SIZE_STEP = 2; // px
+        const MAX_FONT_SIZE = 24;
+        const MIN_FONT_SIZE = 12;
+        const DEFAULT_FONT_SIZE = 16;
 
 
         window.onerror = function(message, source, lineno, colno, error) {
@@ -574,10 +650,21 @@
             return true;
         };
 
-        // Function to show/hide loading indicator
-        // Modified to always hide the loading indicator as requested by the user.
-        function showLoading(show) {
-            loadingIndicator.style.display = 'none'; // Always hide the loading indicator
+        // Function to show/hide initial loading indicator
+        function showInitialLoading(show) {
+            initialLoadingIndicator.style.display = show ? 'flex' : 'none';
+        }
+
+        // Function to show/hide infinite scroll loading indicator
+        function showInfiniteScrollLoading(show) {
+            infiniteScrollLoadingIndicator.style.display = show ? 'flex' : 'none';
+            noMoreNewsMessage.style.display = 'none'; // Hide "no more news" when loading
+        }
+
+        function showNoMoreNewsMessage() {
+            infiniteScrollLoadingIndicator.style.display = 'none';
+            noMoreNewsMessage.textContent = translations.noMoreNews;
+            noMoreNewsMessage.style.display = 'block';
         }
 
         function showErrorMessage(message) {
@@ -613,9 +700,9 @@
                 displayedMessage = `An unexpected error occurred. Check console for details.`;
             }
 
-
             errorTextSpan.textContent = displayedMessage;
             errorMessageDiv.classList.remove('hidden');
+            errorMessageDiv.focus(); // Focus on error message for accessibility
         }
 
         function hideErrorMessage() {
@@ -646,74 +733,46 @@
             return doc.body.textContent || "";
         }
 
-        async function fetchNews(sourceKey, rssUrl, sourceDisplayName) {
-            showLoading(true); // This call will now effectively do nothing to show the loading indicator
-            hideErrorMessage();
-            newsContainer.innerHTML = '';
-            paginationContainer.innerHTML = '';
-
+        async function fetchNewsForSource(rssUrl, sourceDisplayName) {
             try {
                 const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
                 const response = await fetch(proxyUrl);
 
                 if (!response.ok) {
-                    throw new Error(`Could not load news from ${sourceDisplayName}. (Details: HTTP error! status: ${response.status})`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
 
                 if (data.status === 'error') {
-                    throw new Error(`Could not load news from ${sourceDisplayName}. (Details: ${data.message || 'Failed to fetch news from proxy.'})`);
+                    throw new Error(data.message || 'Failed to fetch news from proxy.');
                 }
 
-                let articles = data.items.map(item => ({ ...item, sourceName: sourceDisplayName }));
-                
-                articles = articles.map(item => ({
-                    ...item,
-                    title: item.title || 'No Title',
-                    description: stripHtmlTags(item.description || translations.noDescriptionAvailable)
-                }));
-
-                currentArticles = articles;
-                currentPage = 1;
-                displayNews(currentArticles, currentPage);
-                renderPagination(currentArticles.length, currentPage);
+                return data.items.map(item => ({ ...item, sourceName: sourceDisplayName }));
 
             } catch (error) {
                 console.error(`Error fetching news for ${sourceDisplayName}:`, error);
-                showErrorMessage(error.message);
-            } finally {
-                showLoading(false); // This call will also effectively do nothing
+                throw new Error(`Could not load news from ${sourceDisplayName}. (Details: ${error.message})`);
             }
         }
 
-        async function fetchAllNewsAndInterleave() {
-            showLoading(true); // This call will now effectively do nothing to show the loading indicator
+        async function fetchAllNewsAndPrepareForInfiniteScroll() {
+            showInitialLoading(true);
             hideErrorMessage();
             newsContainer.innerHTML = '';
-            paginationContainer.innerHTML = '';
+            showInfiniteScrollLoading(false);
+            noMoreNewsMessage.style.display = 'none';
 
-            let allArticlesCombined = [];
+            let combinedArticles = [];
             let failedSources = [];
 
-            // Use Promise.allSettled to allow individual fetches to fail without stopping others
             const fetchPromises = Object.entries(RSS_FEEDS).map(async ([key, config]) => {
                 try {
-                    const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(config.url)}`;
-                    const response = await fetch(proxyUrl);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    if (data.status === 'error') {
-                        throw new Error(data.message || 'Failed to fetch news from proxy.');
-                    }
-                    return data.items.map(item => ({ ...item, sourceName: config.name }));
-
+                    const articles = await fetchNewsForSource(config.url, config.name);
+                    return articles;
                 } catch (error) {
-                    console.error(`Error fetching news for ${config.name}:`, error);
                     failedSources.push(config.name);
-                    return null; // Return null for failed fetches to be filtered out later
+                    return null;
                 }
             });
 
@@ -721,26 +780,26 @@
 
             results.forEach(result => {
                 if (result.status === 'fulfilled' && result.value) {
-                    allArticlesCombined = allArticlesCombined.concat(result.value);
+                    combinedArticles = combinedArticles.concat(result.value);
                 }
             });
 
-            if (allArticlesCombined.length === 0) {
+            if (combinedArticles.length === 0) {
                 showErrorMessage(translations.couldNotLoadAny);
-                showLoading(false); // This call will also effectively do nothing
+                showInitialLoading(false);
                 return;
             }
             
-            allArticlesCombined = allArticlesCombined.map(item => ({
+            allArticlesFromAllSources = combinedArticles.map(item => ({
                 ...item,
                 title: item.title || 'No Title',
                 description: stripHtmlTags(item.description || translations.noDescriptionAvailable)
             }));
 
-
+            // Interleave articles for "All News" tab
             const interleavedArticles = [];
             let sourcesWithArticles = {};
-            allArticlesCombined.forEach(article => {
+            allArticlesFromAllSources.forEach(article => {
                 const sourceKey = Object.keys(RSS_FEEDS).find(key => 
                     RSS_FEEDS[key].name === article.sourceName
                 );
@@ -754,15 +813,15 @@
 
             let activeSources = Object.keys(sourcesWithArticles).filter(key => sourcesWithArticles[key].length > 0);
             let lastSourceKey = null;
-            let attemptLimit = 1000;
+            let attemptLimit = 1000; // Safety break for interleaving loop
 
             while (activeSources.length > 0 && attemptLimit > 0) {
                 attemptLimit--;
                 let eligibleSources = activeSources.filter(sourceKey => sourceKey !== lastSourceKey);
-                if (eligibleSources.length === 0) {
+                if (eligibleSources.length === 0) { // If only one source left or all others were just used
                     eligibleSources = activeSources;
                 }
-                if (eligibleSources.length === 0) break;
+                if (eligibleSources.length === 0) break; // No more eligible sources
 
                 const randomIndex = Math.floor(Math.random() * eligibleSources.length);
                 const currentSourceKey = eligibleSources[randomIndex];
@@ -777,6 +836,8 @@
                     activeSources = activeSources.filter(key => key !== currentSourceKey);
                 }
             }
+            
+            allArticlesFromAllSources = interleavedArticles; // Use interleaved for "All News"
 
             if (failedSources.length > 0) {
                 const failedSourceNamesDisplay = failedSources.map(name => {
@@ -785,141 +846,105 @@
                 });
                 showErrorMessage(`${translations.failedSources} ${failedSourceNamesDisplay.join(', ')}. ${translations.displayingAvailableNews}`);
             } else {
-                hideErrorMessage(); // Hide error if all sources loaded successfully
+                hideErrorMessage();
             }
 
-            currentArticles = interleavedArticles;
-            currentPage = 1;
-            displayNews(currentArticles, currentPage);
-            renderPagination(currentArticles.length, currentPage);
-            showLoading(false); // This call will also effectively do nothing
+            currentlyDisplayedArticles = allArticlesFromAllSources; // Default to all news
+            displayedArticleCount = 0; // Reset count
+            displayNextBatchOfNews(); // Show initial batch
+            showInitialLoading(false);
         }
 
-        function displayNews(articles, pageNumber) {
-            newsContainer.innerHTML = '';
+        function displayNextBatchOfNews() {
+            if (isLoadingMore) return; // Prevent multiple loads
+            isLoadingMore = true;
+            showInfiniteScrollLoading(true);
 
-            const startIndex = (pageNumber - 1) * newsPerPage;
-            const endIndex = startIndex + newsPerPage;
-            const articlesToDisplay = articles.slice(startIndex, endIndex);
+            setTimeout(() => { // Simulate network delay
+                const startIndex = displayedArticleCount;
+                const endIndex = startIndex + articlesPerLoad;
+                const articlesToRender = currentlyDisplayedArticles.slice(startIndex, endIndex);
 
-            if (articlesToDisplay.length === 0) {
-                newsContainer.innerHTML = `<p class="text-center text-lg">${translations.noNewsFound}</p>`;
-                return;
-            }
+                if (articlesToRender.length === 0 && displayedArticleCount > 0) {
+                    showNoMoreNewsMessage();
+                    isLoadingMore = false;
+                    return;
+                }
+                if (articlesToRender.length === 0 && displayedArticleCount === 0) {
+                    newsContainer.innerHTML = `<p class="text-center text-lg">${translations.noNewsFound}</p>`;
+                    showInfiniteScrollLoading(false);
+                    isLoadingMore = false;
+                    return;
+                }
 
-            articlesToDisplay.forEach(article => {
-                const newsItem = document.createElement('div');
-                newsItem.classList.add('news-item');
+                articlesToRender.forEach(article => {
+                    const newsItem = document.createElement('div');
+                    newsItem.classList.add('news-item');
+                    newsItem.setAttribute('tabindex', '0'); // Make news items focusable
 
-                const fullDescription = article.description;
-                const imageUrl = extractImageUrl(article);
+                    const fullDescription = article.description;
+                    const imageUrl = extractImageUrl(article);
 
-                const imageHtml = imageUrl ? 
-                    `<img src="${imageUrl}" alt="${article.title || 'News Image'}" class="news-image">` : 
-                    '';
+                    const imageHtml = imageUrl ? 
+                        `<img src="${imageUrl}" alt="${article.title || 'News Image'}" class="news-image">` : 
+                        '';
 
-                newsItem.innerHTML = `
-                    <div class="news-item-header">
-                        ${imageHtml}
-                        <div class="news-item-content">
-                            <h2 class="text-2xl font-semibold">${article.title}</h2>
-                            <span class="source-name">${article.sourceName || translations.unknownSource}</span>
+                    newsItem.innerHTML = `
+                        <div class="news-item-header">
+                            ${imageHtml}
+                            <div class="news-item-content">
+                                <h2 class="font-semibold">${article.title}</h2>
+                                <span class="source-name">${article.sourceName || translations.unknownSource}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="collapsible-container">
-                        <button class="toggle-details-button" data-full-description="${escapeHtml(fullDescription)}">
-                            <span>${translations.showDetails}</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </button>
-                        <div class="collapsible-content">
-                            <p class="text-base mb-4">${fullDescription}</p>
-                            <a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer" class="hover:underline mt-4 block">${translations.readOriginal}</a>
-                            ${article.pubDate ? `<p class="text-sm mt-2">${new Date(article.pubDate).toLocaleString()}</p>` : ''}
+                        <div class="collapsible-container">
+                            <button class="toggle-details-button" data-full-description="${escapeHtml(fullDescription)}" tabindex="0" aria-expanded="false">
+                                <span>${translations.showDetails}</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="collapsible-content" role="region" aria-hidden="true">
+                                <p class="text-base mb-4">${fullDescription}</p>
+                                <a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer" class="hover:underline mt-4 block" tabindex="0">${translations.readOriginal}</a>
+                                ${article.pubDate ? `<p class="text-sm mt-2">${new Date(article.pubDate).toLocaleString()}</p>` : ''}
+                            </div>
                         </div>
-                    </div>
-                `;
-                newsContainer.appendChild(newsItem);
-            });
-
-            document.querySelectorAll('.toggle-details-button').forEach(button => {
-                button.addEventListener('click', () => {
-                    const content = button.closest('.collapsible-container').querySelector('.collapsible-content');
-                    const spanText = button.querySelector('span');
-                    
-                    if (content.classList.contains('expanded')) {
-                        content.classList.remove('expanded');
-                        spanText.textContent = translations.showDetails;
-                        button.classList.remove('expanded');
-                    } else {
-                        spanText.textContent = translations.hideDetails;
-                        content.classList.add('expanded');
-                        button.classList.add('expanded');
-                    }
+                    `;
+                    newsContainer.appendChild(newsItem);
                 });
-            });
-        }
 
-        function renderPagination(totalArticles, pageNumber) {
-            paginationContainer.innerHTML = '';
-            const totalPages = Math.ceil(totalArticles / newsPerPage);
+                // Attach event listeners for toggle buttons in the newly added articles
+                document.querySelectorAll('.news-item:nth-last-child(-n+' + articlesToRender.length + ') .toggle-details-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const content = button.closest('.collapsible-container').querySelector('.collapsible-content');
+                        const spanText = button.querySelector('span');
+                        
+                        if (content.classList.contains('expanded')) {
+                            content.classList.remove('expanded');
+                            spanText.textContent = translations.showDetails;
+                            button.classList.remove('expanded');
+                            button.setAttribute('aria-expanded', 'false');
+                            content.setAttribute('aria-hidden', 'true');
+                        } else {
+                            spanText.textContent = translations.hideDetails;
+                            content.classList.add('expanded');
+                            button.classList.add('expanded');
+                            button.setAttribute('aria-expanded', 'true');
+                            content.setAttribute('aria-hidden', 'false');
+                        }
+                    });
+                });
 
-            if (totalPages <= 1) {
-                return;
-            }
+                displayedArticleCount += articlesToRender.length;
+                showInfiniteScrollLoading(false);
+                isLoadingMore = false;
 
-            const prevButton = document.createElement('button');
-            prevButton.classList.add('pagination-button');
-            prevButton.textContent = translations.prev;
-            prevButton.dataset.page = 'prev';
-            prevButton.disabled = pageNumber === 1;
-            paginationContainer.appendChild(prevButton);
-
-            for (let i = 1; i <= totalPages; i++) {
-                const pageButton = document.createElement('button');
-                pageButton.classList.add('pagination-button');
-                pageButton.textContent = i;
-                pageButton.dataset.page = i;
-                if (i === pageNumber) {
-                    pageButton.classList.add('active');
-                }
-                paginationContainer.appendChild(pageButton);
-            }
-
-            const nextButton = document.createElement('button');
-            nextButton.classList.add('pagination-button');
-            nextButton.textContent = translations.next;
-            nextButton.dataset.page = 'next';
-            nextButton.disabled = pageNumber === totalPages;
-            paginationContainer.appendChild(nextButton);
-
-            paginationContainer.removeEventListener('click', handlePaginationClick);
-            paginationContainer.addEventListener('click', handlePaginationClick);
-        }
-
-        function handlePaginationClick(event) {
-            const target = event.target;
-            if (target.classList.contains('pagination-button')) {
-                const pageAction = target.dataset.page;
-                let newPage = currentPage;
-
-                if (pageAction === 'prev') {
-                    newPage = Math.max(1, currentPage - 1);
-                } else if (pageAction === 'next') {
-                    const totalPages = Math.ceil(currentArticles.length / newsPerPage);
-                    newPage = Math.min(totalPages, currentPage + 1);
-                } else {
-                    newPage = parseInt(pageAction);
+                if (displayedArticleCount >= currentlyDisplayedArticles.length) {
+                    showNoMoreNewsMessage();
                 }
 
-                if (newPage !== currentPage) {
-                    currentPage = newPage;
-                    displayNews(currentArticles, currentPage);
-                    renderPagination(currentArticles.length, currentPage);
-                    // Scroll to the very top after a pagination click
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            }
+            }, 500); // Small delay to simulate load
         }
+
 
         function escapeHtml(text) {
             const map = {
@@ -937,33 +962,37 @@
             if (button.tagName === 'BUTTON') {
                 document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
                     btn.classList.remove('active');
+                    btn.setAttribute('aria-selected', 'false');
                 });
                 button.classList.add('active');
+                button.setAttribute('aria-selected', 'true');
+
 
                 const sourceKey = button.dataset.source;
-                const config = RSS_FEEDS[sourceKey];
-                if (sourceKey === 'All') { // Handle "All News" separately
-                    fetchAllNewsAndInterleave();
-                } else if (config) {
-                    fetchNews(sourceKey, config.url, config.name);
+                
+                // Reset news display
+                newsContainer.innerHTML = '';
+                displayedArticleCount = 0;
+                noMoreNewsMessage.style.display = 'none';
+                hideErrorMessage();
+
+                if (sourceKey === 'All') {
+                    currentlyDisplayedArticles = allArticlesFromAllSources;
                 } else {
-                    showErrorMessage(`Could not load news from ${sourceKey}.`);
+                    currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => article.sourceName === RSS_FEEDS[sourceKey].name);
                 }
+                displayNextBatchOfNews(); // Load first batch for new selection
             }
         });
 
         // Handle click for the unified scroll navigation button
         scrollNavigationBtn.addEventListener('click', (event) => {
             const btnRect = scrollNavigationBtn.getBoundingClientRect();
-            // Calculate relative Y position of the click within the button
             const clickY = event.clientY - btnRect.top;
 
-            // Determine if the top half or bottom half was clicked
             if (clickY < btnRect.height / 2) {
-                // Clicked top half: scroll to top
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                // Clicked bottom half: scroll to bottom
                 window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
             }
         });
@@ -986,6 +1015,34 @@
             }
         }
 
+        // Reading Progress Bar Logic
+        window.addEventListener('scroll', () => {
+            const totalScrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolledPercentage = (window.scrollY / totalScrollHeight) * 100;
+            readingProgressBar.style.width = scrolledPercentage + '%';
+
+            // Infinite scroll trigger
+            if (!isLoadingMore && (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500)) { // 500px from bottom
+                if (displayedArticleCount < currentlyDisplayedArticles.length) {
+                    displayNextBatchOfNews();
+                } else {
+                    showNoMoreNewsMessage();
+                }
+            }
+        });
+
+        // Font Size Accessibility Logic
+        function updateFontSize(newSize) {
+            baseFontSize = Math.min(MAX_FONT_SIZE, Math.max(MIN_FONT_SIZE, newSize));
+            root.style.setProperty('--base-font-size', `${baseFontSize}px`);
+            localStorage.setItem('baseFontSize', baseFontSize);
+        }
+
+        fontSizeDecreaseBtn.addEventListener('click', () => updateFontSize(baseFontSize - FONT_SIZE_STEP));
+        fontSizeResetBtn.addEventListener('click', () => updateFontSize(DEFAULT_FONT_SIZE));
+        fontSizeIncreaseBtn.addEventListener('click', () => updateFontSize(baseFontSize + FONT_SIZE_STEP));
+
+
         document.addEventListener('DOMContentLoaded', () => {
             document.title = translations.appTitle;
             document.getElementById('mainTitle').textContent = translations.mainTitle;
@@ -1006,14 +1063,19 @@
                 updateDarkModeIcons(false); // Ensure light mode icon is shown by default
             }
 
-            // Ensure pagination button texts are set
-            const prevButton = paginationContainer.querySelector('.pagination-button[data-page="prev"]');
-            if (prevButton) prevButton.textContent = translations.prev;
-            const nextButton = paginationContainer.querySelector('.pagination-button[data-page="next"]');
-            if (nextButton) nextButton.textContent = translations.next;
+            // Apply saved font size preference
+            const savedFontSize = parseFloat(localStorage.getItem('baseFontSize'));
+            if (!isNaN(savedFontSize)) {
+                updateFontSize(savedFontSize);
+            } else {
+                updateFontSize(DEFAULT_FONT_SIZE); // Set default if no preference saved
+            }
+
+            // Update infinite scroll loading message text
+            infiniteScrollLoadingIndicator.querySelector('p').textContent = translations.loadingMoreNews;
             
-            // Initial load of all news
-            fetchAllNewsAndInterleave();
+            // Initial load of all news for infinite scroll setup
+            fetchAllNewsAndPrepareForInfiniteScroll();
         });
     </script>
 </body>

@@ -730,11 +730,25 @@
             transition: color 0.3s ease;
         }
 
-        /* Unified Scroll Navigation Button Styling */
-        #scroll-navigation-btn {
+        /* Floating Buttons Wrapper (Desktop) */
+        #floating-buttons-wrapper {
             position: fixed;
-            bottom: 1rem;
+            top: 50%;
             right: 1rem;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column; /* Stack children vertically */
+            gap: 0.75rem; /* Gap between buttons */
+            z-index: 1002;
+            opacity: 0.7; /* Default opacity for desktop */
+            transition: opacity 0.3s ease-in-out;
+        }
+        #floating-buttons-wrapper:hover {
+            opacity: 1;
+        }
+
+        /* Desktop: Unified Scroll Navigation Button Styling */
+        #scroll-navigation-btn {
             background-color: var(--scroll-btn-bg);
             color: #ffffff;
             border: none;
@@ -742,22 +756,18 @@
             width: 36px;
             height: 75px;
             display: flex;
-            flex-direction: column; /* Default for desktop */
+            flex-direction: column; /* Vertical stack for desktop */
             justify-content: space-around;
             align-items: center;
             font-size: 1.5rem;
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            opacity: 0.7;
-            transition: opacity 0.3s ease-in-out, background-color 0.3s ease;
-            z-index: 1000;
             outline: none;
         }
 
         #scroll-navigation-btn:hover,
         #scroll-navigation-btn:focus-visible {
             background-color: var(--scroll-btn-hover-bg);
-            opacity: 1;
             outline: 2px solid var(--link-color);
             outline-offset: 2px;
         }
@@ -771,11 +781,8 @@
             margin: 0.125rem 0;
         }
 
-        /* Dark Mode Toggle Button - repositioned and restyled */
+        /* Desktop: Dark Mode Toggle Button - repositioned and restyled */
         #dark-mode-toggle {
-            position: fixed;
-            bottom: 6.25rem;
-            right: 1rem;
             background-color: var(--scroll-btn-bg);
             color: #ffffff;
             border: none;
@@ -787,16 +794,12 @@
             justify-content: center;
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            opacity: 0.7;
-            transition: opacity 0.3s ease-in-out, background-color 0.3s ease, color 0.3s ease;
-            z-index: 1001;
             flex-shrink: 0;
             outline: none;
         }
 
         #dark-mode-toggle:hover {
             background-color: var(--scroll-btn-hover-bg);
-            opacity: 1;
         }
         #dark-mode-toggle:focus-visible {
             outline: 2px solid var(--link-color);
@@ -911,16 +914,18 @@
 
         @media (max-width: 768px) {
             /* Mobile-specific variables */
-            --mobile-tabs-height: 35px; /* Combined height of tabs + its own padding */
-            --mobile-controls-height: 40px; /* Height for the fixed buttons bar */
-            --mobile-controls-spacing: 0.5rem; /* Space between fixed buttons and tabs */
-
+            --mobile-tab-bar-height: 30px; /* Reduced height for the sticky bottom tab bar */
+            --buttons-stack-gap: 0.75rem; /* Gap between the two floating buttons */
+            --buttons-to-tabs-gap: 0.75rem; /* Gap between button stack and tab bar */
+            
+            /* Calculate total height needed for padding at the bottom of the body */
+            --total-floating-buttons-stack-height: calc(36px + var(--buttons-stack-gap) + 75px);
             body {
-                padding-bottom: calc(var(--mobile-tabs-height) + var(--mobile-controls-height) + var(--mobile-controls-spacing));
+                padding-bottom: calc(var(--mobile-tab-bar-height) + var(--buttons-to-tabs-gap) + var(--total-floating-buttons-stack-height));
             }
 
             .header-content {
-                margin-bottom: 0; /* Remove margin where tabs used to be */
+                margin-bottom: 0.5rem; /* Reduce margin when tabs are fixed to bottom */
             }
             
             /* Make the news sources tab bar fixed at the bottom */
@@ -929,11 +934,11 @@
                 bottom: 0;
                 left: 0;
                 width: 100%;
-                height: var(--mobile-tabs-height); /* Set fixed height */
+                height: var(--mobile-tab-bar-height); /* Set fixed height */
                 background-color: var(--section-bg);
                 box-shadow: 0 -2px 5px var(--box-shadow-color); /* Shadow on top */
                 z-index: 100;
-                padding: 0.5rem 0.5rem; /* Padding for the entire fixed bar */
+                padding: 0.25rem 0.5rem; /* Reduced padding for the entire fixed bar */
                 box-sizing: border-box; /* Include padding in width/height */
                 border-top: 1px solid var(--border-color); /* Subtle border */
                 border-radius: 0; /* No rounded corners for fixed bar */
@@ -946,58 +951,64 @@
 
             /* Styles for the news sources tab group *inside* the fixed bar */
             #news-sources {
-                /* Reset desktop styles for mobile fixed tab bar */
-                background-color: transparent; /* Inner tab group takes no extra bg */
+                background-color: transparent; 
                 box-shadow: none;
                 border: none;
-                max-width: none; /* Allow full width within fixed bar */
-                width: 100%; /* Ensure it fills the nav */
-                padding: 0 0.5rem; /* Inner padding for tabs within the fixed bar */
-                justify-content: space-around; /* Distribute tabs evenly */
-                height: 100%; /* Make sure the inner tab group fills the fixed bar's height */
+                max-width: none; 
+                width: 100%; 
+                padding: 0; /* Remove inner padding as parent has it */
+                justify-content: space-around; 
+                height: 100%; 
             }
 
             /* Adjust tab button padding for vertical compactness */
             #news-sources .tab-button {
-                padding: 0.3rem 0.6rem; 
-                font-size: calc(var(--base-font-size) * 0.85); /* Slightly smaller font for compact tabs */
+                padding: 0.1rem 0.3rem; /* Further reduced padding */
+                font-size: calc(var(--base-font-size) * 0.75); /* Smaller font for compact tabs */
             }
 
-            /* Reposition scroll navigation and dark mode toggle buttons */
-            #scroll-navigation-btn {
-                display: flex !important; /* Ensure visibility */
+            /* Wrapper for the floating buttons in mobile view */
+            #floating-buttons-wrapper {
                 position: fixed;
-                bottom: calc(var(--mobile-tabs-height) + var(--mobile-controls-spacing)); /* Above the tabs with spacing */
-                left: 0.5rem; /* Position on the left */
-                right: auto;
-                width: auto; /* Auto width to fit content */
-                height: var(--mobile-controls-height); /* Fixed height for the controls area */
-                flex-direction: row; /* Make it horizontal */
-                gap: 0.5rem;
-                border-radius: 30px; /* Adjust border-radius for horizontal bar */
-                padding: 0.25rem 0.75rem; /* Adjusted padding */
-                box-sizing: border-box;
-                justify-content: center;
-                opacity: 1; /* Always visible */
-                z-index: 1002; /* Higher z-index to ensure visibility */
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                right: 0.5rem; /* Position on the right edge */
+                bottom: calc(var(--mobile-tab-bar-height) + var(--buttons-to-tabs-gap)); /* Position above the tabs */
+                z-index: 1002; /* Ensure it's above other content */
+                opacity: 1; /* Ensure full visibility */
+                display: flex; /* Ensure visibility */
+                flex-direction: column; /* Stack children vertically */
+                gap: var(--buttons-stack-gap); /* Gap between buttons */
+            }
+
+            /* Reset individual button positioning, let wrapper handle it */
+            #scroll-navigation-btn,
+            #dark-mode-toggle {
+                position: static; /* Let the parent wrapper position them */
+                opacity: 1; /* Ensure full visibility */
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Apply consistent shadow */
+                z-index: unset; /* Let wrapper determine layering */
+            }
+
+            /* Specific styling for scroll button within the wrapper (mobile) */
+            #scroll-navigation-btn {
+                width: 36px;
+                height: 75px; 
+                flex-direction: column; /* Keep vertical arrows */
+                padding: 0.25rem 0; /* Adjust padding for vertical layout */
+                border-radius: 50px; /* Pill shape */
             }
             #scroll-navigation-btn svg {
-                margin: 0; /* Remove extra margin for horizontal layout */
+                margin: 0.125rem 0; /* Small vertical margin for arrows */
             }
 
+            /* Specific styling for dark mode toggle within the wrapper (mobile) */
             #dark-mode-toggle {
-                display: flex !important; /* Ensure visibility */
-                position: fixed;
-                bottom: calc(var(--mobile-tabs-height) + var(--mobile-controls-spacing)); /* Above the tabs with spacing */
-                right: 0.5rem; /* Position on the right */
-                left: auto;
-                width: 36px; /* Retain original width */
-                height: var(--mobile-controls-height); /* Fixed height for the controls area */
-                border-radius: 50%; /* Retain circular shape */
-                opacity: 1; /* Always visible */
-                z-index: 1003; /* Higher z-index to ensure visibility */
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                width: 36px; 
+                height: 36px;
+                border-radius: 50%; /* Circular shape */
+            }
+            #dark-mode-toggle svg {
+                width: 18px;
+                height: 18px;
             }
             
             /* General mobile adjustments for news cards spacing */
@@ -1163,26 +1174,29 @@
         </div>
     </div>
 
-    <!-- Floating Dark Mode Toggle Button (Remains separate for desktop positioning) -->
-    <button id="dark-mode-toggle" aria-label="Toggle dark mode" tabindex="0">
-        <!-- Moon icon for light mode (default), changes to sun in dark mode -->
-        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.61.764-3.778a9.735 9.735 0 00-6.711 8.923 9.718 9.718 0 009.75 9.75 9.735 9.735 0 008.923-6.711z" />
-        </svg>
-        <svg id="sun-icon" xmlns="http://www.w3.000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12H5.25m-.386-6.364l1.591 1.591M12 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-    </button>
+    <!-- Floating Buttons Wrapper -->
+    <div id="floating-buttons-wrapper">
+        <!-- Floating Dark Mode Toggle Button -->
+        <button id="dark-mode-toggle" aria-label="Toggle dark mode" tabindex="0">
+            <!-- Moon icon for light mode (default), changes to sun in dark mode -->
+            <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.61.764-3.778a9.735 9.735 0 00-6.711 8.923 9.718 9.718 0 009.75 9.75 9.735 9.735 0 008.923-6.711z" />
+            </svg>
+            <svg id="sun-icon" xmlns="http://www.w3.000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12H5.25m-.386-6.364l1.591 1.591M12 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+        </button>
 
-    <!-- Unified Scroll Navigation Button -->
-    <button id="scroll-navigation-btn" aria-label="Scroll navigation" tabindex="0">
-        <svg class="scroll-up-arrow" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-        </svg>
-        <svg class="scroll-down-arrow" xmlns="http://www.w3.000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-        </svg>
-    </button>
+        <!-- Unified Scroll Navigation Button -->
+        <button id="scroll-navigation-btn" aria-label="Scroll navigation" tabindex="0">
+            <svg class="scroll-up-arrow" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            </svg>
+            <svg class="scroll-down-arrow" xmlns="http://www.w3.000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+        </button>
+    </div>
 
     <script type="module">
         // Firebase Imports
@@ -1775,29 +1789,29 @@
                 const checkbox = itemDiv.querySelector('.preference-checkbox');
                 checkbox.checked = userPreferences.rss.includes(sourceKey); 
 
-                    checkbox.addEventListener('change', async (event) => {
-                        const changedSourceKey = event.target.dataset.source;
-                        if (!userId) {
-                            event.target.checked = !event.target.checked; 
-                            showModalMessage('Login to save your preferences.', true);
-                            return;
-                        }
+                checkbox.addEventListener('change', async (event) => {
+                    const changedSourceKey = event.target.dataset.source;
+                    if (!userId) {
+                        event.target.checked = !event.target.checked; 
+                        showModalMessage('Login to save your preferences.', true);
+                        return;
+                    }
 
-                        if (event.target.checked) {
-                            if (!userPreferences.rss.includes(changedSourceKey)) {
-                                userPreferences.rss.push(changedSourceKey);
-                            }
-                        } else {
-                            userPreferences.rss = userPreferences.rss.filter(pref => pref !== changedSourceKey);
+                    if (event.target.checked) {
+                        if (!userPreferences.rss.includes(changedSourceKey)) {
+                            userPreferences.rss.push(changedSourceKey);
                         }
-                        await saveUserPreferences(); 
+                    } else {
+                        userPreferences.rss = userPreferences.rss.filter(pref => pref !== changedSourceKey);
+                    }
+                    await saveUserPreferences(); 
 
-                        if (currentActiveTab === 'MyFeed') {
-                            applyNewsFilterAndDisplay('MyFeed');
-                        }
-                    });
+                    if (currentActiveTab === 'MyFeed') {
+                        applyNewsFilterAndDisplay('MyFeed');
+                    }
                 });
-            }
+            });
+        }
 
         function generateNewsSourceTabs() {
             newsSourcesDiv.innerHTML = ''; 
@@ -2077,10 +2091,10 @@
 
 
         scrollNavigationBtn.addEventListener('click', (event) => {
-            const btnRect = scrollNavigationBtn.getBoundingClientRect();
-            const clickY = event.clientY - btnRect.top;
+            const totalScrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollUpThreshold = 0.5 * window.innerHeight; // Scroll up if click is in top half of screen
 
-            if (clickY < btnRect.height / 2) {
+            if (event.clientY < scrollUpThreshold) {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
                 window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });

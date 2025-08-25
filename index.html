@@ -21,8 +21,6 @@
             --tab-button-text: #1a202c;
             --collapsible-text: #4a5568;
             --border-color: #d1e1f3;
-            --pagination-button-text: #1a202c; /* Not used, but kept for consistency */
-            --pagination-button-hover-bg: #e6f2fb; /* Not used, but kept for consistency */
             --loading-spinner-color: #4F85C5;
             --toggle-details-button-border: #d1e1f3;
             --error-bg: #ffe0e0; /* light red */
@@ -324,7 +322,7 @@
         .toggle-details-button.expanded svg {
             transform: rotate(180deg);
         }
-
+        
         .news-item-header {
             display: flex;
             align-items: flex-start;
@@ -359,8 +357,8 @@
             color: #ffffff;
             border: none;
             border-radius: 50px; /* Highly rounded for elongated pill shape */
-            width: 48px;
-            height: 100px; /* Elongated vertically */
+            width: 36px; /* 3/4 of 48px */
+            height: 75px; /* 3/4 of 100px */
             display: flex;
             flex-direction: column; /* Stack icons vertically */
             justify-content: space-around; /* Distribute space between icons */
@@ -388,20 +386,22 @@
         /* No transform on hover for unified button */
 
         #scroll-navigation-btn svg {
-            margin: 0.25rem 0; /* Space out the arrows */
+            width: 20px; /* Adjust icon size to match smaller button */
+            height: 20px; /* Adjust icon size to match smaller button */
+            margin: 0.125rem 0; /* Adjusted spacing */
         }
 
         /* Dark Mode Toggle Button - repositioned and restyled */
         #dark-mode-toggle {
             position: fixed; /* Always visible and fixed */
-            bottom: 7.5rem; /* Just above the scroll navigation button (100px height + 1rem bottom + 0.5rem gap = ~7.5rem) */
+            bottom: 6.25rem; /* Calculated: 1rem (bottom) + 75px (scroll height) + 0.5rem (gap) = 16 + 75 + 8 = 99px (~6.25rem) */
             right: 1rem; /* Align with scroll button */
             background-color: var(--scroll-btn-bg); /* Use scroll button background for consistency */
             color: #ffffff; /* White icon always */
             border: none;
             border-radius: 50%; /* Make it round */
-            width: 48px; /* Fixed width */
-            height: 48px; /* Fixed height */
+            width: 36px; /* 3/4 of 48px */
+            height: 36px; /* 3/4 of 48px */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -424,8 +424,8 @@
         }
 
         #dark-mode-toggle svg {
-            width: 24px;
-            height: 24px;
+            width: 18px; /* Adjust icon size to match smaller button */
+            height: 18px; /* Adjust icon size to match smaller button */
         }
 
         /* Error message styling */
@@ -482,14 +482,22 @@
             #scroll-navigation-btn {
                 bottom: 0.5rem; /* Adjust for potentially tighter mobile layout */
                 right: 0.5rem; /* Slightly less margin on mobile */
-                width: 40px; /* Slightly smaller button on mobile */
-                height: 80px; /* Adjusted height for mobile */
+                width: 30px; /* 3/4 of 40px */
+                height: 60px; /* 3/4 of 80px */
+            }
+            #scroll-navigation-btn svg {
+                width: 16px; /* Adjust icon size */
+                height: 16px; /* Adjust icon size */
             }
             #dark-mode-toggle {
-                bottom: 6rem; /* Adjust bottom for mobile to be above smaller scroll btn */
+                bottom: 4.75rem; /* Calculated: 0.5rem (bottom) + 60px (scroll height) + 0.5rem (gap) = 8 + 60 + 8 = 76px (~4.75rem) */
                 right: 0.5rem; /* Align with scroll button on mobile */
-                width: 40px; /* Smaller toggle on mobile */
-                height: 40px; /* Smaller toggle on mobile */
+                width: 30px; /* 3/4 of 40px */
+                height: 30px; /* 3/4 of 40px */
+            }
+            #dark-mode-toggle svg {
+                width: 16px; /* Adjust icon size */
+                height: 16px; /* Adjust icon size */
             }
             .site-main-content {
                 padding: 0.5rem; /* Smaller padding for main content on mobile */
@@ -497,7 +505,7 @@
             .content-area {
                 padding: 1rem; /* Smaller inner padding for content card */
             }
-        </media>
+        }
     </style>
 </head>
 <body class="min-h-screen">

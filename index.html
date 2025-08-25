@@ -777,7 +777,8 @@
                     currentPage = newPage;
                     displayNews(currentArticles, currentPage);
                     renderPagination(currentArticles.length, currentPage);
-                    newsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Scroll to the very top after a pagination click
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             }
         }
@@ -826,6 +827,7 @@
             }
 
             // Go to Bottom button visibility
+            // Show only if near the top AND not near the very bottom
             if (window.scrollY < scrollThreshold && scrollFromBottom > scrollThreshold) {
                 goToBottomBtn.classList.add('show');
             } else {

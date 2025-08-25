@@ -288,6 +288,94 @@
             box-shadow: 0 0 0 2px var(--link-color);
         }
 
+        /* New styles for collapsible YouTube channel list */
+        .collapsible-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0.5rem;
+            border-bottom: 1px solid var(--hamburger-item-border);
+            background-color: var(--hamburger-bg);
+            color: var(--hamburger-text);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: calc(var(--base-font-size) * 1.05);
+            transition: background-color 0.2s ease;
+            outline: none;
+            width: 100%; /* Ensure it spans full width */
+            box-sizing: border-box; /* Include padding/border in width */
+        }
+        .collapsible-header:hover {
+            background-color: var(--hamburger-hover-bg);
+        }
+        .collapsible-header:focus-visible {
+            outline: 2px solid var(--link-color);
+            outline-offset: 2px;
+        }
+        .collapsible-header svg {
+            transition: transform 0.2s ease;
+        }
+        .collapsible-header.expanded svg {
+            transform: rotate(180deg);
+        }
+        .collapsible-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: var(--hamburger-hover-bg); /* Slightly different bg for nested items */
+            border-bottom: 1px solid var(--hamburger-item-border);
+        }
+        .collapsible-body.expanded {
+            max-height: 300px; /* Adjust as needed, or use JS to calculate dynamically */
+        }
+        .youtube-channel-item {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--hamburger-item-border);
+            background-color: var(--hamburger-hover-bg);
+        }
+        .youtube-channel-item:last-child {
+            border-bottom: none;
+        }
+        .youtube-channel-item label {
+            flex-grow: 1;
+            cursor: pointer;
+            font-size: calc(var(--base-font-size) * 0.95);
+        }
+        .youtube-channel-item input[type="checkbox"] {
+             margin-left: auto;
+             appearance: none;
+            width: 1.1rem;
+            height: 1.1rem;
+            border: 2px solid var(--checkbox-border-color);
+            border-radius: 3px;
+            cursor: pointer;
+            background-color: transparent;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            outline: none;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .youtube-channel-item input[type="checkbox"]:checked {
+            background-color: var(--checkbox-checked-bg);
+            border-color: var(--checkbox-checked-bg);
+        }
+        .youtube-channel-item input[type="checkbox"]:checked::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0.35rem; /* Adjust tick size */
+            height: 0.65rem; /* Adjust tick size */
+            border: solid var(--checkbox-checked-tick);
+            border-width: 0 2px 2px 0;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+        .youtube-channel-item input[type="checkbox"]:focus-visible {
+            box-shadow: 0 0 0 2px var(--link-color);
+        }
         /* Overlay to close menu when clicking outside */
         .overlay {
             position: fixed;
@@ -557,7 +645,7 @@
             transition: color 0.3s ease;
         }
         .collapsible-content.expanded {
-            max-height: 500px;
+            max-height: 500px; /* This needs to be sufficiently large for content, consider dynamic calculation */
             padding-top: 0.5rem;
             padding-bottom: 1rem;
         }
@@ -938,7 +1026,7 @@
         <h3>Your News Feed Preferences</h3>
         <p class="text-sm mb-4" id="pref-menu-status">Login to save your preferences.</p>
         <div id="preferences-checkbox-list">
-            <!-- Checkboxes will be dynamically loaded here -->
+            <!-- Checkboxes and collapsible sections will be dynamically loaded here -->
         </div>
     </aside>
     <div class="overlay" id="overlay"></div>
@@ -1014,7 +1102,7 @@
     <script type="module">
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Configuration (REPLACE with YOUR actual firebaseConfig from Firebase Console) ---
@@ -1034,7 +1122,11 @@
         let app, auth, db;
         let userId = null; // Will store UID
         let userEmail = null; // Will store email if logged in with email/password, or null for anonymous
-        let userPreferences = []; // Stores user's preferred source keys
+        // userPreferences will now store an object with rss: [] and youtube: []
+        let userPreferences = {
+            rss: [],
+            youtube: []
+        }; 
 
 
         const RSS_FEEDS = {
@@ -1050,7 +1142,6 @@
 
         const YOUTUBE_FEEDS = {
             'BreakingPoints': { name: 'Breaking Points', type: 'channelId', value: 'UCDRIjKy6eZOvKtOELtTdeUA' }
-            // 'AssociatedPress' has been removed
         };
 
         // Helper function to get YouTube RSS URL from config
@@ -1065,7 +1156,8 @@
 
         // Helper function to extract YouTube video ID from a URL
         function extractYouTubeVideoId(url) {
-            const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([\w-]{11})/;
+            // More robust regex to capture various YouTube video URL patterns
+            const regex = /(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|live\/|playlist\?list=[\w-]+&v=)([\w-]{11})(?:\S+)?/i;
             const match = url.match(regex);
             return match ? match[1] : null;
         }
@@ -1102,10 +1194,10 @@
         const modalErrorMessage = document.getElementById('modal-error-message');
         const modalInfoMessage = document.getElementById('modal-info-message');
         let myFeedTab; // Declared here, will be assigned after dynamic creation
-        let youtubeVideosTab; // New: YouTube Videos tab element
+        let youtubeVideosTab; // YouTube Videos tab element
 
 
-        // New elements for hamburger menu
+        // Elements for hamburger menu
         const hamburgerMenuBtn = document.getElementById('hamburger-menu-btn');
         const offCanvasMenu = document.getElementById('off-canvas-menu');
         const closeOffCanvasBtn = offCanvasMenu.querySelector('.close-button');
@@ -1251,7 +1343,7 @@
                 if (data.status === 'error') {
                     throw new Error(data.message || 'Failed to fetch news from proxy.');
                 }
-
+                
                 return data.items.map(item => ({ 
                     ...item, 
                     sourceName: sourceDisplayName, 
@@ -1391,7 +1483,7 @@
                     return;
                 }
                 if (articlesToRender.length === 0 && displayedArticleCount === 0) {
-                    newsContainer.innerHTML = `<p class="text-center text-lg">No news found for this selection.</p>`;
+                    newsContainer.innerHTML = `<p class="text-center text-lg text-gray-500">No news found for this selection.</p>`;
                     showInfiniteScrollLoading(false);
                     isLoadingMore = false;
                     return;
@@ -1523,22 +1615,27 @@
             hideErrorMessage();
 
             if (filterKey === 'All') {
-                currentlyDisplayedArticles = allArticlesFromAllSources;
+                currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => !article.isYouTube);
             } else if (filterKey === 'MyFeed') {
-                if (userPreferences.length > 0) {
-                    // Combine all sources (RSS and YouTube) for user preferences filtering
-                    const allSourcesCombined = { ...RSS_FEEDS, ...YOUTUBE_FEEDS };
-                    currentlyDisplayedArticles = allArticlesFromAllSources.filter(article =>
-                        userPreferences.includes(Object.keys(allSourcesCombined).find(key => allSourcesCombined[key].name === article.sourceName))
-                    );
+                if (userPreferences.rss.length > 0 || userPreferences.youtube.length > 0) {
+                    currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => {
+                        // Check if article is an RSS feed and its source is in userPreferences.rss
+                        if (!article.isYouTube && userPreferences.rss.includes(Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === article.sourceName))) {
+                            return true;
+                        }
+                        // Check if article is a YouTube video and its source is in userPreferences.youtube
+                        if (article.isYouTube && userPreferences.youtube.includes(Object.keys(YOUTUBE_FEEDS).find(key => YOUTUBE_FEEDS[key].name === article.sourceName))) {
+                            return true;
+                        }
+                        return false;
+                    });
                 } else {
                     currentlyDisplayedArticles = [];
-                    newsContainer.innerHTML = `<p class="text-center text-lg">Select your preferred sources in the preferences menu (☰) to customize your feed.</p>`;
+                    newsContainer.innerHTML = `<p class="text-center text-lg text-gray-500">Select your preferred sources in the preferences menu (☰) to customize your feed.</p>`;
                 }
-            } else if (filterKey === 'YouTube') { // Filter for YouTube Videos
+            } else if (filterKey === 'YouTube') { // Filter for ALL YouTube Videos
                 currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => article.isYouTube);
-            }
-            else { // Specific general news source tab clicked
+            } else { // Specific general news source tab clicked
                 currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => article.sourceName === RSS_FEEDS[filterKey].name);
             }
             displayNextBatchOfNews();
@@ -1558,12 +1655,12 @@
                     <label for="pref-checkbox-${sourceKey}">
                         ${sourceDisplayName}
                     </label>
-                    <input type="checkbox" id="pref-checkbox-${sourceKey}" data-source="${sourceKey}" class="preference-checkbox">
+                    <input type="checkbox" id="pref-checkbox-${sourceKey}" data-source="${sourceKey}" data-type="rss" class="preference-checkbox">
                 `;
                 preferencesCheckboxList.appendChild(itemDiv);
 
                 const checkbox = itemDiv.querySelector('.preference-checkbox');
-                checkbox.checked = userPreferences.includes(sourceKey); // Set initial state
+                checkbox.checked = userPreferences.rss.includes(sourceKey); // Set initial state
 
                 // Add event listener for instant saving
                 checkbox.addEventListener('change', async (event) => {
@@ -1575,13 +1672,12 @@
                     }
 
                     if (event.target.checked) {
-                        if (!userPreferences.includes(changedSourceKey)) {
-                            userPreferences.push(changedSourceKey);
+                        if (!userPreferences.rss.includes(changedSourceKey)) {
+                            userPreferences.rss.push(changedSourceKey);
                         }
                     } else {
-                        userPreferences = userPreferences.filter(pref => pref !== changedSourceKey);
+                        userPreferences.rss = userPreferences.rss.filter(pref => pref !== changedSourceKey);
                     }
-                    console.log(`Preferences updated for ${changedSourceKey}:`, userPreferences);
                     await saveUserPreferences(); // Save instantly
 
                     // If 'My Feed' is the active tab, refresh it
@@ -1591,47 +1687,74 @@
                 });
             });
 
-            // Add YouTube feeds
-            Object.keys(YOUTUBE_FEEDS).forEach(sourceKey => {
-                const sourceDisplayName = YOUTUBE_FEEDS[sourceKey].name;
-                const itemDiv = document.createElement('div');
-                itemDiv.classList.add('menu-source-item');
-                itemDiv.innerHTML = `
-                    <label for="pref-checkbox-${sourceKey}">
-                        ${sourceDisplayName}
-                    </label>
-                    <input type="checkbox" id="pref-checkbox-${sourceKey}" data-source="${sourceKey}" class="preference-checkbox">
+            // Add YouTube feeds as a collapsible section
+            if (Object.keys(YOUTUBE_FEEDS).length > 0) {
+                const youtubeSection = document.createElement('div');
+                youtubeSection.classList.add('youtube-preferences-section');
+
+                const collapsibleHeader = document.createElement('button');
+                collapsibleHeader.classList.add('collapsible-header');
+                collapsibleHeader.innerHTML = `
+                    <span>YouTube Channels</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 `;
-                preferencesCheckboxList.appendChild(itemDiv);
+                youtubeSection.appendChild(collapsibleHeader);
 
-                const checkbox = itemDiv.querySelector('.preference-checkbox');
-                checkbox.checked = userPreferences.includes(sourceKey); // Set initial state
+                const collapsibleBody = document.createElement('div');
+                collapsibleBody.classList.add('collapsible-body');
+                youtubeSection.appendChild(collapsibleBody);
 
-                // Add event listener for instant saving
-                checkbox.addEventListener('change', async (event) => {
-                    const changedSourceKey = event.target.dataset.source;
-                    if (!userId) {
-                        event.target.checked = !event.target.checked; // Revert checkbox state
-                        showModalMessage('Login to save your preferences.', true);
-                        return;
-                    }
+                Object.keys(YOUTUBE_FEEDS).forEach(sourceKey => {
+                    const sourceDisplayName = YOUTUBE_FEEDS[sourceKey].name;
+                    const itemDiv = document.createElement('div');
+                    itemDiv.classList.add('youtube-channel-item');
+                    itemDiv.innerHTML = `
+                        <label for="pref-checkbox-${sourceKey}">
+                            ${sourceDisplayName}
+                        </label>
+                        <input type="checkbox" id="pref-checkbox-${sourceKey}" data-source="${sourceKey}" data-type="youtube" class="preference-checkbox">
+                    `;
+                    collapsibleBody.appendChild(itemDiv);
 
-                    if (event.target.checked) {
-                        if (!userPreferences.includes(changedSourceKey)) {
-                            userPreferences.push(changedSourceKey);
+                    const checkbox = itemDiv.querySelector('.preference-checkbox');
+                    checkbox.checked = userPreferences.youtube.includes(sourceKey); // Set initial state
+
+                    checkbox.addEventListener('change', async (event) => {
+                        const changedSourceKey = event.target.dataset.source;
+                        if (!userId) {
+                            event.target.checked = !event.target.checked; // Revert checkbox state
+                            showModalMessage('Login to save your preferences.', true);
+                            return;
                         }
-                    } else {
-                        userPreferences = userPreferences.filter(pref => pref !== changedSourceKey);
-                    }
-                    console.log(`Preferences updated for ${changedSourceKey}:`, userPreferences);
-                    await saveUserPreferences(); // Save instantly
 
-                    // If 'My Feed' is the active tab, refresh it
-                    if (currentActiveTab === 'MyFeed') {
-                        applyNewsFilterAndDisplay('MyFeed');
+                        if (event.target.checked) {
+                            if (!userPreferences.youtube.includes(changedSourceKey)) {
+                                userPreferences.youtube.push(changedSourceKey);
+                            }
+                        } else {
+                            userPreferences.youtube = userPreferences.youtube.filter(pref => pref !== changedSourceKey);
+                        }
+                        await saveUserPreferences(); // Save instantly
+
+                        if (currentActiveTab === 'MyFeed') {
+                            applyNewsFilterAndDisplay('MyFeed');
+                        }
+                    });
+                });
+                preferencesCheckboxList.appendChild(youtubeSection);
+
+                // Add event listener for the collapsible header
+                collapsibleHeader.addEventListener('click', () => {
+                    collapsibleHeader.classList.toggle('expanded');
+                    collapsibleBody.classList.toggle('expanded');
+                    // Adjust max-height for smooth transition, or remove it for instant reveal
+                    if (collapsibleBody.classList.contains('expanded')) {
+                        collapsibleBody.style.maxHeight = collapsibleBody.scrollHeight + "px";
+                    } else {
+                        collapsibleBody.style.maxHeight = "0";
                     }
                 });
-            });
+            }
         }
 
         // Function to dynamically generate news source tabs
@@ -1702,7 +1825,6 @@
 
 
             onAuthStateChanged(auth, async (user) => {
-                console.log("onAuthStateChanged triggered. User:", user ? user.uid : "null");
                 if (user) {
                     userId = user.uid;
                     userEmail = user.email; // Capture email
@@ -1726,7 +1848,7 @@
                     logoutBtn.classList.add('hidden');
                     myFeedTab.style.display = 'none'; // Hide My Feed tab for logged-out users
                     prefMenuStatus.textContent = 'Login to save your preferences.';
-                    userPreferences = [];
+                    userPreferences = { rss: [], youtube: [] }; // Reset preferences on logout
                     populatePreferencesMenu(); // Clear checkboxes on logout
 
                     // Reset active tab to 'All' on logout if 'My Feed' was active
@@ -1769,21 +1891,21 @@
 
         async function loadUserPreferences(uid) {
             if (!uid) return;
-            console.log("Loading preferences for user:", uid);
             try {
                 const prefDocRef = doc(db, `artifacts/${firebaseConfig.projectId}/users/${uid}/preferences`, 'sources');
                 const prefDocSnap = await getDoc(prefDocRef);
                 if (prefDocSnap.exists()) {
-                    userPreferences = prefDocSnap.data().preferredSources || [];
-                    console.log("Preferences loaded:", userPreferences);
+                    // Ensure the structure is an object with rss and youtube arrays
+                    const data = prefDocSnap.data();
+                    userPreferences.rss = data.preferredSources?.rss || data.preferredSources || []; // Backward compatibility
+                    userPreferences.youtube = data.preferredSources?.youtube || [];
                 } else {
-                    userPreferences = [];
-                    console.log("No preferences found for user.");
+                    userPreferences = { rss: [], youtube: [] };
                 }
             } catch (error) {
                 console.error("Error loading user preferences:", error);
                 showErrorMessage('Could not load preferences.');
-                userPreferences = [];
+                userPreferences = { rss: [], youtube: [] };
             }
         }
 
@@ -1795,8 +1917,8 @@
             }
             try {
                 const prefDocRef = doc(db, `artifacts/${firebaseConfig.projectId}/users/${userId}/preferences`, 'sources');
+                // Save preferences as an object with rss and youtube arrays
                 await setDoc(prefDocRef, { preferredSources: userPreferences }, { merge: true });
-                console.log("Preferences saved successfully!");
             } catch (error) {
                 console.error("Error saving user preferences:", error);
                 showErrorMessage('Failed to save preferences.');

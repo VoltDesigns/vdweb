@@ -825,7 +825,7 @@
             const scrollThreshold = 200; // Pixels scrolled to show/hide buttons
             const scrollFromBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
 
-            // Go to Top button visibility: Always show if scrolled down past threshold
+            // Go to Top button visibility: Show if scrolled down past threshold
             if (window.scrollY > scrollThreshold) {
                 goToTopBtn.classList.add('show');
             } else {
@@ -842,6 +842,8 @@
 
         goToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Explicitly hide the button when it's clicked to scroll to the top
+            goToTopBtn.classList.remove('show');
         });
 
         goToBottomBtn.addEventListener('click', () => {

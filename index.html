@@ -217,6 +217,41 @@
             opacity: 0.6;
         }
 
+        /* Go to Top Button Styling */
+        #go-to-top-btn {
+            position: fixed;
+            bottom: 6rem; /* Above pagination, leaving space for go-to-bottom */
+            right: 1rem;
+            background-color: #4F85C5; /* UN Blue */
+            color: #ffffff;
+            border: none;
+            border-radius: 50%; /* Circular */
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0; /* Hidden by default */
+            pointer-events: none; /* Disables clicks when hidden */
+            transition: opacity 0.3s ease-in-out, transform 0.2s ease-in-out;
+            z-index: 1000; /* Ensure it's above other content */
+        }
+
+        #go-to-top-btn:hover {
+            background-color: #3e6a9e; /* Darker blue on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+            opacity: 1; /* Fully opaque on hover */
+        }
+
+        /* Class to show the top button (translucent) */
+        #go-to-top-btn.show {
+            opacity: 0.7;
+            pointer-events: auto;
+        }
+
         /* Go to Bottom Button Styling */
         #go-to-bottom-btn {
             position: fixed;
@@ -294,6 +329,12 @@
                 width: 100%;
                 text-align: center;
             }
+            #go-to-top-btn {
+                bottom: 5.5rem; /* Adjust for potentially tighter mobile layout */
+                right: 0.5rem; /* Slightly less margin on mobile */
+                width: 40px; /* Slightly smaller button on mobile */
+                height: 40px;
+            }
             #go-to-bottom-btn {
                 bottom: 0.5rem; /* Adjust for potentially tighter mobile layout */
                 right: 0.5rem; /* Slightly less margin on mobile */
@@ -338,6 +379,13 @@
             <span class="block sm:inline" id="error-text"></span>
         </div>
     </div>
+
+    <!-- Go to Top Button -->
+    <button id="go-to-top-btn" aria-label="Go to top">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
 
     <!-- Go to Bottom Button -->
     <button id="go-to-bottom-btn" aria-label="Go to bottom">
@@ -393,6 +441,7 @@
         const errorMessageDiv = document.getElementById('error-message');
         const errorTextSpan = document.getElementById('error-text');
         const paginationContainer = document.getElementById('pagination-container');
+        const goToTopBtn = document.getElementById('go-to-top-btn');
         const goToBottomBtn = document.getElementById('go-to-bottom-btn');
 
 
@@ -772,10 +821,17 @@
             }
         });
 
-        // Go to Bottom Button Logic
+        // Go to Top/Bottom Button Logic
         window.addEventListener('scroll', () => {
             const scrollThreshold = 200; // Pixels scrolled to show/hide buttons
             const scrollFromBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
+
+            // Go to Top button visibility: Show if scrolled down past threshold
+            if (window.scrollY > scrollThreshold) {
+                goToTopBtn.classList.add('show'); // Add show class to make it visible (translucent)
+            } else {
+                goToTopBtn.classList.remove('show'); // Remove show class to hide it
+            }
 
             // Go to Bottom button visibility: Hide only when near the very bottom
             if (scrollFromBottom <= scrollThreshold) {
@@ -783,6 +839,12 @@
             } else {
                 goToBottomBtn.classList.remove('hide'); // Show it
             }
+        });
+
+        goToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // The scroll listener will now handle hiding the button once window.scrollY is <= scrollThreshold
+            // No need to explicitly remove 'show' here as the scroll event will trigger and handle it naturally after the smooth scroll completes.
         });
 
         goToBottomBtn.addEventListener('click', () => {

@@ -31,16 +31,16 @@
             --scroll-btn-hover-bg: #3e6a9e; /* Darker blue */
             --progress-bar-bg: #4F85C5; /* Blue */
 
-            --general-button-bg: #ffffff; /* Default for non-active buttons, matching tab background */
-            --general-button-text: #1a202c; /* Default text for non-active buttons, matching tab text */
-            --general-button-hover-bg: #e6f2fb; /* Hover for general buttons, matching tab hover */
+            --general-button-bg: #ffffff; 
+            --general-button-text: #1a202c; 
+            --general-button-hover-bg: #e6f2fb; 
 
-            --login-signup-btn-active-bg: #4F85C5; /* Matches active tab blue */
+            --login-signup-btn-active-bg: #4F85C5; 
             --login-signup-btn-active-text: #ffffff;
-            --login-signup-btn-hover-bg: #3e6a9e; /* Consistent darker blue for hover */
+            --login-signup-btn-hover-bg: #3e6a9e; 
 
             /* New for subtle underlines */
-            --tab-underline-color: #4F85C5; /* Blue for active underline */
+            --tab-underline-color: #4F85C5; 
             --tab-underline-height: 3px;
             
             /* Checkbox colors */
@@ -84,15 +84,15 @@
             --general-button-text: #ffffff;
             --general-button-hover-bg: #2d2d2d; /* Slightly lighter grey for hover */
 
-            --login-signup-btn-active-bg: #6DA0C4; /* Darker light blue for active login in dark mode */
+            --login-signup-btn-active-bg: #6DA0C4; 
             --login-signup-btn-active-text: #ffffff;
-            --login-signup-btn-hover-bg: #457B9D; /* Consistent darker blue for hover */
+            --login-signup-btn-hover-bg: #457B9D; 
 
-            --tab-underline-color: #90cdf4; /* Light blue for active underline in dark mode */
+            --tab-underline-color: #90cdf4; 
 
             --checkbox-border-color: #90cdf4;
             --checkbox-checked-bg: #90cdf4;
-            --checkbox-checked-tick: #000000; /* Dark tick for light blue bg */
+            --checkbox-checked-tick: #000000; 
 
             --hamburger-bg: #1a1a1a; /* Darker grey */
             --hamburger-text: #ffffff;
@@ -130,7 +130,7 @@
         }
         /* Dark mode specific shadow for header */
         body.dark-mode .main-header {
-            box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); /* Reduced shadow size */
+            box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); 
         }
 
         .header-content-wrapper {
@@ -195,7 +195,7 @@
         #off-canvas-menu {
             position: fixed;
             top: 0;
-            left: -300px; /* Hidden off-screen */
+            left: -300px; 
             width: 280px;
             height: 100%;
             background-color: var(--hamburger-bg);
@@ -209,7 +209,7 @@
             color: var(--hamburger-text);
         }
         #off-canvas-menu.open {
-            left: 0; /* Slide in */
+            left: 0; 
         }
         #off-canvas-menu .close-button {
             position: absolute;
@@ -223,7 +223,7 @@
             outline: none;
         }
         .close-button:hover,
-        .close-button:focus { /* Added focus state for accessibility */
+        .close-button:focus { 
             color: var(--link-color);
         }
         #off-canvas-menu h3 {
@@ -256,8 +256,8 @@
             font-weight: 500;
         }
         .menu-source-item input[type="checkbox"] {
-            margin-left: auto; /* Push checkbox to the right */
-            appearance: none; /* Hide default checkbox */
+            margin-left: auto; 
+            appearance: none; 
             width: 1.2rem;
             height: 1.2rem;
             border: 2px solid var(--checkbox-border-color);
@@ -278,8 +278,8 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 0.4rem; /* Adjust tick size */
-            height: 0.75rem; /* Adjust tick size */
+            width: 0.4rem; 
+            height: 0.75rem; 
             border: solid var(--checkbox-checked-tick);
             border-width: 0 2px 2px 0;
             transform: translate(-50%, -50%) rotate(45deg);
@@ -302,8 +302,8 @@
             font-size: calc(var(--base-font-size) * 1.05);
             transition: background-color 0.2s ease;
             outline: none;
-            width: 100%; /* Ensure it spans full width */
-            box-sizing: border-box; /* Include padding/border in width */
+            width: 100%; 
+            box-sizing: border-box; 
         }
         .collapsible-header:hover {
             background-color: var(--hamburger-hover-bg);
@@ -322,11 +322,11 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-out;
-            background-color: var(--hamburger-hover-bg); /* Slightly different bg for nested items */
+            background-color: var(--hamburger-hover-bg); 
             border-bottom: 1px solid var(--hamburger-item-border);
         }
         .collapsible-body.expanded {
-            max-height: 300px; /* Adjust as needed, or use JS to calculate dynamically */
+            max-height: 300px; 
         }
         .youtube-channel-item {
             padding: 0.5rem 1rem;
@@ -367,8 +367,8 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 0.35rem; /* Adjust tick size */
-            height: 0.65rem; /* Adjust tick size */
+            width: 0.35rem; 
+            height: 0.65rem; 
             border: solid var(--checkbox-checked-tick);
             border-width: 0 2px 2px 0;
             transform: translate(-50%, -50%) rotate(45deg);
@@ -423,9 +423,9 @@
 
         .auth-buttons-container {
             display: flex;
-            gap: 0.05rem; /* Reduced gap to match tabs */
+            gap: 0.05rem; 
             align-items: center;
-            background-color: var(--card-bg); /* Match tab group styling */
+            background-color: var(--card-bg); 
             box-shadow: 0 2px 5px var(--box-shadow-color);
             overflow: hidden;
             border: 1px solid var(--border-color);
@@ -433,45 +433,45 @@
         }
         /* Dark mode specific shadow for auth buttons container */
         body.dark-mode .auth-buttons-container {
-            box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); /* Reduced shadow size */
+            box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); 
         }
 
         .auth-button {
             background-color: var(--general-button-bg);
             color: var(--general-button-text);
-            padding: 0.6rem 1rem; /* Match tab padding */
-            border-radius: 0; /* No rounded corners */
+            padding: 0.6rem 1rem; 
+            border-radius: 0; 
             border: none;
             cursor: pointer;
             font-weight: 500;
             transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
             outline: none;
-            font-size: calc(var(--base-font-size) * 0.95); /* Match tab font size */
-            flex-grow: 1; /* Allow buttons to grow */
+            font-size: calc(var(--base-font-size) * 0.95); 
+            flex-grow: 1; 
             text-align: center;
         }
         .auth-button:hover:not(.active) {
             background-color: var(--general-button-hover-bg);
-            color: var(--link-color); /* Hover color for general buttons */
+            color: var(--link-color); 
         }
-        .auth-button.active { /* For Login/Logout when it acts as an active tab indicator */
+        .auth-button.active { 
             background-color: var(--login-signup-btn-active-bg);
             color: var(--login-signup-btn-active-text);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         /* Dark mode specific shadow for active auth button */
         body.dark-mode .auth-button.active {
-            box-shadow: 0 1px 2px 0.5px rgba(255, 255, 255, 0.2); /* Reduced shadow size */
+            box-shadow: 0 1px 2px 0.5px rgba(255, 255, 255, 0.2); 
         }
 
         #user-id-display {
             font-size: calc(var(--base-font-size) * 0.85);
             color: var(--source-name-color);
             margin-left: 0.5rem;
-            white-space: normal; /* Allow wrapping */
-            overflow: visible; /* Prevent truncation */
-            text-overflow: clip; /* Prevent truncation */
-            max-width: none; /* Allow full width */
+            white-space: normal; 
+            overflow: visible; 
+            text-overflow: clip; 
+            max-width: none; 
         }
         
         .site-main-content {
@@ -492,7 +492,7 @@
         }
         /* Dark mode specific shadow for content area */
         body.dark-mode .content-area {
-            box-shadow: 0 2px 3px 1px var(--box-shadow-color); /* Reduced shadow size */
+            box-shadow: 0 2px 3px 1px var(--box-shadow-color); 
         }
 
         /* Reading Progress Bar */
@@ -520,7 +520,7 @@
         }
         /* Dark mode specific shadow for news items */
         body.dark-mode .news-item {
-            box-shadow: 0 2px 3px 1px var(--box-shadow-color); /* Reduced shadow size */
+            box-shadow: 0 2px 3px 1px var(--box-shadow-color); 
         }
 
         .news-item h2 {
@@ -574,7 +574,7 @@
         }
         /* Dark mode specific shadow for tab button group */
         body.dark-mode .tab-button-group {
-            box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); /* Reduced shadow size */
+            box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); 
         }
 
         .tab-button {
@@ -651,11 +651,11 @@
         }
         /* For responsive YouTube embeds */
         .video-container {
-            width: 240px; /* Doubled width for desktop */
-            height: 140px; /* Doubled height for desktop */
+            width: 240px; 
+            height: 140px; 
             position: relative;
             overflow: hidden;
-            margin-right: 1.5rem; /* Increased margin for spacing */
+            margin-right: 1.5rem; 
             flex-shrink: 0;
             border-radius: 0.5rem;
             border: 1px solid var(--border-color);
@@ -713,11 +713,11 @@
             margin-bottom: 0.4rem; 
         }
         .news-image {
-            width: 240px; /* Aligned with video container width */
-            height: 140px; /* Aligned with video container height */
+            width: 240px; 
+            height: 140px; 
             object-fit: cover;
             border-radius: 0.5rem;
-            margin-right: 1.5rem; /* Increased margin for spacing */
+            margin-right: 1.5rem; 
             flex-shrink: 0;
             border: 1px solid var(--border-color);
             transition: border-color 0.3s ease;
@@ -844,7 +844,7 @@
         }
         /* Dark mode specific shadow for modal content */
         body.dark-mode .modal-content {
-            box-shadow: 0 2px 3px 1px var(--box-shadow-color); /* Reduced shadow size */
+            box-shadow: 0 2px 3px 1px var(--box-shadow-color); 
         }
 
         .close-button {
@@ -962,7 +962,7 @@
             }
             .video-container {
                 width: 100%;
-                height: 180px; /* Adjust height for mobile videos */
+                height: 180px; 
                 margin-right: 0;
                 margin-bottom: 0.75rem;
             }
@@ -1030,7 +1030,7 @@
     <!-- Off-canvas Preferences Menu -->
     <aside id="off-canvas-menu" role="dialog" aria-modal="true" aria-label="News Preferences">
         <button class="close-button" aria-label="Close preferences menu">&times;</button>
-        <h3>News Feed Preferences</h3> <!-- Renamed title -->
+        <h3>News Feed Preferences</h3> 
         <p class="text-sm mb-4" id="pref-menu-status">Login to save your preferences.</p>
         <div id="preferences-checkbox-list">
             <!-- Checkboxes and collapsible sections will be dynamically loaded here -->
@@ -1127,8 +1127,8 @@
 
         // Firebase App and Services
         let app, auth, db;
-        let userId = null; // Will store UID
-        let userEmail = null; // Will store email if logged in with email/password, or null for anonymous
+        let userId = null; 
+        let userEmail = null; 
         let userPreferences = {
             rss: [],
             youtube: []
@@ -1175,7 +1175,7 @@
         let displayedArticleCount = 0;
         const articlesPerLoad = 10;
         let isLoadingMore = false;
-        let currentActiveTab = 'All'; // Track the currently active content-viewing tab
+        let currentActiveTab = 'All'; 
 
 
         const newsContainer = document.getElementById('news-container');
@@ -1204,7 +1204,6 @@
         let youtubeVideosTab; 
 
 
-        // Elements for hamburger menu
         const hamburgerMenuBtn = document.getElementById('hamburger-menu-btn');
         const offCanvasMenu = document.getElementById('off-canvas-menu');
         const closeOffCanvasBtn = offCanvasMenu.querySelector('.close-button');
@@ -1297,7 +1296,7 @@
                 modalInfoMessage.classList.remove('hidden');
                 modalErrorMessage.classList.add('hidden');
             }
-            loginModal.style.display = 'flex'; // Show modal
+            loginModal.style.display = 'flex'; 
             setTimeout(() => {
                 if (isError) modalErrorMessage.focus();
                 else modalInfoMessage.focus();
@@ -1341,7 +1340,6 @@
                 const response = await fetch(proxyUrl);
 
                 if (!response.ok) {
-                    // Try to parse error message from response body if available
                     const errorDetails = await response.text();
                     throw new Error(`HTTP error! Status: ${response.status}. Details: ${errorDetails.substring(0, 100)}`);
                 }
@@ -1349,7 +1347,6 @@
                 const data = await response.json();
 
                 if (data.status === 'error' || !data.items || data.items.length === 0) {
-                    // Treat empty items as an error as well for population purposes
                     throw new Error(data.message || 'Failed to fetch news or no items found from proxy.');
                 }
                 
@@ -1376,19 +1373,16 @@
             let combinedArticles = [];
             let failedSources = [];
 
-            // Fetch from RSS_FEEDS
             const rssFetchPromises = Object.entries(RSS_FEEDS).map(async ([key, config]) => {
                 try {
                     const articles = await fetchNewsForSource(config.url, config.name);
                     return articles;
                 } catch (error) {
                     failedSources.push(config.name);
-                    // Instead of throwing, just return null so Promise.allSettled can continue
                     return null;
                 }
             });
 
-            // Fetch from YOUTUBE_FEEDS
             const youtubeFetchPromises = Object.entries(YOUTUBE_FEEDS).map(async ([key, config]) => {
                 const youtubeRssUrl = getYoutubeRssUrl(config);
                 if (!youtubeRssUrl) {
@@ -1421,9 +1415,8 @@
             }
             
             allArticlesFromAllSources = combinedArticles.map(item => {
-                // Parse pubDate reliably. RSS2JSON often uses 'pubDate' or 'date'. YouTube RSS uses 'pubDate'.
                 let date = new Date(item.pubDate || item.date || 0);
-                if (isNaN(date.getTime())) { // If date parsing failed, set to a default (e.g., epoch)
+                if (isNaN(date.getTime())) { 
                     date = new Date(0);
                 }
                 return {
@@ -1434,7 +1427,6 @@
                 };
             });
 
-            // Sort all articles from latest to oldest
             allArticlesFromAllSources.sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
 
 
@@ -1569,14 +1561,12 @@
         }
 
 
-        // Event listener for tab buttons
         newsSourcesDiv.addEventListener('click', (event) => {
             const button = event.target.closest('.tab-button');
             if (!button) return;
 
             const sourceKey = button.dataset.source;
 
-            // Update active class for tabs
             document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
                 btn.classList.remove('active');
                 btn.setAttribute('aria-selected', 'false');
@@ -1623,11 +1613,9 @@
         }
 
 
-        // Function to populate the off-canvas menu with checkboxes
         function populatePreferencesMenu() {
             preferencesCheckboxList.innerHTML = ''; 
             
-            // Add YouTube feeds as a collapsible section (now at the top)
             if (Object.keys(YOUTUBE_FEEDS).length > 0) {
                 const youtubeSection = document.createElement('div');
                 youtubeSection.classList.add('youtube-preferences-section');
@@ -1694,7 +1682,6 @@
                 });
             }
 
-            // Add general RSS feeds (now below YouTube)
             Object.keys(RSS_FEEDS).forEach(sourceKey => {
                 const sourceDisplayName = RSS_FEEDS[sourceKey].name;
                 const itemDiv = document.createElement('div');
@@ -1734,11 +1721,9 @@
             });
         }
 
-        // Function to dynamically generate news source tabs
         function generateNewsSourceTabs() {
             newsSourcesDiv.innerHTML = ''; 
 
-            // Add 'All News' tab
             const allNewsTab = document.createElement('button');
             allNewsTab.classList.add('tab-button');
             allNewsTab.dataset.source = 'All';
@@ -1747,7 +1732,6 @@
             allNewsTab.textContent = 'All News';
             newsSourcesDiv.appendChild(allNewsTab);
 
-            // Add 'My Feed' tab
             myFeedTab = document.createElement('button'); 
             myFeedTab.classList.add('tab-button');
             myFeedTab.dataset.source = 'MyFeed';
@@ -1757,7 +1741,6 @@
             myFeedTab.style.display = 'none'; 
             newsSourcesDiv.appendChild(myFeedTab);
 
-            // Add dynamic general news source tabs
             Object.keys(RSS_FEEDS).forEach(sourceKey => {
                 const tabButton = document.createElement('button');
                 tabButton.classList.add('tab-button');
@@ -1768,7 +1751,6 @@
                 newsSourcesDiv.appendChild(tabButton);
             });
 
-            // Add dynamic "YouTube Videos" tab
             if (Object.keys(YOUTUBE_FEEDS).length > 0) {
                 youtubeVideosTab = document.createElement('button');
                 youtubeVideosTab.classList.add('tab-button');
@@ -1780,7 +1762,6 @@
             }
 
 
-            // Set 'All News' as active by default initially
             document.querySelector('.tab-button[data-source="All"]').classList.add('active');
             document.querySelector('.tab-button[data-source="All"]').setAttribute('aria-selected', 'true');
             currentActiveTab = 'All';
@@ -1792,10 +1773,8 @@
             auth = getAuth(app);
             db = getFirestore(app);
 
-            // Generate tabs first
             generateNewsSourceTabs();
 
-            // Initial state: Anonymous user display
             userIdDisplay.textContent = 'Anonymous';
             userIdDisplay.classList.remove('hidden'); 
 
@@ -1873,7 +1852,7 @@
                     const data = prefDocSnap.data();
                     userPreferences.rss = data.preferredSources?.rss || []; 
                     userPreferences.youtube = data.preferredSources?.youtube || [];
-                    if (!data.preferredSources?.rss && Array.isArray(data.preferredSources)) {
+                    if (!data.preferredSources?.rss && Array.isArray(data.preferredSources)) { // Backward compatibility
                          userPreferences.rss = data.preferredSources.filter(key => RSS_FEEDS[key]);
                          userPreferences.youtube = data.preferredSources.filter(key => YOUTUBE_FEEDS[key]);
                     }
@@ -1904,7 +1883,6 @@
         }
 
 
-        // Hamburger Menu Event Listeners
         hamburgerMenuBtn.addEventListener('click', () => {
             offCanvasMenu.classList.add('open');
             overlay.style.display = 'block';
@@ -1924,7 +1902,6 @@
         });
 
 
-        // Close menu on Escape key
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape' && offCanvasMenu.classList.contains('open')) {
                 offCanvasMenu.classList.remove('open');

@@ -26,7 +26,7 @@
             --error-bg: #ffe0e0;
             --error-border: #ff8080;
             --error-text: #cc0000;
-            --box-shadow-color: rgba(0, 0, 0, 0.05);
+            --box-shadow-color: rgba(0, 0, 0, 0.05); /* Default light mode shadow color */
             --scroll-btn-bg: #4F85C5; /* Blue */
             --scroll-btn-hover-bg: #3e6a9e; /* Darker blue */
             --progress-bar-bg: #4F85C5; /* Blue */
@@ -75,7 +75,7 @@
             --error-bg: #330000;
             --error-border: #660000;
             --error-text: #ff6666;
-            --box-shadow-color: rgba(255, 255, 255, 0.1);
+            --box-shadow-color: rgba(255, 255, 255, 0.2); /* Slightly more visible white shadow color for dark mode */
             --scroll-btn-bg: #3a3a3a;
             --scroll-btn-hover-bg: #555555;
             --progress-bar-bg: #90cdf4;
@@ -127,6 +127,10 @@
             position: sticky;
             top: 0;
             z-index: 100;
+        }
+        /* Dark mode specific shadow for header */
+        body.dark-mode .main-header {
+            box-shadow: 0 3px 6px 1px var(--box-shadow-color);
         }
 
         .header-content-wrapper {
@@ -339,6 +343,11 @@
             border: 1px solid var(--border-color);
             transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
+        /* Dark mode specific shadow for auth buttons container */
+        body.dark-mode .auth-buttons-container {
+            box-shadow: 0 3px 6px 1px var(--box-shadow-color);
+        }
+
         .auth-button {
             background-color: var(--general-button-bg);
             color: var(--general-button-text);
@@ -362,9 +371,9 @@
             color: var(--login-signup-btn-active-text);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
-        .auth-button:focus-visible {
-            outline: 2px solid var(--link-color);
-            outline-offset: 2px;
+        /* Dark mode specific shadow for active auth button */
+        body.dark-mode .auth-button.active {
+            box-shadow: 0 3px 6px rgba(255, 255, 255, 0.3);
         }
 
         #user-id-display {
@@ -393,6 +402,10 @@
             padding: 1.5rem;
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
+        /* Dark mode specific shadow for content area */
+        body.dark-mode .content-area {
+            box-shadow: 0 6px 10px 2px var(--box-shadow-color);
+        }
 
         /* Reading Progress Bar */
         #reading-progress-bar {
@@ -417,6 +430,11 @@
         .news-item:hover {
             transform: translateY(-5px);
         }
+        /* Dark mode specific shadow for news items */
+        body.dark-mode .news-item {
+            box-shadow: 0 6px 10px 2px var(--box-shadow-color);
+        }
+
         .news-item h2 {
             font-size: calc(var(--base-font-size) * 1.5);
             font-weight: 600;
@@ -465,6 +483,10 @@
             border-radius: 0;
             border: 1px solid var(--border-color);
             transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        /* Dark mode specific shadow for tab button group */
+        body.dark-mode .tab-button-group {
+            box-shadow: 0 3px 6px 1px var(--box-shadow-color);
         }
 
         .tab-button {
@@ -713,6 +735,11 @@
             box-shadow: 0 4px 6px var(--box-shadow-color);
             position: relative;
         }
+        /* Dark mode specific shadow for modal content */
+        body.dark-mode .modal-content {
+            box-shadow: 0 6px 10px 2px var(--box-shadow-color);
+        }
+
         .close-button {
             color: var(--headline-color);
             position: absolute;

@@ -206,7 +206,7 @@
             box-shadow: 2px 0 5px rgba(0,0,0,0.2);
             transition: left 0.3s ease-in-out;
             z-index: 1500;
-            padding: 1.5rem 1rem;
+            padding: 1.5rem 1.0rem;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
@@ -330,7 +330,7 @@
             border-bottom: 1px solid var(--hamburger-item-border);
         }
         .collapsible-body.expanded {
-            max-height: 300px; 
+            max-height: 300px; /* Adjust as needed */
         }
         .youtube-channel-item {
             padding: 0.5rem 1rem;
@@ -427,62 +427,62 @@
 
         .auth-buttons-container {
             display: flex;
-            gap: 0.05rem; 
+            gap: 0.05rem; /* Reduced gap */
             align-items: center;
-            background-color: var(--card-bg); 
-            box-shadow: 0 2px 5px var(--box-shadow-color);
+            background-color: var(--card-bg); /* Use card background for the container */
+            box-shadow: 0 2px 5px var(--box-shadow-color); /* Subtle shadow */
             overflow: hidden;
             border: 1px solid var(--border-color);
             transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
         /* Dark mode specific shadow for auth buttons container */
         body.dark-mode .auth-buttons-container {
-            box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); 
+            box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); /* Reduced shadow size */
         }
 
         .auth-button {
             background-color: var(--general-button-bg);
             color: var(--general-button-text);
-            padding: 0.6rem 1rem; 
-            border-radius: 0; 
+            padding: 0.6rem 1rem; /* Adjust padding to match design */
+            border-radius: 0; /* No rounded corners for grouped buttons */
             border: none;
             cursor: pointer;
             font-weight: 500;
             transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
             outline: none;
-            font-size: calc(var(--base-font-size) * 0.95); 
-            flex-grow: 1; 
+            font-size: calc(var(--base-font-size) * 0.95); /* Adjusted font size */
+            flex-grow: 1; /* Make buttons fill available space */
             text-align: center;
         }
         .auth-button:hover:not(.active) {
             background-color: var(--general-button-hover-bg);
-            color: var(--link-color); 
+            color: var(--link-color); /* Use link color for hover text */
         }
-        .auth-button.active { 
+        .auth-button.active { /* Style for the active/selected button */
             background-color: var(--login-signup-btn-active-bg);
             color: var(--login-signup-btn-active-text);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Stronger shadow for active state */
         }
         /* Dark mode specific shadow for active auth button */
         body.dark-mode .auth-button.active {
-            box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); 
+            box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); /* Reduced shadow size */
         }
 
         #user-id-display {
             font-size: calc(var(--base-font-size) * 0.85);
             color: var(--source-name-color);
             margin-left: 0.5rem;
-            white-space: normal; 
-            overflow: visible; 
-            text-overflow: clip; 
-            max-width: none; 
+            white-space: normal; /* Allow text to wrap */
+            overflow: visible; /* Ensure text is not clipped */
+            text-overflow: clip; /* Prevent ellipsis */
+            max-width: none; /* Allow full width */
         }
         
         .site-main-content {
             background-color: var(--section-bg);
             padding: 1rem;
             transition: background-color 0.3s ease;
-            min-height: calc(100vh - 2rem - 64px);
+            min-height: calc(100vh - 2rem - 64px); /* Adjust based on header/footer heights */
         }
 
         .content-area {
@@ -496,7 +496,7 @@
         }
         /* Dark mode specific shadow for content area */
         body.dark-mode .content-area {
-            box-shadow: 0 2px 3px 1px var(--box-shadow-color); 
+            box-shadow: 0 2px 3px 1px var(--box-shadow-color); /* Reduced shadow size */
         }
 
         /* Reading Progress Bar */
@@ -507,7 +507,7 @@
             height: 4px;
             background-color: var(--progress-bar-bg);
             width: 0%;
-            z-index: 101;
+            z-index: 101; /* Above header but below modals */
             transition: background-color 0.3s ease;
         }
 
@@ -515,27 +515,27 @@
             background-color: var(--card-bg);
             border-radius: 0.75rem;
             box-shadow: 0 4px 6px var(--box-shadow-color);
-            padding: 1rem; 
+            padding: 1rem; /* Padding for news cards */
             margin-bottom: 1rem; /* Default for desktop */
             transition: transform 0.2s ease-in-out, background-color 0.3s ease, box-shadow 0.3s ease;
         }
         .news-item:hover {
-            transform: translateY(-3px); 
+            transform: translateY(-3px); /* Subtle lift on hover */
         }
         /* Dark mode specific shadow for news items */
         body.dark-mode .news-item {
-            box-shadow: 0 2px 3px 1.5px var(--box-shadow-color); 
+            box-shadow: 0 2px 3px 1.5px var(--box-shadow-color); /* Reduced shadow size */
         }
 
         .news-item h2 {
-            font-size: calc(var(--base-font-size) * 1.35); 
+            font-size: calc(var(--base-font-size) * 1.35); /* Responsive headline size */
             font-weight: 600;
             color: var(--headline-color);
             margin-bottom: 0.25rem;
             transition: color 0.3s ease;
         }
         .news-item .source-name {
-            font-size: calc(var(--base-font-size) * 0.85); 
+            font-size: calc(var(--base-font-size) * 0.85); /* Smaller font for source name */
             font-weight: 500;
             color: var(--source-name-color);
             margin-bottom: 0.5rem; /* Default for desktop */
@@ -551,11 +551,11 @@
         .news-item a:hover {
             text-decoration: underline;
         }
-        
+
         .toggle-details-button {
             background-color: transparent;
             color: var(--tab-button-text);
-            padding: 0.4rem 0.8rem; 
+            padding: 0.4rem 0.8rem; /* Small padding */
             border-radius: 0;
             border: 1px solid var(--toggle-details-button-border);
             cursor: pointer;
@@ -565,7 +565,7 @@
             align-items: center;
             font-weight: 500;
             box-shadow: none;
-            font-size: calc(var(--base-font-size) * 0.85); 
+            font-size: calc(var(--base-font-size) * 0.85); /* Smaller text */
             outline: none;
         }
         .toggle-details-button:hover {
@@ -583,7 +583,7 @@
             outline-offset: 2px;
         }
         .toggle-details-button svg {
-            margin-left: 0.4rem; 
+            margin-left: 0.4rem; /* Space between text and icon */
             transition: transform 0.2s;
         }
         .toggle-details-button.expanded svg {
@@ -596,21 +596,21 @@
             margin-bottom: 0.4rem; /* Default for desktop */
         }
         .news-image {
-            width: 240px; 
-            height: 140px; 
+            width: 240px; /* Fixed width for desktop */
+            height: 140px; /* Fixed height for desktop */
             object-fit: cover;
             border-radius: 0.5rem;
-            margin-right: 1.5rem; 
-            flex-shrink: 0;
+            margin-right: 1.5rem; /* Space from text */
+            flex-shrink: 0; /* Prevent shrinking */
             border: 1px solid var(--border-color);
             transition: border-color 0.3s ease;
         }
         
         .infinite-scroll-message {
             text-align: center;
-            font-size: calc(var(--base-font-size) * 1.0); 
+            font-size: calc(var(--base-font-size) * 1.0); /* Base font size */
             color: var(--source-name-color);
-            padding: 1.5rem 0; 
+            padding: 1.5rem 0; /* Vertical padding */
             transition: color 0.3s ease;
         }
 
@@ -842,6 +842,7 @@
             }
         }
 
+        /* Mobile view for tab bar: fixed at bottom */
         @media (max-width: 768px) {
             /* Mobile-specific variables */
             --mobile-tab-bar-height: 45px; /* Increased height for the sticky bottom tab bar (30px * 1.5) */
@@ -1624,7 +1625,7 @@
                     });
                 } else {
                     currentlyDisplayedArticles = [];
-                    newsContainer.innerHTML = `<p class="text-center text-lg text-gray-500">No news found for this selection.</p>`;
+                    newsContainer.innerHTML = `<p class="text-center text-lg text-gray-500">Select your preferred sources in the preferences menu (☰) to customize your feed.</p>`;
                 }
             } else if (filterKey === 'YouTube') { 
                 currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => article.isYouTube);
@@ -2021,10 +2022,11 @@
 
         // Function to update scroll button icon
         function updateScrollButtonIcon() {
-            if (window.scrollY > 0) {
-                scrollNavigationBtn.classList.remove('scrolled-to-top');
+            // Check if at the very top of the page
+            if (window.scrollY === 0) {
+                scrollNavigationBtn.classList.add('scrolled-to-top'); // Show down arrow
             } else {
-                scrollNavigationBtn.classList.add('scrolled-to-top');
+                scrollNavigationBtn.classList.remove('scrolled-to-top'); // Show up arrow
             }
         }
 

@@ -11,9 +11,9 @@
     <style>
         /* Define CSS variables for colors */
         :root {
-            --body-bg: #e6f2fb; /* Light grayish blue */
-            --header-bg: #ffffff; /* Header background for light mode */
-            --main-content-bg: #e6f2fb; /* Background for main content section (light mode) */
+            --body-bg: #e6f2fb; /* Light grayish blue - for the very outermost area, e.g., if there's body margin */
+            --section-bg: #ffffff; /* Background for header and main content sections (full width) */
+            --card-bg: #ffffff; /* Background for the central content card, tabs, pagination */
             --headline-color: #1a202c; /* Darker text */
             --source-name-color: #4a5568;
             --link-color: #4F85C5; /* UN Blue */
@@ -34,8 +34,8 @@
         /* Dark Mode overrides */
         body.dark-mode {
             --body-bg: #000000; /* Pure Black background */
-            --header-bg: #000000; /* Header background for dark mode */
-            --main-content-bg: #000000; /* Background for main content section (dark mode) */
+            --section-bg: #000000; /* Pure Black for header and main content sections */
+            --card-bg: #000000; /* Pure Black for the central content card, tabs, pagination */
             --headline-color: #ffffff; /* White text */
             --source-name-color: #ffffff; /* White text for source name */
             --link-color: #90cdf4; /* Lighter blue */
@@ -55,16 +55,16 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--body-bg);
+            background-color: var(--body-bg); /* Applies to entire viewport */
             transition: background-color 0.3s ease; /* Smooth transition for theme change */
             color: var(--headline-color); /* Default text color for body */
             margin: 0; /* Remove default body margin */
-            padding: 0; /* Remove default body padding */
+            padding: 0; /* Remove default body padding from Tailwind's p-4 */
         }
 
         .main-header {
             width: 100%; /* Full width */
-            background-color: var(--header-bg); /* Dynamic header background */
+            background-color: var(--section-bg); /* Dynamic header background, full width */
             box-shadow: 0 2px 4px var(--box-shadow-color); /* Subtle shadow for separation */
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
             position: sticky; /* Keep header visible on scroll */
@@ -81,21 +81,23 @@
             display: flex; /* Flexbox for alignment */
             justify-content: center; /* Center the title */
             align-items: center;
+            min-height: 48px; /* Ensure enough height for the button */
         }
 
         .site-main-content {
-            background-color: var(--main-content-bg); /* Full width background for the whole content area */
-            padding: 1rem; /* Padding for the main content section, consistent with body padding */
+            background-color: var(--section-bg); /* Full width background for the whole content area, matches header */
+            padding: 1rem; /* Padding for the main content section, consistent with header padding */
             transition: background-color 0.3s ease;
+            min-height: calc(100vh - 2rem - 64px); /* Adjust min-height, heuristic: viewport height - (header height + section padding) */
         }
 
         .content-area {
             max-width: 900px; /* Max width for the card-like content */
             margin: 0 auto; /* Center the content area */
-            background-color: var(--header-bg); /* Uses header-bg for the card background */
+            background-color: var(--card-bg); /* Card background for news, tabs, pagination */
             border-radius: 0.75rem; /* Rounded corners for the content area */
             box-shadow: 0 4px 6px var(--box-shadow-color); /* Dynamic shadow color */
-            padding: 1.5rem; /* Content padding */
+            padding: 1.5rem; /* Content padding inside the card */
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -149,7 +151,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 0.05rem;
-            background-color: var(--header-bg); /* Uses the card background */
+            background-color: var(--card-bg); /* Tabs use card background */
             box-shadow: 0 2px 5px var(--box-shadow-color); /* Dynamic shadow color */
             overflow: hidden;
             flex-grow: 1;
@@ -270,7 +272,7 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 0.05rem;
-            background-color: var(--header-bg); /* Uses the card background */
+            background-color: var(--card-bg); /* Pagination uses card background */
             box-shadow: 0 2px 5px var(--box-shadow-color); /* Dynamic shadow color */
             overflow: hidden;
             padding: 0.5rem;
@@ -443,7 +445,7 @@
         }
     </style>
 </head>
-<body class="p-4 min-h-screen">
+<body class="min-h-screen">
     <!-- Header (full width background, centered content) -->
     <header class="main-header">
         <div class="header-content-wrapper">

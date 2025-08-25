@@ -9,23 +9,61 @@
     <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Define CSS variables for colors */
+        :root {
+            --body-bg: #e6f2fb; /* Light grayish blue */
+            --container-bg: #ffffff;
+            --news-item-bg: #ffffff;
+            --headline-color: #1a202c; /* Darker text */
+            --source-name-color: #4a5568;
+            --link-color: #4F85C5; /* UN Blue */
+            --tab-button-hover-bg: #e6f2fb;
+            --tab-button-text: #1a202c;
+            --collapsible-text: #4a5568;
+            --border-color: #d1e1f3;
+            --pagination-button-text: #1a202c;
+            --pagination-button-hover-bg: #e6f2fb;
+            --loading-spinner-color: #4F85C5;
+            --toggle-details-button-border: #d1e1f3;
+        }
+
+        /* Dark Mode overrides */
+        body.dark-mode {
+            --body-bg: #1a202c; /* Dark charcoal */
+            --container-bg: #2d3748; /* Slightly lighter dark grey */
+            --news-item-bg: #2d3748;
+            --headline-color: #edf2f7; /* Light text */
+            --source-name-color: #a0aec0; /* Lighter grey */
+            --link-color: #90cdf4; /* Lighter blue */
+            --tab-button-hover-bg: #4a5568;
+            --tab-button-text: #edf2f7;
+            --collapsible-text: #cbd5e0;
+            --border-color: #4a5568;
+            --pagination-button-text: #edf2f7;
+            --pagination-button-hover-bg: #4a5568;
+            --loading-spinner-color: #90cdf4;
+            --toggle-details-button-border: #4a5568;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #e6f2fb; /* Light grayish blue for background, like UN flag */
+            background-color: var(--body-bg);
+            transition: background-color 0.3s ease; /* Smooth transition for theme change */
         }
         .container {
             max-width: 900px;
             margin: auto;
             position: relative;
-            background-color: #ffffff; /* White background for the main content area */
+            background-color: var(--container-bg);
+            transition: background-color 0.3s ease;
         }
         .news-item {
-            background-color: #ffffff;
+            background-color: var(--news-item-bg);
             border-radius: 0.75rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Lighter shadow */
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            transition: transform 0.2s ease-in-out;
+            transition: transform 0.2s ease-in-out, background-color 0.3s ease, box-shadow 0.3s ease;
         }
         .news-item:hover {
             transform: translateY(-5px);
@@ -33,20 +71,23 @@
         .news-item h2 {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #1a202c; /* Darker text for headlines for contrast */
+            color: var(--headline-color);
             margin-bottom: 0.25rem;
+            transition: color 0.3s ease;
         }
         .news-item .source-name {
             font-size: 0.9rem;
             font-weight: 500;
-            color: #4a5568;
+            color: var(--source-name-color);
             margin-bottom: 0.75rem;
             display: block;
+            transition: color 0.3s ease;
         }
         .news-item a {
-            color: #4F85C5; /* UN Blue for links */
+            color: var(--link-color);
             text-decoration: none;
             font-weight: 500;
+            transition: color 0.3s ease;
         }
         .news-item a:hover {
             text-decoration: underline;
@@ -73,14 +114,15 @@
             width: 100%;
             max-width: 900px;
             border-radius: 0;
-            border: 1px solid #d1e1f3;
+            border: 1px solid var(--border-color);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .tab-button {
             padding: 0.6rem 1rem;
             font-size: 0.95rem;
             font-weight: 500;
-            color: #1a202c;
+            color: var(--tab-button-text);
             background-color: transparent;
             transition: all 0.2s ease-in-out;
             cursor: pointer;
@@ -92,23 +134,24 @@
         }
 
         .tab-button:hover:not(.active) {
-            background-color: #e6f2fb;
-            color: #000000;
+            background-color: var(--tab-button-hover-bg);
+            color: var(--headline-color);
         }
 
         .tab-button.active {
-            background-color: #4F85C5;
+            background-color: #4F85C5; /* Keep active tab accent consistent */
             color: #ffffff;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .loading-spinner {
             border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #4F85C5;
+            border-left-color: var(--loading-spinner-color);
             border-radius: 50%;
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
+            transition: border-left-color 0.3s ease;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -120,8 +163,9 @@
             overflow: hidden;
             transition: max-height 0.3s ease-out;
             padding: 0 1rem;
-            color: #4a5568;
+            color: var(--collapsible-text);
             line-height: 1.6;
+            transition: color 0.3s ease;
         }
         .collapsible-content.expanded {
             max-height: 500px;
@@ -131,10 +175,10 @@
 
         .toggle-details-button {
             background-color: transparent;
-            color: #1a202c;
+            color: var(--tab-button-text);
             padding: 0.5rem 1rem;
             border-radius: 0;
-            border: 1px solid #d1e1f3;
+            border: 1px solid var(--toggle-details-button-border);
             cursor: pointer;
             transition: all 0.2s ease-in-out;
             margin-top: 1rem;
@@ -145,8 +189,8 @@
             font-size: 0.9rem;
         }
         .toggle-details-button:hover {
-            background-color: #e6f2fb;
-            color: #000000;
+            background-color: var(--tab-button-hover-bg);
+            color: var(--headline-color);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
         }
         .toggle-details-button:active {
@@ -174,7 +218,8 @@
             border-radius: 0.5rem;
             margin-right: 1rem;
             flex-shrink: 0;
-            border: 1px solid #d1e1f3;
+            border: 1px solid var(--border-color);
+            transition: border-color 0.3s ease;
         }
         
         .pagination-container {
@@ -188,13 +233,14 @@
             overflow: hidden;
             padding: 0.5rem;
             border-radius: 0;
-            border: 1px solid #d1e1f3;
+            border: 1px solid var(--border-color);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .pagination-button {
             padding: 0.6rem 1rem;
             font-size: 0.95rem;
             font-weight: 500;
-            color: #1a202c;
+            color: var(--pagination-button-text);
             background-color: transparent;
             transition: all 0.2s ease-in-out;
             cursor: pointer;
@@ -204,8 +250,8 @@
             text-align: center;
         }
         .pagination-button:hover:not(.active):not(:disabled) {
-            background-color: #e6f2fb;
-            color: #000000;
+            background-color: var(--pagination-button-hover-bg);
+            color: var(--headline-color);
         }
         .pagination-button.active {
             background-color: #4F85C5;
@@ -251,6 +297,33 @@
         #scroll-navigation-btn svg {
             margin: 0.25rem 0; /* Space out the arrows */
         }
+
+        /* Dark Mode Toggle Button */
+        #dark-mode-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--headline-color); /* Inherit color from theme */
+            transition: color 0.3s ease, background-color 0.2s ease;
+        }
+
+        #dark-mode-toggle:hover {
+            background-color: rgba(0, 0, 0, 0.05); /* Light hover effect */
+        }
+        body.dark-mode #dark-mode-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1); /* Dark mode hover effect */
+        }
+
+        #dark-mode-toggle svg {
+            width: 24px;
+            height: 24px;
+        }
+
 
         @media (max-width: 768px) {
             .flex.justify-center.items-center.mb-4.relative {
@@ -307,6 +380,16 @@
     <div class="container bg-white rounded-xl shadow-lg p-6 md:p-8">
         <div class="flex justify-center items-center mb-4 relative">
             <h1 class="text-4xl font-bold text-gray-800" id="mainTitle">📰 News Aggregator</h1>
+            <!-- Dark Mode Toggle Button -->
+            <button id="dark-mode-toggle" class="absolute right-4 top-1/2 -translate-y-1/2" aria-label="Toggle dark mode">
+                <!-- Moon icon for light mode (default), changes to sun in dark mode -->
+                <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.61.764-3.778a9.735 9.735 0 00-6.711 8.923 9.718 9.718 0 009.75 9.75 9.735 9.735 0 008.923-6.711z" />
+                </svg>
+                <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12H5.25m-.386-6.364l1.591 1.591M12 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </button>
         </div>
 
         <div class="header-content">
@@ -397,6 +480,9 @@
         const errorTextSpan = document.getElementById('error-text');
         const paginationContainer = document.getElementById('pagination-container');
         const scrollNavigationBtn = document.getElementById('scroll-navigation-btn');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
 
 
         window.onerror = function(message, source, lineno, colno, error) {
@@ -524,9 +610,10 @@
             newsContainer.innerHTML = '';
             paginationContainer.innerHTML = '';
 
-            let articlesBySource = {};
+            let allArticlesCombined = [];
             let failedSources = [];
 
+            // Use Promise.allSettled to allow individual fetches to fail without stopping others
             const fetchPromises = Object.entries(RSS_FEEDS).map(async ([key, config]) => {
                 try {
                     const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(config.url)}`;
@@ -538,24 +625,29 @@
                     if (data.status === 'error') {
                         throw new Error(data.message || 'Failed to fetch news from proxy.');
                     }
-                    articlesBySource[key] = data.items.map(item => ({ ...item, sourceName: config.name }));
+                    return data.items.map(item => ({ ...item, sourceName: config.name }));
 
                 } catch (error) {
                     console.error(`Error fetching news for ${config.name}:`, error);
                     failedSources.push(config.name);
+                    return null; // Return null for failed fetches to be filtered out later
                 }
             });
 
-            await Promise.all(fetchPromises);
+            const results = await Promise.allSettled(fetchPromises);
 
-            if (Object.keys(articlesBySource).length === 0) {
+            results.forEach(result => {
+                if (result.status === 'fulfilled' && result.value) {
+                    allArticlesCombined = allArticlesCombined.concat(result.value);
+                }
+            });
+
+            if (allArticlesCombined.length === 0) {
                 showErrorMessage(translations.couldNotLoadAny);
                 showLoading(false); // This call will also effectively do nothing
                 return;
             }
             
-            let allArticlesCombined = Object.values(articlesBySource).flat();
-
             allArticlesCombined = allArticlesCombined.map(item => ({
                 ...item,
                 title: item.title || 'No Title',
@@ -609,6 +701,8 @@
                     return originalKey ? RSS_FEEDS[originalKey].name : name;
                 });
                 showErrorMessage(`${translations.failedSources} ${failedSourceNamesDisplay.join(', ')}. ${translations.displayingAvailableNews}`);
+            } else {
+                hideErrorMessage(); // Hide error if all sources loaded successfully
             }
 
             currentArticles = interleavedArticles;
@@ -791,6 +885,24 @@
             }
         });
 
+        // Dark Mode Toggle Logic
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            updateDarkModeIcons(isDarkMode);
+        });
+
+        function updateDarkModeIcons(isDarkMode) {
+            if (isDarkMode) {
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             document.title = translations.appTitle;
             document.getElementById('mainTitle').textContent = translations.mainTitle;
@@ -801,6 +913,15 @@
             document.querySelector('[data-source="The Hill"]').textContent = translations.tabTheHill;
             document.querySelector('[data-source="Forbes"]').textContent = translations.tabForbes;
             document.querySelector('[data-source="WSJ"]').textContent = translations.tabWSJ;
+
+            // Apply saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                updateDarkModeIcons(true);
+            } else {
+                updateDarkModeIcons(false); // Ensure light mode icon is shown by default
+            }
 
             // Ensure pagination button texts are set
             const prevButton = paginationContainer.querySelector('.pagination-button[data-page="prev"]');

@@ -11,25 +11,25 @@
     <style>
         /* Define CSS variables for colors */
         :root {
-            --body-bg: #e6f2fb; /* Light grayish blue - for the very outermost area, e.g., if there's body margin */
-            --section-bg: #ffffff; /* Background for header and main content sections (full width) */
-            --card-bg: #ffffff; /* Background for the central content card, tabs, pagination */
-            --headline-color: #1a202c; /* Darker text */
+            --body-bg: #e6f2fb;
+            --section-bg: #ffffff;
+            --card-bg: #ffffff;
+            --headline-color: #1a202c;
             --source-name-color: #4a5568;
-            --link-color: #4F85C5; /* UN Blue */
+            --link-color: #4F85C5;
             --tab-button-hover-bg: #e6f2fb;
             --tab-button-text: #1a202c;
             --collapsible-text: #4a5568;
             --border-color: #d1e1f3;
             --loading-spinner-color: #4F85C5;
             --toggle-details-button-border: #d1e1f3;
-            --error-bg: #ffe0e0; /* light red */
-            --error-border: #ff8080; /* medium red */
-            --error-text: #cc0000; /* dark red */
-            --box-shadow-color: rgba(0, 0, 0, 0.05); /* Light mode shadow color */
+            --error-bg: #ffe0e0;
+            --error-border: #ff8080;
+            --error-text: #cc0000;
+            --box-shadow-color: rgba(0, 0, 0, 0.05);
             --scroll-btn-bg: #4F85C5;
             --scroll-btn-hover-bg: #3e6a9e;
-            --progress-bar-bg: #4F85C5; /* Progress bar color */
+            --progress-bar-bg: #4F85C5;
 
             /* Font Size Variables for Accessibility */
             --base-font-size: 16px;
@@ -37,117 +37,116 @@
 
         /* Dark Mode overrides */
         body.dark-mode {
-            --body-bg: #000000; /* Pure Black background */
-            --section-bg: #000000; /* Pure Black for header and main content sections */
-            --card-bg: #000000; /* Pure Black for the central content card, tabs, pagination */
-            --headline-color: #ffffff; /* White text */
-            --source-name-color: #ffffff; /* White text for source name */
-            --link-color: #90cdf4; /* Lighter blue */
-            --tab-button-hover-bg: #1a1a1a; /* Very dark grey for hover */
-            --tab-button-text: #ffffff; /* White text */
-            --collapsible-text: #ffffff; /* White text for collapsible content */
-            --border-color: #333333; /* Darker border */
+            --body-bg: #000000;
+            --section-bg: #000000;
+            --card-bg: #000000;
+            --headline-color: #ffffff;
+            --source-name-color: #ffffff;
+            --link-color: #90cdf4;
+            --tab-button-hover-bg: #1a1a1a;
+            --tab-button-text: #ffffff;
+            --collapsible-text: #ffffff;
+            --border-color: #333333;
             --loading-spinner-color: #90cdf4;
             --toggle-details-button-border: #333333;
-            --error-bg: #330000; /* Darker red for error */
-            --error-border: #660000; /* Darker red border */
-            --error-text: #ff6666; /* Lighter red text */
-            --box-shadow-color: rgba(255, 255, 255, 0.1); /* White shadow for dark mode */
-            --scroll-btn-bg: #3a3a3a; /* Darker scroll button in dark mode */
+            --error-bg: #330000;
+            --error-border: #660000;
+            --error-text: #ff6666;
+            --box-shadow-color: rgba(255, 255, 255, 0.1);
+            --scroll-btn-bg: #3a3a3a;
             --scroll-btn-hover-bg: #555555;
-            --progress-bar-bg: #90cdf4; /* Progress bar color for dark mode */
+            --progress-bar-bg: #90cdf4;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--body-bg); /* Applies to entire viewport */
-            transition: background-color 0.3s ease; /* Smooth transition for theme change */
-            color: var(--headline-color); /* Default text color for body */
-            margin: 0; /* Remove default body margin */
-            padding: 0; /* Remove default body padding from Tailwind's p-4 */
-            font-size: var(--base-font-size); /* Base font size for accessibility */
-            line-height: 1.6; /* Default line height for readability */
+            background-color: var(--body-bg);
+            transition: background-color 0.3s ease;
+            color: var(--headline-color);
+            margin: 0;
+            padding: 0;
+            font-size: var(--base-font-size);
+            line-height: 1.6;
         }
 
         /* Adjust font sizes relative to --base-font-size */
-        h1 { font-size: calc(var(--base-font-size) * 2.25); } /* 4xl equivalent */
-        h2 { font-size: calc(var(--base-font-size) * 1.5); } /* 2xl equivalent */
+        h1 { font-size: calc(var(--base-font-size) * 2.25); }
+        h2 { font-size: calc(var(--base-font-size) * 1.5); }
         .text-lg { font-size: calc(var(--base-font-size) * 1.125); }
         .text-base { font-size: var(--base-font-size); }
         .text-sm { font-size: calc(var(--base-font-size) * 0.875); }
         .text-xs { font-size: calc(var(--base-font-size) * 0.75); }
 
         .main-header {
-            width: 100%; /* Full width */
-            background-color: var(--section-bg); /* Dynamic header background, full width */
-            box-shadow: 0 2px 4px var(--box-shadow-color); /* Subtle shadow for separation */
+            width: 100%;
+            background-color: var(--section-bg);
+            box-shadow: 0 2px 4px var(--box-shadow-color);
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            position: sticky; /* Keep header visible on scroll */
+            position: sticky;
             top: 0;
             z-index: 100;
         }
 
         .header-content-wrapper {
-            max-width: 900px; /* Max width for centered content */
+            max-width: 900px;
             margin-left: auto;
             margin-right: auto;
-            padding: 1rem 1rem; /* Padding inside the centered header content */
-            position: relative; /* Needed for positioning elements inside (e.g. title) */
-            display: flex; /* Flexbox for alignment */
-            justify-content: center; /* Center the title */
+            padding: 1rem 1rem;
+            position: relative;
+            display: flex;
+            justify-content: center;
             align-items: center;
-            min-height: 48px; /* Ensure enough height for the title */
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            min-height: 48px;
+            flex-wrap: wrap;
         }
 
         .font-size-controls {
             display: flex;
-            gap: 0.25rem; /* Reduced gap */
+            gap: 0.25rem;
             align-items: center;
-            margin-left: 1rem; /* Space from title */
+            margin-left: 1rem;
             flex-shrink: 0;
             color: var(--headline-color);
-            border: none; /* Removed border */
-            border-radius: 0.25rem; /* Slightly less rounded */
-            padding: 0.125rem 0.25rem; /* Reduced padding */
-            transition: color 0.3s ease; /* Only color transition */
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.125rem 0.25rem;
+            transition: color 0.3s ease;
         }
         .font-size-controls button {
             background: none;
-            border: none; /* Removed border */
+            border: none;
             color: var(--headline-color);
             font-weight: 600;
-            padding: 0.125rem 0.375rem; /* Reduced padding for smaller buttons */
-            font-size: calc(var(--base-font-size) * 0.875); /* Smaller font in buttons */
+            padding: 0.125rem 0.375rem;
+            font-size: calc(var(--base-font-size) * 0.875);
             cursor: pointer;
             border-radius: 0.25rem;
             transition: background-color 0.2s ease, color 0.2s ease;
-            outline: none; /* For keyboard navigation */
+            outline: none;
         }
         .font-size-controls button:hover {
             background-color: var(--tab-button-hover-bg);
             color: var(--link-color);
         }
-        .font-size-controls button:focus-visible { /* For keyboard focus indicator */
+        .font-size-controls button:focus-visible {
             outline: 2px solid var(--link-color);
             outline-offset: 2px;
         }
 
-
         .site-main-content {
-            background-color: var(--section-bg); /* Full width background for the whole content area, matches header */
-            padding: 1rem; /* Padding for the main content section, consistent with header padding */
+            background-color: var(--section-bg);
+            padding: 1rem;
             transition: background-color 0.3s ease;
-            min-height: calc(100vh - 2rem - 64px); /* Adjust min-height, heuristic: viewport height - (header height + section padding) */
+            min-height: calc(100vh - 2rem - 64px);
         }
 
         .content-area {
-            max-width: 900px; /* Max width for the card-like content */
-            margin: 0 auto; /* Center the content area */
-            background-color: var(--card-bg); /* Card background for news, tabs, pagination */
-            border-radius: 0.75rem; /* Rounded corners for the content area */
-            box-shadow: 0 4px 6px var(--box-shadow-color); /* Dynamic shadow color */
-            padding: 1.5rem; /* Content padding inside the card */
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px var(--box-shadow-color);
+            padding: 1.5rem;
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -156,18 +155,17 @@
             position: fixed;
             top: 0;
             left: 0;
-            height: 4px; /* Thin bar */
-            background-color: var(--progress-bar-bg); /* Dynamic color */
+            height: 4px;
+            background-color: var(--progress-bar-bg);
             width: 0%;
-            z-index: 101; /* Above header */
+            z-index: 101;
             transition: background-color 0.3s ease;
         }
 
-        /* Rest of your CSS remains mostly the same, ensuring variables are used */
         .news-item {
             background-color: var(--news-item-bg);
             border-radius: 0.75rem;
-            box-shadow: 0 4px 6px var(--box-shadow-color); /* Dynamic shadow color */
+            box-shadow: 0 4px 6px var(--box-shadow-color);
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             transition: transform 0.2s ease-in-out, background-color 0.3s ease, box-shadow 0.3s ease;
@@ -176,7 +174,7 @@
             transform: translateY(-5px);
         }
         .news-item h2 {
-            font-size: calc(var(--base-font-size) * 1.5); /* 2xl equivalent */
+            font-size: calc(var(--base-font-size) * 1.5);
             font-weight: 600;
             color: var(--headline-color);
             margin-bottom: 0.25rem;
@@ -185,7 +183,7 @@
         .news-item .source-name {
             font-size: calc(var(--base-font-size) * 0.9);
             font-weight: 500;
-            color: var(--source-name-color); /* Dynamic source name color */
+            color: var(--source-name-color);
             margin-bottom: 0.75rem;
             display: block;
             transition: color 0.3s ease;
@@ -200,11 +198,11 @@
             text-decoration: underline;
         }
 
-        .header-content { /* For the tab group, now within .content-area */
+        .header-content {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 0rem; /* Adjusted as it's inside content-area now */
+            margin-top: 0rem;
             margin-bottom: 2rem;
             gap: 1rem;
         }
@@ -213,13 +211,13 @@
             display: flex;
             flex-wrap: wrap;
             gap: 0.05rem;
-            background-color: var(--card-bg); /* Tabs use card background */
-            box-shadow: 0 2px 5px var(--box-shadow-color); /* Dynamic shadow color */
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 5px var(--box-shadow-color);
             overflow: hidden;
             flex-grow: 1;
             justify-content: center;
             width: 100%;
-            max-width: 900px; /* This will be redundant if parent is max-width 900px, but kept for safety */
+            max-width: 900px;
             border-radius: 0;
             border: 1px solid var(--border-color);
             transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
@@ -239,11 +237,10 @@
             text-align: center;
             white-space: nowrap;
         }
-        .tab-button:focus-visible { /* For keyboard focus indicator */
+        .tab-button:focus-visible {
             outline: 2px solid var(--link-color);
             outline-offset: 2px;
         }
-
 
         .tab-button:hover:not(.active) {
             background-color: var(--tab-button-hover-bg);
@@ -251,7 +248,7 @@
         }
 
         .tab-button.active {
-            background-color: #4F85C5; /* Keep active tab accent consistent */
+            background-color: #4F85C5;
             color: #ffffff;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
@@ -275,19 +272,19 @@
             overflow: hidden;
             transition: max-height 0.3s ease-out;
             padding: 0 1rem;
-            color: var(--collapsible-text); /* Dynamic collapsible text color */
+            color: var(--collapsible-text);
             line-height: 1.6;
             transition: color 0.3s ease;
         }
         .collapsible-content.expanded {
-            max-height: 500px; /* Adjusted from 1000px for better transition, can be increased if content is very long */
+            max-height: 500px;
             padding-top: 0.5rem;
             padding-bottom: 1rem;
         }
 
         .toggle-details-button {
             background-color: transparent;
-            color: var(--tab-button-text); /* Now uses dynamic tab button text color */
+            color: var(--tab-button-text);
             padding: 0.5rem 1rem;
             border-radius: 0;
             border: 1px solid var(--toggle-details-button-border);
@@ -299,11 +296,11 @@
             font-weight: 500;
             box-shadow: none;
             font-size: calc(var(--base-font-size) * 0.9);
-            outline: none; /* For keyboard navigation */
+            outline: none;
         }
         .toggle-details-button:hover {
-            background-color: var(--tab-button-hover-bg); /* Now uses dynamic tab button hover background */
-            color: var(--headline-color); /* Now uses dynamic headline color */
+            background-color: var(--tab-button-hover-bg);
+            color: var(--headline-color);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
         }
         .toggle-details-button:active {
@@ -311,7 +308,7 @@
             color: #ffffff;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
-        .toggle-details-button:focus-visible { /* For keyboard focus indicator */
+        .toggle-details-button:focus-visible {
             outline: 2px solid var(--link-color);
             outline-offset: 2px;
         }
@@ -341,91 +338,88 @@
         
         .infinite-scroll-message {
             text-align: center;
-            font-size: calc(var(--base-font-size) * 1.125); /* text-lg */
+            font-size: calc(var(--base-font-size) * 1.125);
             color: var(--source-name-color);
             padding: 2rem 0;
             transition: color 0.3s ease;
         }
 
-
         /* Unified Scroll Navigation Button Styling */
         #scroll-navigation-btn {
             position: fixed;
-            bottom: 1rem; /* Adjust as needed */
+            bottom: 1rem;
             right: 1rem;
-            background-color: var(--scroll-btn-bg); /* UN Blue */
+            background-color: var(--scroll-btn-bg);
             color: #ffffff;
             border: none;
-            border-radius: 50px; /* Highly rounded for elongated pill shape */
-            width: 36px; /* 3/4 of 48px */
-            height: 75px; /* 3/4 of 100px */
+            border-radius: 50px;
+            width: 36px;
+            height: 75px;
             display: flex;
-            flex-direction: column; /* Stack icons vertically */
-            justify-content: space-around; /* Distribute space between icons */
+            flex-direction: column;
+            justify-content: space-around;
             align-items: center;
             font-size: 1.5rem;
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            opacity: 0.7; /* Translucent by default */
-            transition: opacity 0.3s ease-in-out, background-color 0.3s ease; /* Smooth transition for opacity and background */
-            z-index: 1000; /* Ensure it's above other content */
-            outline: none; /* For keyboard navigation */
+            opacity: 0.7;
+            transition: opacity 0.3s ease-in-out, background-color 0.3s ease;
+            z-index: 1000;
+            outline: none;
         }
 
         #scroll-navigation-btn:hover,
-        #scroll-navigation-btn:focus-visible { /* Make opaque on hover or focus */
-            background-color: var(--scroll-btn-hover-bg); /* Darker blue on hover */
-            opacity: 1; /* Fully opaque */
-            outline: 2px solid var(--link-color); /* Focus outline */
+        #scroll-navigation-btn:focus-visible {
+            background-color: var(--scroll-btn-hover-bg);
+            opacity: 1;
+            outline: 2px solid var(--link-color);
             outline-offset: 2px;
         }
         #scroll-navigation-btn:hover {
-            outline: none; /* Remove outline on hover if already focused */
+            outline: none;
         }
         
-        /* No transform on hover for unified button */
-
         #scroll-navigation-btn svg {
-            width: 20px; /* Adjust icon size to match smaller button */
-            height: 20px; /* Adjust icon size to match smaller button */
-            margin: 0.125rem 0; /* Adjusted spacing */
+            width: 20px;
+            height: 20px;
+            margin: 0.125rem 0;
         }
 
         /* Dark Mode Toggle Button - repositioned and restyled */
         #dark-mode-toggle {
-            position: fixed; /* Always visible and fixed */
-            bottom: 6.25rem; /* Calculated: 1rem (bottom) + 75px (scroll height) + 0.5rem (gap) = 16 + 75 + 8 = 99px (~6.25rem) */
-            right: 1rem; /* Align with scroll button */
-            background-color: var(--scroll-btn-bg); /* Use scroll button background for consistency */
-            color: #ffffff; /* White icon always */
+            position: fixed;
+            bottom: 6.25rem;
+            right: 1rem;
+            background-color: var(--scroll-btn-bg);
+            color: #ffffff;
             border: none;
-            border-radius: 50%; /* Make it round */
-            width: 36px; /* 3/4 of 48px */
-            height: 36px; /* 3/4 of 48px */
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            opacity: 0.7; /* Translucent by default */
+            opacity: 0.7;
             transition: opacity 0.3s ease-in-out, background-color 0.3s ease, color 0.3s ease;
-            z-index: 1001; /* Higher than scroll button */
-            flex-shrink: 0; /* Prevent distortion */
-            outline: none; /* For keyboard navigation */
+            z-index: 1001;
+            flex-shrink: 0;
+            outline: none;
         }
 
         #dark-mode-toggle:hover {
-            background-color: var(--scroll-btn-hover-bg); /* Darker on hover */
-            opacity: 1; /* Fully opaque on hover */
+            background-color: var(--scroll-btn-hover-bg);
+            opacity: 1;
         }
-        #dark-mode-toggle:focus-visible { /* For keyboard focus indicator */
+        #dark-mode-toggle:focus-visible {
             outline: 2px solid var(--link-color);
             outline-offset: 2px;
         }
 
         #dark-mode-toggle svg {
-            width: 18px; /* Adjust icon size to match smaller button */
-            height: 18px; /* Adjust icon size to match smaller button */
+            width: 18px;
+            height: 18px;
         }
 
         /* Error message styling */
@@ -436,16 +430,15 @@
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         }
 
-
         @media (max-width: 768px) {
             .header-content-wrapper {
-                flex-direction: column; /* Stack title on mobile */
+                flex-direction: column;
                 align-items: center;
-                padding: 0.5rem 1rem; /* Smaller padding on mobile */
+                padding: 0.5rem 1rem;
             }
             .font-size-controls {
-                margin-left: 0; /* Remove left margin on mobile */
-                margin-top: 0.5rem; /* Add top margin below title */
+                margin-left: 0;
+                margin-top: 0.5rem;
             }
             h1 {
                 text-align: center;
@@ -460,7 +453,7 @@
                 width: 100%;
             }
             .infinite-scroll-message {
-                padding: 1rem 0; /* Smaller padding on mobile */
+                padding: 1rem 0;
             }
             .toggle-details-button {
                  margin-top: 0.5rem;
@@ -480,30 +473,30 @@
                 text-align: center;
             }
             #scroll-navigation-btn {
-                bottom: 0.5rem; /* Adjust for potentially tighter mobile layout */
-                right: 0.5rem; /* Slightly less margin on mobile */
-                width: 30px; /* 3/4 of 40px */
-                height: 60px; /* 3/4 of 80px */
+                bottom: 0.5rem;
+                right: 0.5rem;
+                width: 30px;
+                height: 60px;
             }
             #scroll-navigation-btn svg {
-                width: 16px; /* Adjust icon size */
-                height: 16px; /* Adjust icon size */
+                width: 16px;
+                height: 16px;
             }
             #dark-mode-toggle {
-                bottom: 4.75rem; /* Calculated: 0.5rem (bottom) + 60px (scroll height) + 0.5rem (gap) = 8 + 60 + 8 = 76px (~4.75rem) */
-                right: 0.5rem; /* Align with scroll button on mobile */
-                width: 30px; /* 3/4 of 40px */
-                height: 30px; /* 3/4 of 40px */
+                bottom: 4.75rem;
+                right: 0.5rem;
+                width: 30px;
+                height: 30px;
             }
             #dark-mode-toggle svg {
-                width: 16px; /* Adjust icon size */
-                height: 16px; /* Adjust icon size */
+                width: 16px;
+                height: 16px;
             }
             .site-main-content {
-                padding: 0.5rem; /* Smaller padding for main content on mobile */
+                padding: 0.5rem;
             }
             .content-area {
-                padding: 1rem; /* Smaller inner padding for content card */
+                padding: 1rem;
             }
         }
     </style>
@@ -621,11 +614,11 @@
             apiError: 'API error. Please check configuration.',
         };
 
-        let allArticlesFromAllSources = []; // Stores all fetched articles
-        let currentlyDisplayedArticles = []; // Stores articles for the current tab
-        let displayedArticleCount = 0; // Number of articles currently rendered in DOM
-        const articlesPerLoad = 10; // How many articles to load at once for infinite scroll
-        let isLoadingMore = false; // Flag to prevent multiple simultaneous loads
+        let allArticlesFromAllSources = [];
+        let currentlyDisplayedArticles = [];
+        let displayedArticleCount = 0;
+        const articlesPerLoad = 10;
+        let isLoadingMore = false;
 
         const newsContainer = document.getElementById('news-container');
         const newsSourcesDiv = document.getElementById('news-sources');
@@ -640,13 +633,12 @@
         const sunIcon = document.getElementById('sun-icon');
         const readingProgressBar = document.getElementById('reading-progress-bar');
 
-        // Font size accessibility controls
         const fontSizeDecreaseBtn = document.getElementById('font-size-decrease');
         const fontSizeResetBtn = document.getElementById('font-size-reset');
         const fontSizeIncreaseBtn = document.getElementById('font-size-increase');
         const root = document.documentElement;
         let baseFontSize = parseFloat(getComputedStyle(root).getPropertyValue('--base-font-size')) || 16;
-        const FONT_SIZE_STEP = 2; // px
+        const FONT_SIZE_STEP = 2;
         const MAX_FONT_SIZE = 24;
         const MIN_FONT_SIZE = 12;
         const DEFAULT_FONT_SIZE = 16;
@@ -658,15 +650,13 @@
             return true;
         };
 
-        // Function to show/hide initial loading indicator
         function showInitialLoading(show) {
             initialLoadingIndicator.style.display = show ? 'flex' : 'none';
         }
 
-        // Function to show/hide infinite scroll loading indicator
         function showInfiniteScrollLoading(show) {
             infiniteScrollLoadingIndicator.style.display = show ? 'flex' : 'none';
-            noMoreNewsMessage.style.display = 'none'; // Hide "no more news" when loading
+            noMoreNewsMessage.style.display = 'none';
         }
 
         function showNoMoreNewsMessage() {
@@ -710,7 +700,7 @@
 
             errorTextSpan.textContent = displayedMessage;
             errorMessageDiv.classList.remove('hidden');
-            errorMessageDiv.focus(); // Focus on error message for accessibility
+            errorMessageDiv.focus();
         }
 
         function hideErrorMessage() {
@@ -804,7 +794,6 @@
                 description: stripHtmlTags(item.description || translations.noDescriptionAvailable)
             }));
 
-            // Interleave articles for "All News" tab
             const interleavedArticles = [];
             let sourcesWithArticles = {};
             allArticlesFromAllSources.forEach(article => {
@@ -821,15 +810,15 @@
 
             let activeSources = Object.keys(sourcesWithArticles).filter(key => sourcesWithArticles[key].length > 0);
             let lastSourceKey = null;
-            let attemptLimit = 1000; // Safety break for interleaving loop
+            let attemptLimit = 1000;
 
             while (activeSources.length > 0 && attemptLimit > 0) {
                 attemptLimit--;
                 let eligibleSources = activeSources.filter(sourceKey => sourceKey !== lastSourceKey);
-                if (eligibleSources.length === 0) { // If only one source left or all others were just used
+                if (eligibleSources.length === 0) {
                     eligibleSources = activeSources;
                 }
-                if (eligibleSources.length === 0) break; // No more eligible sources
+                if (eligibleSources.length === 0) break;
 
                 const randomIndex = Math.floor(Math.random() * eligibleSources.length);
                 const currentSourceKey = eligibleSources[randomIndex];
@@ -845,7 +834,7 @@
                 }
             }
             
-            allArticlesFromAllSources = interleavedArticles; // Use interleaved for "All News"
+            allArticlesFromAllSources = interleavedArticles;
 
             if (failedSources.length > 0) {
                 const failedSourceNamesDisplay = failedSources.map(name => {
@@ -857,18 +846,18 @@
                 hideErrorMessage();
             }
 
-            currentlyDisplayedArticles = allArticlesFromAllSources; // Default to all news
-            displayedArticleCount = 0; // Reset count
-            displayNextBatchOfNews(); // Show initial batch
+            currentlyDisplayedArticles = allArticlesFromAllSources;
+            displayedArticleCount = 0;
+            displayNextBatchOfNews();
             showInitialLoading(false);
         }
 
         function displayNextBatchOfNews() {
-            if (isLoadingMore) return; // Prevent multiple loads
+            if (isLoadingMore) return;
             isLoadingMore = true;
             showInfiniteScrollLoading(true);
 
-            setTimeout(() => { // Simulate network delay
+            setTimeout(() => {
                 const startIndex = displayedArticleCount;
                 const endIndex = startIndex + articlesPerLoad;
                 const articlesToRender = currentlyDisplayedArticles.slice(startIndex, endIndex);
@@ -888,7 +877,7 @@
                 articlesToRender.forEach(article => {
                     const newsItem = document.createElement('div');
                     newsItem.classList.add('news-item');
-                    newsItem.setAttribute('tabindex', '0'); // Make news items focusable
+                    newsItem.setAttribute('tabindex', '0');
 
                     const fullDescription = article.description;
                     const imageUrl = extractImageUrl(article);
@@ -920,7 +909,6 @@
                     newsContainer.appendChild(newsItem);
                 });
 
-                // Attach event listeners for toggle buttons in the newly added articles
                 document.querySelectorAll('.news-item:nth-last-child(-n+' + articlesToRender.length + ') .toggle-details-button').forEach(button => {
                     button.addEventListener('click', () => {
                         const content = button.closest('.collapsible-container').querySelector('.collapsible-content');
@@ -950,9 +938,8 @@
                     showNoMoreNewsMessage();
                 }
 
-            }, 500); // Small delay to simulate load
+            }, 500);
         }
-
 
         function escapeHtml(text) {
             const map = {
@@ -975,10 +962,8 @@
                 button.classList.add('active');
                 button.setAttribute('aria-selected', 'true');
 
-
                 const sourceKey = button.dataset.source;
                 
-                // Reset news display
                 newsContainer.innerHTML = '';
                 displayedArticleCount = 0;
                 noMoreNewsMessage.style.display = 'none';
@@ -989,11 +974,10 @@
                 } else {
                     currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => article.sourceName === RSS_FEEDS[sourceKey].name);
                 }
-                displayNextBatchOfNews(); // Load first batch for new selection
+                displayNextBatchOfNews();
             }
         });
 
-        // Handle click for the unified scroll navigation button
         scrollNavigationBtn.addEventListener('click', (event) => {
             const btnRect = scrollNavigationBtn.getBoundingClientRect();
             const clickY = event.clientY - btnRect.top;
@@ -1005,7 +989,6 @@
             }
         });
 
-        // Dark Mode Toggle Logic
         darkModeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             const isDarkMode = document.body.classList.contains('dark-mode');
@@ -1023,14 +1006,12 @@
             }
         }
 
-        // Reading Progress Bar Logic
         window.addEventListener('scroll', () => {
             const totalScrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolledPercentage = (window.scrollY / totalScrollHeight) * 100;
             readingProgressBar.style.width = scrolledPercentage + '%';
 
-            // Infinite scroll trigger
-            if (!isLoadingMore && (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500)) { // 500px from bottom
+            if (!isLoadingMore && (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500)) {
                 if (displayedArticleCount < currentlyDisplayedArticles.length) {
                     displayNextBatchOfNews();
                 } else {
@@ -1039,7 +1020,6 @@
             }
         });
 
-        // Font Size Accessibility Logic
         function updateFontSize(newSize) {
             baseFontSize = Math.min(MAX_FONT_SIZE, Math.max(MIN_FONT_SIZE, newSize));
             root.style.setProperty('--base-font-size', `${baseFontSize}px`);
@@ -1062,27 +1042,23 @@
             document.querySelector('[data-source="Forbes"]').textContent = translations.tabForbes;
             document.querySelector('[data-source="WSJ"]').textContent = translations.tabWSJ;
 
-            // Apply saved theme preference
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
                 document.body.classList.add('dark-mode');
                 updateDarkModeIcons(true);
             } else {
-                updateDarkModeIcons(false); // Ensure light mode icon is shown by default
+                updateDarkModeIcons(false);
             }
 
-            // Apply saved font size preference
             const savedFontSize = parseFloat(localStorage.getItem('baseFontSize'));
             if (!isNaN(savedFontSize)) {
                 updateFontSize(savedFontSize);
             } else {
-                updateFontSize(DEFAULT_FONT_SIZE); // Set default if no preference saved
+                updateFontSize(DEFAULT_FONT_SIZE);
             }
 
-            // Update infinite scroll loading message text
             infiniteScrollLoadingIndicator.querySelector('p').textContent = translations.loadingMoreNews;
             
-            // Initial load of all news for infinite scroll setup
             fetchAllNewsAndPrepareForInfiniteScroll();
         });
     </script>

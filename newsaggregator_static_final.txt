@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Aggregator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Define CSS variables for colors */
+        :root {
+            --body-bg: #e6f2fb;
+            --section-bg: #ffffff;
+            --card-bg: #ffffff;
+            --headline-color: #1a202c;
+            --source-name-color: #4a5568;
+            --link-color: #4F85C5;
+            --tab-button-hover-bg: #e6f2fb;
+            --tab-button-text: #1a202c;
+            --collapsible-text: #4a5568;
+            --border-color: #d1e1f3;
+            --loading-spinner-color: #4F85C5;
+            --toggle-details-button-border: #d1e1f3;
+            --error-bg: #ffe0e0;
+            --error-border: #ff8080;
+            --error-text: #cc0000;
+            --box-shadow-color: rgba(0, 0, 0, 0.05);
+            --scroll-btn-bg: #4F85C5;
+            --scroll-btn-hover-bg: #3e6a9e;
+            --progress-bar-bg: #4F85C5;
+
+            /* Font Size Variables for Accessibility */
+            --base-font-size: 16px;
+        }
+
+        /* Dark Mode overrides */
+        body.dark-mode {
+            --body-bg: #000000;
+            --section-bg: #000000;
+            --card-bg: #000000;
+            --headline-color: #ffffff;
+            --source-name-color: #ffffff;
+            --link-color: #90cdf4;
+            --tab-button-hover-bg: #1a1a1a;
+            --tab-button-text: #ffffff;
+            --collapsible-text: #ffffff;
+            --border-color: #333333;
+            --loading-spinner-color: #90cdf4;
+            --toggle-details-button-border: #333333;
+            --error-bg: #330000;
+            --error-border: #660000;
+            --error-text: #ff6666;
+            --box-shadow-color: rgba(255, 255, 255, 0.1);
+            --scroll-btn-bg: #3a3a3a;
+            --scroll-btn-hover-bg: #555555;
+            --progress-bar-bg: #90cdf4;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--body-bg);
+            transition: background-color 0.3s ease;
+            color: var(--headline-color);
+            margin: 0;
+            padding: 0;
+            font-size: var(--base-font-size);
+            line-height: 1.6;
+        }
+
+        /* Adjust font sizes relative to --base-font-size */
+        h1 { font-size: calc(var(--base-font-size) * 2.25); }
+        h2 { font-size: calc(var(--base-font-size) * 1.5); }
+        .text-lg { font-size: calc(var(--base-font-size) * 1.125); }
+        .text-base { font-size: var(--base-font-size); }
+        .text-sm { font-size: calc(var(--base-font-size) * 0.875); }
+        .text-xs { font-size: calc(var(--base-font-size) * 0.75); }
+
+        .main-header {
+            width: 100%;
+            background-color: var(--section-bg);
+            box-shadow: 0 2px 4px var(--box-shadow-color);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content-wrapper {
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1rem 1rem;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 48px;
+            flex-wrap: wrap;
+        }
+
+        .font-size-controls {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+            margin-left: 1rem;
+            flex-shrink: 0;
+            color: var(--headline-color);
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.125rem 0.25rem;
+            transition: color 0.3s ease;
+        }
+        .font-size-controls button {
+            background: none;
+            border: none;
+            color: var(--headline-color);
+            font-weight: 600;
+            padding: 0.125rem 0.375rem;
+            font-size: calc(var(--base-font-size) * 0.875);
+            cursor: pointer;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            outline: none;
+        }
+        .font-size-controls button:hover {
+            background-color: var(--tab-button-hover-bg);
+            color: var(--link-color);
+        }
+        .font-size-controls button:focus-visible {
+            outline: 2px solid var(--link-color);
+            outline-offset: 2px;
+        }
+
+        .site-main-content {
+            background-color: var(--section-bg);
+            padding: 1rem;
+            transition: background-color 0.3s ease;
+            min-height: calc(100vh - 2rem - 64px);
+        }
+
+        .content-area {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px var(--box-shadow-color);
+            padding: 1.5rem;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Reading Progress Bar */
+        #reading-progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background-color: var(--progress-bar-bg);
+            width: 0%;
+            z-index: 101;
+            transition: background-color 0.3s ease;
+        }
+
+        .news-item {
+            background-color: var(--news-item-bg);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px var(--box-shadow-color);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s ease-in-out, background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .news-item:hover {
+            transform: translateY(-5px);
+        }
+        .news-item h2 {
+            font-size: calc(var(--base-font-size) * 1.5);
+            font-weight: 600;
+            color: var(--headline-color);
+            margin-bottom: 0.25rem;
+            transition: color 0.3s ease;
+        }
+        .news-item .source-name {
+            font-size: calc(var(--base-font-size) * 0.9);
+            font-weight: 500;
+            color: var(--source-name-color);
+            margin-bottom: 0.75rem;
+            display: block;
+            transition: color 0.3s ease;
+        }
+        .news-item a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .news-item a:hover {
+            text-decoration: underline;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 0rem;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .tab-button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.05rem;
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 5px var(--box-shadow-color);
+            overflow: hidden;
+            flex-grow: 1;
+            justify-content: center;
+            width: 100%;
+            max-width: 900px;
+            border-radius: 0;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tab-button {
+            padding: 0.6rem 1rem;
+            font-size: calc(var(--base-font-size) * 0.95);
+            font-weight: 500;
+            color: var(--tab-button-text);
+            background-color: transparent;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .tab-button:focus-visible {
+            outline: 2px solid var(--link-color);
+            outline-offset: 2px;
+        }
+
+        .tab-button:hover:not(.active) {
+            background-color: var(--tab-button-hover-bg);
+            color: var(--headline-color);
+        }
+
+        .tab-button.active {
+            background-color: #4F85C5;
+            color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--loading-spinner-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            transition: border-left-color 0.3s ease;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding: 0 1rem;
+            color: var(--collapsible-text);
+            line-height: 1.6;
+            transition: color 0.3s ease;
+        }
+        .collapsible-content.expanded {
+            max-height: 500px;
+            padding-top: 0.5rem;
+            padding-bottom: 1rem;
+        }
+
+        .toggle-details-button {
+            background-color: transparent;
+            color: var(--tab-button-text);
+            padding: 0.5rem 1rem;
+            border-radius: 0;
+            border: 1px solid var(--toggle-details-button-border);
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            font-weight: 500;
+            box-shadow: none;
+            font-size: calc(var(--base-font-size) * 0.9);
+            outline: none;
+        }
+        .toggle-details-button:hover {
+            background-color: var(--tab-button-hover-bg);
+            color: var(--headline-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+        .toggle-details-button:active {
+            background-color: #4F85C5;
+            color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .toggle-details-button:focus-visible {
+            outline: 2px solid var(--link-color);
+            outline-offset: 2px;
+        }
+        .toggle-details-button svg {
+            margin-left: 0.5rem;
+            transition: transform 0.2s;
+        }
+        .toggle-details-button.expanded svg {
+            transform: rotate(180deg);
+        }
+        
+        .news-item-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+        .news-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            border: 1px solid var(--border-color);
+            transition: border-color 0.3s ease;
+        }
+        
+        .infinite-scroll-message {
+            text-align: center;
+            font-size: calc(var(--base-font-size) * 1.125);
+            color: var(--source-name-color);
+            padding: 2rem 0;
+            transition: color 0.3s ease;
+        }
+
+        /* Unified Scroll Navigation Button Styling */
+        #scroll-navigation-btn {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background-color: var(--scroll-btn-bg);
+            color: #ffffff;
+            border: none;
+            border-radius: 50px;
+            width: 36px;
+            height: 75px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0.7;
+            transition: opacity 0.3s ease-in-out, background-color 0.3s ease;
+            z-index: 1000;
+            outline: none;
+        }
+
+        #scroll-navigation-btn:hover,
+        #scroll-navigation-btn:focus-visible {
+            background-color: var(--scroll-btn-hover-bg);
+            opacity: 1;
+            outline: 2px solid var(--link-color);
+            outline-offset: 2px;
+        }
+        #scroll-navigation-btn:hover {
+            outline: none;
+        }
+        
+        #scroll-navigation-btn svg {
+            width: 20px;
+            height: 20px;
+            margin: 0.125rem 0;
+        }
+
+        /* Dark Mode Toggle Button - repositioned and restyled */
+        #dark-mode-toggle {
+            position: fixed;
+            bottom: 6.25rem;
+            right: 1rem;
+            background-color: var(--scroll-btn-bg);
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0.7;
+            transition: opacity 0.3s ease-in-out, background-color 0.3s ease, color 0.3s ease;
+            z-index: 1001;
+            flex-shrink: 0;
+            outline: none;
+        }
+
+        #dark-mode-toggle:hover {
+            background-color: var(--scroll-btn-hover-bg);
+            opacity: 1;
+        }
+        #dark-mode-toggle:focus-visible {
+            outline: 2px solid var(--link-color);
+            outline-offset: 2px;
+        }
+
+        #dark-mode-toggle svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Error message styling */
+        #error-message {
+            background-color: var(--error-bg);
+            border-color: var(--error-border);
+            color: var(--error-text);
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .header-content-wrapper {
+                flex-direction: column;
+                align-items: center;
+                padding: 0.5rem 1rem;
+            }
+            .font-size-controls {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+            h1 {
+                text-align: center;
+                margin-bottom: 0;
+            }
+            .header-content {
+                margin-top: 1rem;
+                flex-direction: column;
+                align-items: center;
+            }
+            .tab-button-group {
+                width: 100%;
+            }
+            .infinite-scroll-message {
+                padding: 1rem 0;
+            }
+            .toggle-details-button {
+                 margin-top: 0.5rem;
+            }
+            .news-item-header {
+                flex-direction: column;
+                align-items: center;
+            }
+            .news-image {
+                width: 100%;
+                height: 180px;
+                margin-right: 0;
+                margin-bottom: 0.75rem;
+            }
+            .news-item-content {
+                width: 100%;
+                text-align: center;
+            }
+            #scroll-navigation-btn {
+                bottom: 0.5rem;
+                right: 0.5rem;
+                width: 30px;
+                height: 60px;
+            }
+            #scroll-navigation-btn svg {
+                width: 16px;
+                height: 16px;
+            }
+            #dark-mode-toggle {
+                bottom: 4.75rem;
+                right: 0.5rem;
+                width: 30px;
+                height: 30px;
+            }
+            #dark-mode-toggle svg {
+                width: 16px;
+                height: 16px;
+            }
+            .site-main-content {
+                padding: 0.5rem;
+            }
+            .content-area {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Reading Progress Bar -->
+    <div id="reading-progress-bar"></div>
+
+    <!-- Header (full width background, centered content) -->
+    <header class="main-header">
+        <div class="header-content-wrapper">
+            <h1 class="font-bold" id="mainTitle">📰 News Aggregator</h1>
+            <!-- Font Size Controls -->
+            <div class="font-size-controls" role="group" aria-label="Adjust font size">
+                <button id="font-size-decrease" aria-label="Decrease font size" tabindex="0">A-</button>
+                <button id="font-size-reset" aria-label="Reset font size" tabindex="0">A</button>
+                <button id="font-size-increase" aria-label="Increase font size" tabindex="0">A+</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area (News, Tabs, Loading, Error, Infinite Scroll) -->
+    <main class="site-main-content">
+        <div class="content-area">
+            <div class="header-content">
+                <div id="news-sources" class="tab-button-group" role="tablist">
+                    <button class="tab-button active" data-source="All" tabindex="0" role="tab" aria-selected="true">All News</button>
+                    <button class="tab-button" data-source="DW" tabindex="0" role="tab" aria-selected="false">DW News</button>
+                    <button class="tab-button" data-source="BBC" tabindex="0" role="tab" aria-selected="false">BBC News</button>
+                    <button class="tab-button" data-source="The Hill" tabindex="0" role="tab" aria-selected="false">The Hill</button>
+                    <button class="tab-button" data-source="Forbes" tabindex="0" role="tab" aria-selected="false">Forbes</button>
+                    <button class="tab-button" data-source="WSJ" tabindex="0" role="tab" aria-selected="false">Wall Street Journal</button>
+                </div>
+            </div>
+
+            <div id="loading" class="flex justify-center items-center h-40" style="display: none;" role="status" aria-live="polite">
+                <div class="loading-spinner"></div>
+                <p class="ml-4 text-lg text-gray-600">Loading news...</p>
+            </div>
+
+            <div id="news-container" class="space-y-6" role="feed">
+                <!-- News articles will be loaded here -->
+            </div>
+
+            <!-- Infinite Scroll Loading Indicator -->
+            <div id="infinite-scroll-loading" class="flex justify-center items-center h-24" style="display: none;" role="status" aria-live="polite">
+                <div class="loading-spinner"></div>
+                <p class="ml-4 text-lg text-gray-600">Loading more news...</p>
+            </div>
+            <p id="no-more-news-message" class="infinite-scroll-message" style="display: none;" role="status" aria-live="polite">No more news to load.</p>
+
+
+            <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md relative mt-6" role="alert" tabindex="-1">
+                <strong class="font-bold">Error!</strong>
+                <span class="block sm:inline" id="error-text"></span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Dark Mode Toggle Button -->
+    <button id="dark-mode-toggle" aria-label="Toggle dark mode" tabindex="0">
+        <!-- Moon icon for light mode (default), changes to sun in dark mode -->
+        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.61.764-3.778a9.735 9.735 0 00-6.711 8.923 9.718 9.718 0 009.75 9.75 9.735 9.735 0 008.923-6.711z" />
+        </svg>
+        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColo

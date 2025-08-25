@@ -561,6 +561,24 @@
             padding-top: 0.5rem;
             padding-bottom: 1rem;
         }
+        /* For responsive YouTube embeds */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem; /* Match image rounded corners */
+            border: 1px solid var(--border-color);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
 
         .toggle-details-button {
             background-color: transparent;
@@ -1024,10 +1042,33 @@
             BBC: { name: 'BBC News', url: 'http://feeds.bbci.co.uk/news/rss.xml' },
             'The Hill': { name: 'The Hill', url: 'https://thehill.com/rss/' },
             Forbes: { name: 'Forbes', url: 'https://www.forbes.com/business/feed/' },
-            WSJ: { name: 'Wall Street Journal', url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml' }
-            // Add new news sources here following the same structure:
-            // NEW_SOURCE_KEY: { name: 'New Source Display Name', url: 'https://example.com/rss-feed' }
+            WSJ: { name: 'Wall Street Journal', url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml' },
+            Reuters: { name: 'Reuters', url: 'http://feeds.reuters.com/reuters/topNews' },
+            ESPN: { name: 'ESPN', url: 'https://www.espn.com/espn/rss/news' },
+            TechCrunch: { name: 'TechCrunch', url: 'https://techcrunch.com/feed/' }
         };
+
+        const YOUTUBE_FEEDS = {
+            'BreakingPoints': { name: 'Breaking Points', type: 'channelId', value: 'UCDRIjKy6eZOvKtOELtTdeUA' },
+            'AssociatedPress': { name: 'Associated Press', type: 'channelId', value: 'UCF0y-U3h5WwN_S9bN6zHkLA' }
+        };
+
+        // Helper function to get YouTube RSS URL from config
+        function getYoutubeRssUrl(feedConfig) {
+            if (feedConfig.type === 'channelId') {
+                return `https://www.youtube.com/feeds/videos.xml?channel_id=${feedConfig.value}`;
+            } else if (feedConfig.type === 'rssUrl') {
+                return feedConfig.value;
+            }
+            return null;
+        }
+
+        // Helper function to extract YouTube video ID from a URL
+        function extractYouTubeVideoId(url) {
+            const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([\w-]{11})/;
+            const match = url.match(regex);
+            return match ? match[1] : null;
+        }
 
 
         let allArticlesFromAllSources = [];
@@ -1061,6 +1102,7 @@
         const modalErrorMessage = document.getElementById('modal-error-message');
         const modalInfoMessage = document.getElementById('modal-info-message');
         let myFeedTab; // Declared here, will be assigned after dynamic creation
+        let youtubeVideosTab; // New: YouTube Videos tab element
 
 
         // New elements for hamburger menu
@@ -1195,9 +1237,9 @@
         }
 
 
-        async function fetchNewsForSource(rssUrl, sourceDisplayName) {
+        async function fetchNewsForSource(url, sourceDisplayName, isYouTube = false) {
             try {
-                const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+                const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
                 const response = await fetch(proxyUrl);
 
                 if (!response.ok) {
@@ -1210,7 +1252,11 @@
                     throw new Error(data.message || 'Failed to fetch news from proxy.');
                 }
 
-                return data.items.map(item => ({ ...item, sourceName: sourceDisplayName }));
+                return data.items.map(item => ({ 
+                    ...item, 
+                    sourceName: sourceDisplayName, 
+                    isYouTube: isYouTube 
+                }));
 
             } catch (error) {
                 console.error(`Error fetching news for ${sourceDisplayName}:`, error);
@@ -1229,7 +1275,8 @@
             let combinedArticles = [];
             let failedSources = [];
 
-            const fetchPromises = Object.entries(RSS_FEEDS).map(async ([key, config]) => {
+            // Fetch from RSS_FEEDS
+            const rssFetchPromises = Object.entries(RSS_FEEDS).map(async ([key, config]) => {
                 try {
                     const articles = await fetchNewsForSource(config.url, config.name);
                     return articles;
@@ -1239,7 +1286,24 @@
                 }
             });
 
-            const results = await Promise.allSettled(fetchPromises);
+            // Fetch from YOUTUBE_FEEDS
+            const youtubeFetchPromises = Object.entries(YOUTUBE_FEEDS).map(async ([key, config]) => {
+                const youtubeRssUrl = getYoutubeRssUrl(config);
+                if (!youtubeRssUrl) {
+                    failedSources.push(config.name);
+                    return null;
+                }
+                try {
+                    const articles = await fetchNewsForSource(youtubeRssUrl, config.name, true); // Mark as YouTube
+                    return articles;
+                } catch (error) {
+                    failedSources.push(config.name);
+                    return null;
+                }
+            });
+
+            const allFetchPromises = [...rssFetchPromises, ...youtubeFetchPromises];
+            const results = await Promise.allSettled(allFetchPromises);
 
             results.forEach(result => {
                 if (result.status === 'fulfilled' && result.value) {
@@ -1263,16 +1327,13 @@
             // Interleave articles from different sources for a varied display
             const interleavedArticles = [];
             let sourcesWithArticles = {};
-            allArticlesFromAllSources.forEach(article => {
-                const sourceKey = Object.keys(RSS_FEEDS).find(key => 
-                    RSS_FEEDS[key].name === article.sourceName
+            // Combine all defined sources for interleaving logic
+            const allSourcesConfig = { ...RSS_FEEDS, ...YOUTUBE_FEEDS };
+
+            Object.keys(allSourcesConfig).forEach(sourceKey => {
+                sourcesWithArticles[sourceKey] = allArticlesFromAllSources.filter(article =>
+                    allSourcesConfig[sourceKey].name === article.sourceName
                 );
-                if (sourceKey) {
-                    if (!sourcesWithArticles[sourceKey]) {
-                        sourcesWithArticles[sourceKey] = [];
-                    }
-                    sourcesWithArticles[sourceKey].push(article);
-                }
             });
 
             let activeSources = Object.keys(sourcesWithArticles).filter(key => sourcesWithArticles[key].length > 0);
@@ -1342,15 +1403,34 @@
                     newsItem.setAttribute('tabindex', '0');
 
                     const fullDescription = article.description;
-                    const imageUrl = extractImageUrl(article);
+                    let mediaHtml = '';
+                    let articleLink = article.link || '#';
 
-                    const imageHtml = imageUrl ? 
-                        `<img src="${imageUrl}" alt="${article.title || 'News Image'}" class="news-image">` : 
-                        '';
+                    if (article.isYouTube) {
+                        const videoId = extractYouTubeVideoId(article.link);
+                        if (videoId) {
+                            mediaHtml = `
+                                <div class="video-container">
+                                    <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            `;
+                        } else {
+                            // Fallback if video ID cannot be extracted, show thumbnail if available
+                            const imageUrl = extractImageUrl(article);
+                            mediaHtml = imageUrl ? 
+                                `<img src="${imageUrl}" alt="${article.title || 'YouTube Video Thumbnail'}" class="news-image block w-full h-auto">` : 
+                                '';
+                        }
+                    } else {
+                        const imageUrl = extractImageUrl(article);
+                        mediaHtml = imageUrl ? 
+                            `<img src="${imageUrl}" alt="${article.title || 'News Image'}" class="news-image">` : 
+                            '';
+                    }
 
                     newsItem.innerHTML = `
                         <div class="news-item-header">
-                            ${imageHtml}
+                            ${mediaHtml}
                             <div class="news-item-content">
                                 <h2 class="font-semibold">${article.title}</h2>
                                 <span class="source-name">${article.sourceName || 'Unknown Source'}</span>
@@ -1363,7 +1443,7 @@
                             </button>
                             <div class="collapsible-content" role="region" aria-hidden="true">
                                 <p class="text-base mb-4">${fullDescription}</p>
-                                <a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer" class="hover:underline mt-4 block" tabindex="0">Read Original Article →</a>
+                                <a href="${articleLink}" target="_blank" rel="noopener noreferrer" class="hover:underline mt-4 block" tabindex="0">Read Original Article →</a>
                                 ${article.pubDate ? `<p class="text-sm mt-2">${new Date(article.pubDate).toLocaleString()}</p>` : ''}
                             </div>
                         </div>
@@ -1446,14 +1526,19 @@
                 currentlyDisplayedArticles = allArticlesFromAllSources;
             } else if (filterKey === 'MyFeed') {
                 if (userPreferences.length > 0) {
+                    // Combine all sources (RSS and YouTube) for user preferences filtering
+                    const allSourcesCombined = { ...RSS_FEEDS, ...YOUTUBE_FEEDS };
                     currentlyDisplayedArticles = allArticlesFromAllSources.filter(article =>
-                        userPreferences.includes(Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === article.sourceName))
+                        userPreferences.includes(Object.keys(allSourcesCombined).find(key => allSourcesCombined[key].name === article.sourceName))
                     );
                 } else {
                     currentlyDisplayedArticles = [];
                     newsContainer.innerHTML = `<p class="text-center text-lg">Select your preferred sources in the preferences menu (☰) to customize your feed.</p>`;
                 }
-            } else { // Specific source tab clicked
+            } else if (filterKey === 'YouTube') { // Filter for YouTube Videos
+                currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => article.isYouTube);
+            }
+            else { // Specific general news source tab clicked
                 currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => article.sourceName === RSS_FEEDS[filterKey].name);
             }
             displayNextBatchOfNews();
@@ -1463,11 +1548,55 @@
         // Function to populate the off-canvas menu with checkboxes
         function populatePreferencesMenu() {
             preferencesCheckboxList.innerHTML = ''; // Clear existing
+            
+            // Add general RSS feeds
             Object.keys(RSS_FEEDS).forEach(sourceKey => {
                 const sourceDisplayName = RSS_FEEDS[sourceKey].name;
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('menu-source-item');
                 itemDiv.innerHTML = `
+                    <label for="pref-checkbox-${sourceKey}">
+                        ${sourceDisplayName}
+                    </label>
+                    <input type="checkbox" id="pref-checkbox-${sourceKey}" data-source="${sourceKey}" class="preference-checkbox">
+                `;
+                preferencesCheckboxList.appendChild(itemDiv);
+
+                const checkbox = itemDiv.querySelector('.preference-checkbox');
+                checkbox.checked = userPreferences.includes(sourceKey); // Set initial state
+
+                // Add event listener for instant saving
+                checkbox.addEventListener('change', async (event) => {
+                    const changedSourceKey = event.target.dataset.source;
+                    if (!userId) {
+                        event.target.checked = !event.target.checked; // Revert checkbox state
+                        showModalMessage('Login to save your preferences.', true);
+                        return;
+                    }
+
+                    if (event.target.checked) {
+                        if (!userPreferences.includes(changedSourceKey)) {
+                            userPreferences.push(changedSourceKey);
+                        }
+                    } else {
+                        userPreferences = userPreferences.filter(pref => pref !== changedSourceKey);
+                    }
+                    console.log(`Preferences updated for ${changedSourceKey}:`, userPreferences);
+                    await saveUserPreferences(); // Save instantly
+
+                    // If 'My Feed' is the active tab, refresh it
+                    if (currentActiveTab === 'MyFeed') {
+                        applyNewsFilterAndDisplay('MyFeed');
+                    }
+                });
+            });
+
+            // Add YouTube feeds
+            Object.keys(YOUTUBE_FEEDS).forEach(sourceKey => {
+                const sourceDisplayName = YOUTUBE_FEEDS[sourceKey].name;
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('menu-source-item');
+                item.innerHTML = `
                     <label for="pref-checkbox-${sourceKey}">
                         ${sourceDisplayName}
                     </label>
@@ -1528,7 +1657,7 @@
             myFeedTab.style.display = 'none'; // Initially hidden
             newsSourcesDiv.appendChild(myFeedTab);
 
-            // Add dynamic source tabs
+            // Add dynamic general news source tabs
             Object.keys(RSS_FEEDS).forEach(sourceKey => {
                 const tabButton = document.createElement('button');
                 tabButton.classList.add('tab-button');
@@ -1538,6 +1667,16 @@
                 tabButton.textContent = RSS_FEEDS[sourceKey].name;
                 newsSourcesDiv.appendChild(tabButton);
             });
+
+            // Add dynamic "YouTube Videos" tab
+            youtubeVideosTab = document.createElement('button');
+            youtubeVideosTab.classList.add('tab-button');
+            youtubeVideosTab.dataset.source = 'YouTube';
+            youtubeVideosTab.setAttribute('tabindex', '0');
+            youtubeVideosTab.setAttribute('role', 'tab');
+            youtubeVideosTab.textContent = 'YouTube Videos';
+            newsSourcesDiv.appendChild(youtubeVideosTab);
+
 
             // Set 'All News' as active by default initially
             document.querySelector('.tab-button[data-source="All"]').classList.add('active');
@@ -1839,5 +1978,3 @@
     </script>
 </body>
 </html>
-
-

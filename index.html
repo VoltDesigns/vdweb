@@ -434,6 +434,7 @@
         const newsPerPage = 10;
         let currentPage = 1;
         let currentArticles = [];
+        let isScrollingToTop = false; // Flag to manage "Go to Top" button state during smooth scroll
 
         const newsContainer = document.getElementById('news-container');
         const newsSourcesDiv = document.getElementById('news-sources');
@@ -826,14 +827,19 @@
             const scrollThreshold = 200; // Pixels scrolled to show/hide buttons
             const scrollFromBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
 
-            // Go to Top button visibility: Show if scrolled down past threshold
+            // Go to Top button visibility:
             if (window.scrollY > scrollThreshold) {
-                goToTopBtn.classList.add('show'); // Add show class to make it visible (translucent)
+                // Only show the button if it's not currently in a "scrolling to top" state from a button click
+                if (!isScrollingToTop) {
+                    goToTopBtn.classList.add('show');
+                }
             } else {
-                goToTopBtn.classList.remove('show'); // Remove show class to hide it
+                // If at or near the top, always hide the button and reset the flag
+                goToTopBtn.classList.remove('show');
+                isScrollingToTop = false; // Important: Reset flag here when at the very top
             }
 
-            // Go to Bottom button visibility: Hide only when near the very bottom
+            // Go to Bottom button visibility:
             if (scrollFromBottom <= scrollThreshold) {
                 goToBottomBtn.classList.add('hide'); // Hide it
             } else {
@@ -842,9 +848,10 @@
         });
 
         goToTopBtn.addEventListener('click', () => {
+            isScrollingToTop = true; // Set flag when button is clicked
+            goToTopBtn.classList.remove('show'); // Immediately hide on click for better UX
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            // Removed explicit goToTopBtn.classList.remove('show');
-            // The scroll listener will now handle hiding the button once window.scrollY is 0.
+            // The scroll listener will now handle resetting isScrollingToTop to false when window.scrollY reaches 0.
         });
 
         goToBottomBtn.addEventListener('click', () => {

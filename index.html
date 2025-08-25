@@ -1049,12 +1049,7 @@
         };
 
         const YOUTUBE_FEEDS = {
-            // Add YouTube channels here using 'channelId' and their respective IDs
-            // Example:
-            // 'GoogleDevelopers': { name: 'Google Developers', type: 'channelId', value: 'UC_Fh8NUoUFy9e_TUMFTLM_Q' },
-            // 'TheNewYorkTimes': { name: 'The New York Times', type: 'channelId', value: 'UCqZQWT_j9A6_K6C8Gj_vD9Q' }
-            // Or directly RSS URL if available:
-            // 'SomeChannel': { name: 'Some Channel', type: 'rssUrl', value: 'https://www.youtube.com/feeds/videos.xml?user=someusername' }
+            'BreakingPoints': { name: 'Breaking Points', type: 'channelId', value: 'UCDRIjKy6eZOvKtOELtTdeUA' }
         };
 
         // Helper function to get YouTube RSS URL from config
@@ -1539,7 +1534,7 @@
                     currentlyDisplayedArticles = [];
                     newsContainer.innerHTML = `<p class="text-center text-lg">Select your preferred sources in the preferences menu (☰) to customize your feed.</p>`;
                 }
-            } else if (filterKey === 'YouTube') { // New filter for YouTube Videos
+            } else if (filterKey === 'YouTube') { // Filter for YouTube Videos
                 currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => article.isYouTube);
             }
             else { // Specific general news source tab clicked

@@ -1555,17 +1555,28 @@ const firebaseConfig = {
   measurementId: "G-3P1SVT79L6"
 };
 
-            // Initialize Firebase App
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
+            // Initialize Firebase with your actual config
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            // measurementId: "YOUR_MEASUREMENT_ID" // Only include if present in your config
+        };
 
-            // Sign in anonymously if no user is currently authenticated when the app starts.
-            // This replaces the __initial_auth_token logic for static deployments.
-            if (!auth.currentUser) {
-                await signInAnonymously(auth);
-            }
-            // --- End Firebase Initialization for Static Hosting ---
+        // Initialize Firebase App
+        app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        // Sign in anonymously if no user is currently authenticated
+        // For GitHub Pages, we will primarily rely on email/password or anonymous auth.
+        // Remove the __initial_auth_token check as it's for specific environments.
+        if (!auth.currentUser) {
+            await signInAnonymously(auth);
+        }
 
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {

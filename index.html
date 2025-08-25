@@ -450,9 +450,10 @@
             return true;
         };
 
-        // Function to show/hide loading indicator - BUG FIX APPLIED HERE
+        // Function to show/hide loading indicator
+        // Modified to always hide the loading indicator as requested by the user.
         function showLoading(show) {
-            loadingIndicator.style.display = show ? 'flex' : 'none';
+            loadingIndicator.style.display = 'none'; // Always hide the loading indicator
         }
 
         function showErrorMessage(message) {
@@ -522,7 +523,7 @@
         }
 
         async function fetchNews(sourceKey, rssUrl, sourceDisplayName) {
-            showLoading(true); // Call with true to show loading
+            showLoading(true); // This call will now effectively do nothing to show the loading indicator
             hideErrorMessage();
             newsContainer.innerHTML = '';
             paginationContainer.innerHTML = '';
@@ -558,12 +559,12 @@
                 console.error(`Error fetching news for ${sourceDisplayName}:`, error);
                 showErrorMessage(error.message);
             } finally {
-                showLoading(false); // Always hide loading in finally
+                showLoading(false); // This call will also effectively do nothing
             }
         }
 
         async function fetchAllNewsAndInterleave() {
-            showLoading(true); // Call with true to show loading
+            showLoading(true); // This call will now effectively do nothing
             hideErrorMessage();
             newsContainer.innerHTML = '';
             paginationContainer.innerHTML = '';
@@ -594,7 +595,7 @@
 
             if (Object.keys(articlesBySource).length === 0) {
                 showErrorMessage(translations.couldNotLoadAny);
-                showLoading(false); // Hide loading if no sources loaded
+                showLoading(false); // This call will also effectively do nothing
                 return;
             }
             
@@ -659,7 +660,7 @@
             currentPage = 1;
             displayNews(currentArticles, currentPage);
             renderPagination(currentArticles.length, currentPage);
-            showLoading(false); // Hide loading at the end of all news fetch
+            showLoading(false); // This call will also effectively do nothing
         }
 
         function displayNews(articles, pageNumber) {

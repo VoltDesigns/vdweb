@@ -40,12 +40,9 @@
             --login-signup-btn-hover-bg: #3e6a9e; /* Consistent darker blue for hover */
 
             /* New for subtle underlines */
-            --tab-underline-color: #4F85C5; /* Blue for active/preferred underline */
+            --tab-underline-color: #4F85C5; /* Blue for active underline */
             --tab-underline-height: 3px;
             
-            --save-pref-btn-bg: #3e6a9e; /* Matches the darker blue for save preferences */
-            --save-pref-btn-hover-bg: #2b5585; /* Even darker blue for save button hover */
-
             /* Checkbox colors */
             --checkbox-border-color: #4F85C5;
             --checkbox-checked-bg: #4F85C5;
@@ -91,10 +88,7 @@
             --login-signup-btn-active-text: #ffffff;
             --login-signup-btn-hover-bg: #457B9D; /* Consistent darker blue for hover */
 
-            --tab-underline-color: #90cdf4; /* Light blue for active/preferred underline in dark mode */
-
-            --save-pref-btn-bg: #457B9D; /* Matches the darker blue for save preferences dark mode */
-            --save-pref-btn-hover-bg: #325A77; /* Even darker blue for save button hover dark mode */
+            --tab-underline-color: #90cdf4; /* Light blue for active underline in dark mode */
 
             --checkbox-border-color: #90cdf4;
             --checkbox-checked-bg: #90cdf4;
@@ -607,36 +601,6 @@
             transition: color 0.3s ease;
         }
 
-        /* Save Preferences Button - now removed as per request, but keeping styles if needed later */
-        #save-preferences-btn {
-            background-color: var(--save-pref-btn-bg); /* Use the darker blue for save */
-            color: #ffffff;
-            padding: 0.6rem 1rem;
-            border-radius: 0;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-            outline: none;
-            margin-top: 1rem;
-            display: block;
-            width: 100%;
-            text-align: center;
-            font-size: calc(var(--base-font-size) * 0.95);
-        }
-        #save-preferences-btn:hover {
-            background-color: var(--save-pref-btn-hover-bg);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        #save-preferences-btn:focus-visible {
-            outline: 2px solid var(--link-color);
-            outline-offset: 2px;
-        }
-        #save-preferences-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
         /* Unified Scroll Navigation Button Styling */
         #scroll-navigation-btn {
             position: fixed;
@@ -946,7 +910,6 @@
                     <button class="tab-button" data-source="Forbes" tabindex="0" role="tab" aria-selected="false">Forbes</button>
                     <button class="tab-button" data-source="WSJ" tabindex="0" role="tab" aria-selected="false">Wall Street Journal</button>
                 </div>
-                <!-- Save Preferences button is now removed -->
             </div>
 
             <div id="loading" class="flex justify-center items-center h-40" style="display: none;" role="status" aria-live="polite">
@@ -1070,14 +1033,6 @@
             apiError: 'API error. Please check configuration.',
             loginSignup: 'Login/Signup',
             logout: 'Logout',
-            savePreferences: 'Save My Preferences',
-            loginModalTitle: 'Login or Sign Up',
-            emailPlaceholder: 'Email',
-            passwordPlaceholder: 'Password',
-            loginSignupButton: 'Login / Sign Up',
-            loginSuccess: 'Logged in successfully!',
-            signupSuccess: 'Account created successfully!',
-            logoutSuccess: 'Logged out.',
             prefSaved: 'Preferences saved!',
             prefLoadError: 'Could not load preferences.',
             prefSaveError: 'Failed to save preferences.',
@@ -1085,7 +1040,9 @@
             invalidEmailPass: 'Invalid email or password.',
             emailExists: 'Email already in use. Please login or use a different email.',
             weakPassword: 'Password should be at least 6 characters.',
-            anonymousUser: 'Anonymous'
+            anonymousUser: 'Anonymous',
+            prefMenuStatusLoggedIn: 'Select sources for your customized "My Feed".',
+            prefMenuStatusLoggedOut: 'Login to save your preferences.'
         };
 
         let allArticlesFromAllSources = [];
@@ -1532,7 +1489,7 @@
                     const changedSourceKey = event.target.dataset.source;
                     if (!userId) {
                         event.target.checked = !event.target.checked; // Revert checkbox state
-                        showModalMessage("You must be logged in to save preferences.", true);
+                        showModalMessage(translations.prefMenuStatusLoggedOut, true); // Use specific translation
                         return;
                     }
 
@@ -1568,13 +1525,13 @@
             loginSignupBtn.textContent = translations.loginSignup;
             logoutBtn.textContent = translations.logout;
             
-            // Remove the save preferences button as it's no longer needed
-            const savePreferencesBtn = document.getElementById('save-preferences-btn');
-            if (savePreferencesBtn) savePreferencesBtn.style.display = 'none';
-
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
+
+            // Initial state: Anonymous user display
+            userIdDisplay.textContent = translations.anonymousUser;
+            userIdDisplay.classList.remove('hidden'); // Ensure it's visible by default
 
             onAuthStateChanged(auth, async (user) => {
                 console.log("onAuthStateChanged triggered. User:", user ? user.uid : "null");
@@ -1586,7 +1543,7 @@
                     loginSignupBtn.classList.add('hidden');
                     logoutBtn.classList.remove('hidden');
                     myFeedTab.style.display = 'block';
-                    prefMenuStatus.textContent = 'Select sources for your customized "My Feed".';
+                    prefMenuStatus.textContent = translations.prefMenuStatusLoggedIn; // Update menu status
                     
                     await loadUserPreferences(userId);
                     populatePreferencesMenu(); // Populate and set checked states
@@ -1596,12 +1553,11 @@
                 } else {
                     userId = null;
                     userEmail = null;
-                    userIdDisplay.textContent = translations.anonymousUser; // Set to "Anonymous"
-                    userIdDisplay.classList.remove('hidden');
+                    userIdDisplay.textContent = translations.anonymousUser; // Set to "Anonymous" on logout
                     loginSignupBtn.classList.remove('hidden');
                     logoutBtn.classList.add('hidden');
                     myFeedTab.style.display = 'none';
-                    prefMenuStatus.textContent = 'Login to save your preferences.';
+                    prefMenuStatus.textContent = translations.prefMenuStatusLoggedOut; // Update menu status
                     userPreferences = [];
                     populatePreferencesMenu(); // Clear checkboxes on logout
 
@@ -1619,10 +1575,7 @@
                 }
             });
 
-            if (!auth.currentUser) {
-                console.log("Signing in anonymously...");
-                await signInAnonymously(auth);
-            }
+            // No automatic anonymous sign-in here. `onAuthStateChanged` handles initial user state.
 
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
@@ -1674,7 +1627,6 @@
             try {
                 const prefDocRef = doc(db, `artifacts/${firebaseConfig.projectId}/users/${userId}/preferences`, 'sources');
                 await setDoc(prefDocRef, { preferredSources: userPreferences }, { merge: true });
-                // showModalMessage(translations.prefSaved); // Removed this to avoid too many popups on instant save
                 console.log("Preferences saved successfully!");
             } catch (error) {
                 console.error("Error saving user preferences:", error);

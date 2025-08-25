@@ -450,8 +450,9 @@
             return true;
         };
 
-        function showLoading() {
-            loadingIndicator.style.display = 'none'; // Always hide
+        // Function to show/hide loading indicator - BUG FIX APPLIED HERE
+        function showLoading(show) {
+            loadingIndicator.style.display = show ? 'flex' : 'none';
         }
 
         function showErrorMessage(message) {
@@ -521,7 +522,7 @@
         }
 
         async function fetchNews(sourceKey, rssUrl, sourceDisplayName) {
-            showLoading();
+            showLoading(true); // Call with true to show loading
             hideErrorMessage();
             newsContainer.innerHTML = '';
             paginationContainer.innerHTML = '';
@@ -557,12 +558,12 @@
                 console.error(`Error fetching news for ${sourceDisplayName}:`, error);
                 showErrorMessage(error.message);
             } finally {
-                showLoading();
+                showLoading(false); // Always hide loading in finally
             }
         }
 
         async function fetchAllNewsAndInterleave() {
-            showLoading();
+            showLoading(true); // Call with true to show loading
             hideErrorMessage();
             newsContainer.innerHTML = '';
             paginationContainer.innerHTML = '';
@@ -593,7 +594,7 @@
 
             if (Object.keys(articlesBySource).length === 0) {
                 showErrorMessage(translations.couldNotLoadAny);
-                showLoading();
+                showLoading(false); // Hide loading if no sources loaded
                 return;
             }
             
@@ -658,6 +659,7 @@
             currentPage = 1;
             displayNews(currentArticles, currentPage);
             renderPagination(currentArticles.length, currentPage);
+            showLoading(false); // Hide loading at the end of all news fetch
         }
 
         function displayNews(articles, pageNumber) {

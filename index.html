@@ -29,6 +29,8 @@
             --error-border: #ff8080; /* medium red */
             --error-text: #cc0000; /* dark red */
             --box-shadow-color: rgba(0, 0, 0, 0.05); /* Light mode shadow color */
+            --scroll-btn-bg: #4F85C5;
+            --scroll-btn-hover-bg: #3e6a9e;
         }
 
         /* Dark Mode overrides */
@@ -51,6 +53,8 @@
             --error-border: #660000; /* Darker red border */
             --error-text: #ff6666; /* Lighter red text */
             --box-shadow-color: rgba(255, 255, 255, 0.1); /* White shadow for dark mode */
+            --scroll-btn-bg: #3a3a3a; /* Darker scroll button in dark mode */
+            --scroll-btn-hover-bg: #555555;
         }
 
         body {
@@ -77,11 +81,11 @@
             margin-left: auto;
             margin-right: auto;
             padding: 1rem 1rem; /* Padding inside the centered header content */
-            position: relative; /* For absolute positioning of toggle button */
+            position: relative; /* Needed for positioning elements inside (e.g. title) */
             display: flex; /* Flexbox for alignment */
             justify-content: center; /* Center the title */
             align-items: center;
-            min-height: 48px; /* Ensure enough height for the button */
+            min-height: 48px; /* Ensure enough height for the title */
         }
 
         .site-main-content {
@@ -220,7 +224,7 @@
 
         .toggle-details-button {
             background-color: transparent;
-            color: var(--tab-button-text);
+            color: var(--tab-button-text); /* Now uses dynamic tab button text color */
             padding: 0.5rem 1rem;
             border-radius: 0;
             border: 1px solid var(--toggle-details-button-border);
@@ -234,8 +238,8 @@
             font-size: 0.9rem;
         }
         .toggle-details-button:hover {
-            background-color: var(--tab-button-hover-bg);
-            color: var(--headline-color);
+            background-color: var(--tab-button-hover-bg); /* Now uses dynamic tab button hover background */
+            color: var(--headline-color); /* Now uses dynamic headline color */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
         }
         .toggle-details-button:active {
@@ -313,7 +317,7 @@
             position: fixed;
             bottom: 1rem; /* Adjust as needed */
             right: 1rem;
-            background-color: #4F85C5; /* UN Blue */
+            background-color: var(--scroll-btn-bg); /* UN Blue */
             color: #ffffff;
             border: none;
             border-radius: 50px; /* Highly rounded for elongated pill shape */
@@ -327,13 +331,13 @@
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             opacity: 0.7; /* Translucent by default */
-            transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
+            transition: opacity 0.3s ease-in-out, background-color 0.3s ease; /* Smooth transition for opacity and background */
             z-index: 1000; /* Ensure it's above other content */
         }
 
         #scroll-navigation-btn:hover,
         #scroll-navigation-btn:focus { /* Make opaque on hover or focus */
-            background-color: #3e6a9e; /* Darker blue on hover */
+            background-color: var(--scroll-btn-hover-bg); /* Darker blue on hover */
             opacity: 1; /* Fully opaque */
             outline: none; /* Remove default focus outline for aesthetics */
         }
@@ -343,30 +347,31 @@
             margin: 0.25rem 0; /* Space out the arrows */
         }
 
-        /* Dark Mode Toggle Button */
+        /* Dark Mode Toggle Button - repositioned and restyled */
         #dark-mode-toggle {
-            background: none;
+            position: fixed; /* Always visible and fixed */
+            bottom: 7.5rem; /* Just above the scroll navigation button (100px height + 1rem bottom + 0.5rem gap = ~7.5rem) */
+            right: 1rem; /* Align with scroll button */
+            background-color: var(--scroll-btn-bg); /* Use scroll button background for consistency */
+            color: #ffffff; /* White icon always */
             border: none;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 50%;
+            border-radius: 50%; /* Make it round */
+            width: 48px; /* Fixed width */
+            height: 48px; /* Fixed height */
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--headline-color); /* Inherit color from theme */
-            transition: color 0.3s ease, background-color 0.2s ease;
-            position: absolute; /* Positioned relative to .header-content-wrapper */
-            top: 50%; /* Center vertically */
-            right: 0; /* Align to the right of the wrapper */
-            transform: translateY(-50%); /* Adjust for perfect vertical centering */
-            flex-shrink: 0; /* Prevent button from shrinking */
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0.7; /* Translucent by default */
+            transition: opacity 0.3s ease-in-out, background-color 0.3s ease, color 0.3s ease;
+            z-index: 1001; /* Higher than scroll button */
+            flex-shrink: 0; /* Prevent distortion */
         }
 
         #dark-mode-toggle:hover {
-            background-color: rgba(0, 0, 0, 0.05); /* Light hover effect */
-        }
-        body.dark-mode #dark-mode-toggle:hover {
-            background-color: rgba(255, 255, 255, 0.1); /* Dark mode hover effect */
+            background-color: var(--scroll-btn-hover-bg); /* Darker on hover */
+            opacity: 1; /* Fully opaque on hover */
         }
 
         #dark-mode-toggle svg {
@@ -385,15 +390,11 @@
 
         @media (max-width: 768px) {
             .header-content-wrapper {
-                flex-direction: column; /* Stack title and toggle on small screens */
+                flex-direction: column; /* Stack title on mobile */
                 align-items: center;
                 padding: 0.5rem 1rem; /* Smaller padding on mobile */
             }
-            #dark-mode-toggle {
-                position: static; /* Revert to static for flow within column */
-                transform: none;
-                margin-top: 0.5rem; /* Space between title and toggle */
-            }
+            /* Dark mode toggle now fixed, so no need to adjust its position within header-content-wrapper for mobile */
             h1 {
                 text-align: center;
                 margin-bottom: 0;
@@ -436,6 +437,12 @@
                 width: 40px; /* Slightly smaller button on mobile */
                 height: 80px; /* Adjusted height for mobile */
             }
+            #dark-mode-toggle {
+                bottom: 6rem; /* Adjust bottom for mobile to be above smaller scroll btn */
+                right: 0.5rem; /* Align with scroll button on mobile */
+                width: 40px; /* Smaller toggle on mobile */
+                height: 40px; /* Smaller toggle on mobile */
+            }
             .site-main-content {
                 padding: 0.5rem; /* Smaller padding for main content on mobile */
             }
@@ -450,16 +457,6 @@
     <header class="main-header">
         <div class="header-content-wrapper">
             <h1 class="text-4xl font-bold" id="mainTitle">📰 News Aggregator</h1>
-            <!-- Dark Mode Toggle Button -->
-            <button id="dark-mode-toggle" aria-label="Toggle dark mode">
-                <!-- Moon icon for light mode (default), changes to sun in dark mode -->
-                <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.61.764-3.778a9.735 9.735 0 00-6.711 8.923 9.718 9.718 0 009.75 9.75 9.735 9.735 0 008.923-6.711z" />
-                </svg>
-                <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12H5.25m-.386-6.364l1.591 1.591M12 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-            </button>
         </div>
     </header>
 
@@ -496,6 +493,17 @@
             </div>
         </div>
     </main>
+
+    <!-- Floating Dark Mode Toggle Button -->
+    <button id="dark-mode-toggle" aria-label="Toggle dark mode">
+        <!-- Moon icon for light mode (default), changes to sun in dark mode -->
+        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.61.764-3.778a9.735 9.735 0 00-6.711 8.923 9.718 9.718 0 009.75 9.75 9.735 9.735 0 008.923-6.711z" />
+        </svg>
+        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12H5.25m-.386-6.364l1.591 1.591M12 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+    </button>
 
     <!-- Unified Scroll Navigation Button -->
     <button id="scroll-navigation-btn" aria-label="Scroll navigation">
@@ -580,7 +588,7 @@
                 const sourceNameMatch = message.match(/Could not load news from (\w[\w\s.-]*)\./);
                 if (sourceNameMatch) {
                     const sourceKey = Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === sourceNameMatch[1]);
-                    const sourceDisplayName = sourceKey ? RSS_FEEDS[sourceKey].name : sourceNameMatch[1];
+                    const sourceDisplayName = sourceKey ? RSS_FEEDS[key].name : sourceNameMatch[1];
                     const detailsPart = message.substring(message.indexOf('(Details:'));
                     displayedMessage = `${translations.couldNotLoad} ${sourceDisplayName}. ${translations.tryAgain} ${detailsPart}`;
                 }

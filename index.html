@@ -733,9 +733,9 @@
         /* Floating Buttons Wrapper (Desktop) */
         #floating-buttons-wrapper {
             position: fixed;
-            top: 50%;
+            top: 75%; /* 50% downwards from middle (50% + 50%*0.5 = 75%) */
             right: 1rem;
-            transform: translateY(-50%);
+            transform: translateY(-50%); /* Center based on its own height */
             display: flex;
             flex-direction: column; /* Stack children vertically */
             gap: 0.75rem; /* Gap between buttons */
@@ -914,7 +914,7 @@
 
         @media (max-width: 768px) {
             /* Mobile-specific variables */
-            --mobile-tab-bar-height: 30px; /* Reduced height for the sticky bottom tab bar */
+            --mobile-tab-bar-height: 45px; /* Increased height for the sticky bottom tab bar (30px * 1.5) */
             --buttons-stack-gap: 0.75rem; /* Gap between the two floating buttons */
             --buttons-to-tabs-gap: 0.75rem; /* Gap between button stack and tab bar */
             
@@ -938,7 +938,7 @@
                 background-color: var(--section-bg);
                 box-shadow: 0 -2px 5px var(--box-shadow-color); /* Shadow on top */
                 z-index: 100;
-                padding: 0.25rem 0.5rem; /* Reduced padding for the entire fixed bar */
+                padding: 0.25rem 0.5rem; /* Padding adjusted for new height */
                 box-sizing: border-box; /* Include padding in width/height */
                 border-top: 1px solid var(--border-color); /* Subtle border */
                 border-radius: 0; /* No rounded corners for fixed bar */
@@ -963,8 +963,8 @@
 
             /* Adjust tab button padding for vertical compactness */
             #news-sources .tab-button {
-                padding: 0.1rem 0.3rem; /* Further reduced padding */
-                font-size: calc(var(--base-font-size) * 0.75); /* Smaller font for compact tabs */
+                padding: 0.2rem 0.3rem; /* Further adjusted padding for new height */
+                font-size: calc(var(--base-font-size) * 0.8); /* Adjusted font size */
             }
 
             /* Wrapper for the floating buttons in mobile view */
@@ -977,6 +977,7 @@
                 display: flex; /* Ensure visibility */
                 flex-direction: column; /* Stack children vertically */
                 gap: var(--buttons-stack-gap); /* Gap between buttons */
+                transform: translateY(0); /* Reset transform for mobile */
             }
 
             /* Reset individual button positioning, let wrapper handle it */
@@ -997,6 +998,8 @@
                 border-radius: 50px; /* Pill shape */
             }
             #scroll-navigation-btn svg {
+                width: 20px;
+                height: 20px;
                 margin: 0.125rem 0; /* Small vertical margin for arrows */
             }
 
@@ -1126,16 +1129,6 @@
     <!-- Main Content Area (News, Tabs, Loading, Error, Infinite Scroll) -->
     <main class="site-main-content">
         <div class="content-area">
-            <div class="header-content">
-                <!-- Tab selection section -->
-                <!-- The nav wrapper for sticky mobile tabs. On desktop, it behaves as a normal div. -->
-                <nav id="mobile-tab-bar" class="w-full max-w-none"> 
-                    <div id="news-sources" class="tab-button-group" role="tablist">
-                        <!-- Tabs will be dynamically loaded here -->
-                    </div>
-                </nav>
-            </div>
-
             <div id="loading" class="flex justify-center items-center h-40" style="display: none;" role="status" aria-live="polite">
                 <div class="loading-spinner"></div>
                 <p class="ml-4 text-lg text-gray-600">Loading news...</p>
@@ -1197,6 +1190,13 @@
             </svg>
         </button>
     </div>
+
+    <!-- Tab selection section (Mobile Only - fixed at bottom) -->
+    <nav id="mobile-tab-bar" class="w-full max-w-none"> 
+        <div id="news-sources" class="tab-button-group" role="tablist">
+            <!-- Tabs will be dynamically loaded here -->
+        </div>
+    </nav>
 
     <script type="module">
         // Firebase Imports

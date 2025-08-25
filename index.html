@@ -60,13 +60,13 @@
 
         /* Dark Mode overrides */
         body.dark-mode {
-            --body-bg: #000000;
-            --section-bg: #000000;
-            --card-bg: #000000;
+            --body-bg: #1a1a1a; /* Darker grey */
+            --section-bg: #1a1a1a; /* Darker grey */
+            --card-bg: #1a1a1a; /* Darker grey */
             --headline-color: #ffffff;
             --source-name-color: #ffffff;
             --link-color: #90cdf4; /* Light blue */
-            --tab-button-hover-bg: #1a1a1a;
+            --tab-button-hover-bg: #2d2d2d; /* Slightly lighter grey for hover */
             --tab-button-text: #ffffff;
             --collapsible-text: #ffffff;
             --border-color: #333333;
@@ -80,9 +80,9 @@
             --scroll-btn-hover-bg: #555555;
             --progress-bar-bg: #90cdf4;
 
-            --general-button-bg: #000000;
+            --general-button-bg: #1a1a1a; /* Darker grey */
             --general-button-text: #ffffff;
-            --general-button-hover-bg: #1a1a1a;
+            --general-button-hover-bg: #2d2d2d; /* Slightly lighter grey for hover */
 
             --login-signup-btn-active-bg: #6DA0C4; /* Darker light blue for active login in dark mode */
             --login-signup-btn-active-text: #ffffff;
@@ -94,9 +94,9 @@
             --checkbox-checked-bg: #90cdf4;
             --checkbox-checked-tick: #000000; /* Dark tick for light blue bg */
 
-            --hamburger-bg: #000000;
+            --hamburger-bg: #1a1a1a; /* Darker grey */
             --hamburger-text: #ffffff;
-            --hamburger-hover-bg: #1a1a1a;
+            --hamburger-hover-bg: #2d2d2d; /* Slightly lighter grey for hover */
             --hamburger-item-border: #333333;
         }
 
@@ -652,12 +652,12 @@
         /* For responsive YouTube embeds */
         .video-container {
             position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
+            width: 120px; /* Fixed width for video container to match news image */
+            height: 70px; /* Fixed height for video container to match news image */
             overflow: hidden;
-            margin-bottom: 0.75rem; /* Adjusted margin */
-            border-radius: 0.5rem; /* Match image rounded corners */
+            margin-right: 0.8rem; /* Adjusted margin to match news image */
+            flex-shrink: 0;
+            border-radius: 0.5rem;
             border: 1px solid var(--border-color);
         }
         .video-container iframe {
@@ -666,8 +666,9 @@
             left: 0;
             width: 100%;
             height: 100%;
+            border: none; /* Ensure no extra borders */
         }
-
+        
         .toggle-details-button {
             background-color: transparent;
             color: var(--tab-button-text);
@@ -712,8 +713,8 @@
             margin-bottom: 0.4rem; /* Adjusted margin */
         }
         .news-image {
-            width: 70px; /* Slightly smaller image */
-            height: 70px; /* Slightly smaller image */
+            width: 120px; /* Aligned with video container width */
+            height: 70px; /* Aligned with video container height */
             object-fit: cover;
             border-radius: 0.5rem;
             margin-right: 0.8rem; /* Adjusted margin */
@@ -959,6 +960,12 @@
                 width: 100%;
                 text-align: center;
             }
+            .video-container {
+                width: 100%;
+                height: 180px; /* Adjust height for mobile videos */
+                margin-right: 0;
+                margin-bottom: 0.75rem;
+            }
             #scroll-navigation-btn {
                 bottom: 0.5rem;
                 right: 0.5rem;
@@ -1023,7 +1030,7 @@
     <!-- Off-canvas Preferences Menu -->
     <aside id="off-canvas-menu" role="dialog" aria-modal="true" aria-label="News Preferences">
         <button class="close-button" aria-label="Close preferences menu">&times;</button>
-        <h3>Your News Feed Preferences</h3>
+        <h3>News Feed Preferences</h3> <!-- Renamed title -->
         <p class="text-sm mb-4" id="pref-menu-status">Login to save your preferences.</p>
         <div id="preferences-checkbox-list">
             <!-- Checkboxes and collapsible sections will be dynamically loaded here -->
@@ -1122,7 +1129,6 @@
         let app, auth, db;
         let userId = null; // Will store UID
         let userEmail = null; // Will store email if logged in with email/password, or null for anonymous
-        // userPreferences will now store an object with rss: [] and youtube: []
         let userPreferences = {
             rss: [],
             youtube: []
@@ -1212,11 +1218,11 @@
         const fontSizeResetBtn = document.getElementById('font-size-reset');
         const fontSizeIncreaseBtn = document.getElementById('font-size-increase');
         const root = document.documentElement;
-        let baseFontSize = parseFloat(getComputedStyle(root).getPropertyValue('--base-font-size')) || 14; // Default to 14px
+        let baseFontSize = parseFloat(getComputedStyle(root).getPropertyValue('--base-font-size')) || 14; 
         const FONT_SIZE_STEP = 2;
-        const MAX_FONT_SIZE = 20; // Adjusted max font size
-        const MIN_FONT_SIZE = 10; // Adjusted min font size
-        const DEFAULT_FONT_SIZE = 14; // Default to 14px
+        const MAX_FONT_SIZE = 20; 
+        const MIN_FONT_SIZE = 10; 
+        const DEFAULT_FONT_SIZE = 14; 
 
         window.onerror = function(message, source, lineno, colno, error) {
             console.error("Caught a global error:", { message, source, lineno, colno, error });
@@ -1330,15 +1336,6 @@
             return doc.body.textContent || "";
         }
 
-        // Simple shuffle function for arrays
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
         async function fetchNewsForSource(url, sourceDisplayName, isYouTube = false) {
             try {
                 const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
@@ -1350,8 +1347,9 @@
 
                 const data = await response.json();
 
-                if (data.status === 'error') {
-                    throw new Error(data.message || 'Failed to fetch news from proxy.');
+                if (data.status === 'error' || !data.items || data.items.length === 0) {
+                    // Treat empty items as an error as well for population purposes
+                    throw new Error(data.message || 'Failed to fetch news or no items found from proxy.');
                 }
                 
                 return data.items.map(item => ({ 
@@ -1423,11 +1421,14 @@
             allArticlesFromAllSources = combinedArticles.map(item => ({
                 ...item,
                 title: item.title || 'No Title',
-                description: stripHtmlTags(item.description || 'No description available.')
+                description: stripHtmlTags(item.description || 'No description available.'),
+                // Ensure pubDate is a Date object or can be reliably sorted
+                pubDate: item.pubDate ? new Date(item.pubDate) : new Date(0) // Default to epoch for unsortable
             }));
 
-            // Shuffle all articles once to ensure a varied display
-            allArticlesFromAllSources = shuffleArray(allArticlesFromAllSources);
+            // Sort all articles from latest to oldest
+            allArticlesFromAllSources.sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
+
 
             if (failedSources.length > 0) {
                 showErrorMessage(`Some news sources failed to load: ${failedSources.join(', ')}. Displaying available news.`);
@@ -1509,7 +1510,7 @@
                             <div class="collapsible-content" role="region" aria-hidden="true">
                                 <p class="text-base mb-4">${fullDescription}</p>
                                 <a href="${articleLink}" target="_blank" rel="noopener noreferrer" class="hover:underline mt-4 block" tabindex="0">Read Original Article →</a>
-                                ${article.pubDate ? `<p class="text-sm mt-2">${new Date(article.pubDate).toLocaleString()}</p>` : ''}
+                                ${article.pubDate ? `<p class="text-sm mt-2">${article.pubDate.toLocaleString()}</p>` : ''}
                             </div>
                         </div>
                     `;

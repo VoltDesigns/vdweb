@@ -55,7 +55,7 @@
             --hamburger-item-border: #d1e1f3;
 
             /* Font Size Variables for Accessibility */
-            --base-font-size: 14px; /* Reduced from 16px */
+            --base-font-size: 14px; 
         }
 
         /* Dark Mode overrides */
@@ -75,7 +75,7 @@
             --error-bg: #330000;
             --error-border: #660000;
             --error-text: #ff6666;
-            --box-shadow-color: rgba(255, 255, 255, 0.2); /* Slightly more visible white shadow color for dark mode */
+            --box-shadow-color: rgba(255, 255, 255, 0.1); /* Reduced shadow size */
             --scroll-btn-bg: #3a3a3a;
             --scroll-btn-hover-bg: #555555;
             --progress-bar-bg: #90cdf4;
@@ -130,7 +130,7 @@
         }
         /* Dark mode specific shadow for header */
         body.dark-mode .main-header {
-            box-shadow: 0 3px 6px 1px var(--box-shadow-color);
+            box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); /* Reduced shadow size */
         }
 
         .header-content-wrapper {
@@ -433,7 +433,7 @@
         }
         /* Dark mode specific shadow for auth buttons container */
         body.dark-mode .auth-buttons-container {
-            box-shadow: 0 3px 6px 1px var(--box-shadow-color);
+            box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); /* Reduced shadow size */
         }
 
         .auth-button {
@@ -461,7 +461,7 @@
         }
         /* Dark mode specific shadow for active auth button */
         body.dark-mode .auth-button.active {
-            box-shadow: 0 3px 6px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 1px 2px 0.5px rgba(255, 255, 255, 0.2); /* Reduced shadow size */
         }
 
         #user-id-display {
@@ -492,7 +492,7 @@
         }
         /* Dark mode specific shadow for content area */
         body.dark-mode .content-area {
-            box-shadow: 0 6px 10px 2px var(--box-shadow-color);
+            box-shadow: 0 2px 3px 1px var(--box-shadow-color); /* Reduced shadow size */
         }
 
         /* Reading Progress Bar */
@@ -511,30 +511,30 @@
             background-color: var(--card-bg);
             border-radius: 0.75rem;
             box-shadow: 0 4px 6px var(--box-shadow-color);
-            padding: 1rem; /* Adjusted padding */
-            margin-bottom: 1rem; /* Adjusted margin */
+            padding: 1rem; 
+            margin-bottom: 1rem; 
             transition: transform 0.2s ease-in-out, background-color 0.3s ease, box-shadow 0.3s ease;
         }
         .news-item:hover {
-            transform: translateY(-3px); /* Slightly less pronounced hover */
+            transform: translateY(-3px); 
         }
         /* Dark mode specific shadow for news items */
         body.dark-mode .news-item {
-            box-shadow: 0 6px 10px 2px var(--box-shadow-color);
+            box-shadow: 0 2px 3px 1px var(--box-shadow-color); /* Reduced shadow size */
         }
 
         .news-item h2 {
-            font-size: calc(var(--base-font-size) * 1.35); /* Adjusted relative size */
+            font-size: calc(var(--base-font-size) * 1.35); 
             font-weight: 600;
             color: var(--headline-color);
             margin-bottom: 0.25rem;
             transition: color 0.3s ease;
         }
         .news-item .source-name {
-            font-size: calc(var(--base-font-size) * 0.85); /* Adjusted relative size */
+            font-size: calc(var(--base-font-size) * 0.85); 
             font-weight: 500;
             color: var(--source-name-color);
-            margin-bottom: 0.5rem; /* Adjusted margin */
+            margin-bottom: 0.5rem; 
             display: block;
             transition: color 0.3s ease;
         }
@@ -553,8 +553,8 @@
             flex-direction: column;
             align-items: center;
             margin-top: 0rem;
-            margin-bottom: 1.5rem; /* Adjusted margin */
-            gap: 0.75rem; /* Adjusted gap */
+            margin-bottom: 1.5rem; 
+            gap: 0.75rem; 
         }
 
         .tab-button-group {
@@ -574,15 +574,15 @@
         }
         /* Dark mode specific shadow for tab button group */
         body.dark-mode .tab-button-group {
-            box-shadow: 0 3px 6px 1px var(--box-shadow-color);
+            box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); /* Reduced shadow size */
         }
 
         .tab-button {
-            padding: 0.5rem 0.8rem; /* Adjusted padding */
-            font-size: calc(var(--base-font-size) * 0.9); /* Adjusted relative size */
+            padding: 0.5rem 0.8rem; 
+            font-size: calc(var(--base-font-size) * 0.9); 
             font-weight: 500;
             color: var(--tab-button-text);
-            background-color: transparent; /* Default state for all tabs */
+            background-color: transparent; 
             transition: all 0.2s ease-in-out;
             cursor: pointer;
             border: none;
@@ -590,14 +590,14 @@
             flex-grow: 1;
             text-align: center;
             white-space: nowrap;
-            position: relative; /* For the underline pseudo-element */
+            position: relative; 
         }
         .tab-button:focus-visible {
             outline: 2px solid var(--link-color);
             outline-offset: 2px;
         }
 
-        .tab-button:hover:not(.active) { /* Hover for non-active */
+        .tab-button:hover:not(.active) { 
             background-color: var(--tab-button-hover-bg);
             color: var(--headline-color);
         }
@@ -611,14 +611,14 @@
             width: 100%;
             height: var(--tab-underline-height);
             background-color: var(--tab-underline-color);
-            transform: scaleX(0); /* Hidden by default */
+            transform: scaleX(0); 
             transition: transform 0.3s ease, background-color 0.3s ease;
             transform-origin: bottom center;
         }
 
         /* Active tab underline */
         .tab-button.active::after {
-            transform: scaleX(1); /* Show blue underline */
+            transform: scaleX(1); 
         }
         
         .loading-spinner {
@@ -639,23 +639,23 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-out;
-            padding: 0 0.75rem; /* Adjusted padding */
+            padding: 0 0.75rem; 
             color: var(--collapsible-text);
             line-height: 1.6;
             transition: color 0.3s ease;
         }
         .collapsible-content.expanded {
-            max-height: 500px; /* This needs to be sufficiently large for content, consider dynamic calculation */
-            padding-top: 0.4rem; /* Adjusted padding */
-            padding-bottom: 0.8rem; /* Adjusted padding */
+            max-height: 500px; 
+            padding-top: 0.4rem; 
+            padding-bottom: 0.8rem; 
         }
         /* For responsive YouTube embeds */
         .video-container {
+            width: 240px; /* Doubled width for desktop */
+            height: 140px; /* Doubled height for desktop */
             position: relative;
-            width: 120px; /* Fixed width for video container to match news image */
-            height: 70px; /* Fixed height for video container to match news image */
             overflow: hidden;
-            margin-right: 0.8rem; /* Adjusted margin to match news image */
+            margin-right: 1.5rem; /* Increased margin for spacing */
             flex-shrink: 0;
             border-radius: 0.5rem;
             border: 1px solid var(--border-color);
@@ -666,23 +666,23 @@
             left: 0;
             width: 100%;
             height: 100%;
-            border: none; /* Ensure no extra borders */
+            border: none; 
         }
         
         .toggle-details-button {
             background-color: transparent;
             color: var(--tab-button-text);
-            padding: 0.4rem 0.8rem; /* Adjusted padding */
+            padding: 0.4rem 0.8rem; 
             border-radius: 0;
             border: 1px solid var(--toggle-details-button-border);
             cursor: pointer;
             transition: all 0.2s ease-in-out;
-            margin-top: 0.75rem; /* Adjusted margin */
+            margin-top: 0.75rem; 
             display: inline-flex;
             align-items: center;
             font-weight: 500;
             box-shadow: none;
-            font-size: calc(var(--base-font-size) * 0.85); /* Adjusted relative size */
+            font-size: calc(var(--base-font-size) * 0.85); 
             outline: none;
         }
         .toggle-details-button:hover {
@@ -700,7 +700,7 @@
             outline-offset: 2px;
         }
         .toggle-details-button svg {
-            margin-left: 0.4rem; /* Adjusted margin */
+            margin-left: 0.4rem; 
             transition: transform 0.2s;
         }
         .toggle-details-button.expanded svg {
@@ -710,14 +710,14 @@
         .news-item-header {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 0.4rem; /* Adjusted margin */
+            margin-bottom: 0.4rem; 
         }
         .news-image {
-            width: 120px; /* Aligned with video container width */
-            height: 70px; /* Aligned with video container height */
+            width: 240px; /* Aligned with video container width */
+            height: 140px; /* Aligned with video container height */
             object-fit: cover;
             border-radius: 0.5rem;
-            margin-right: 0.8rem; /* Adjusted margin */
+            margin-right: 1.5rem; /* Increased margin for spacing */
             flex-shrink: 0;
             border: 1px solid var(--border-color);
             transition: border-color 0.3s ease;
@@ -725,9 +725,9 @@
         
         .infinite-scroll-message {
             text-align: center;
-            font-size: calc(var(--base-font-size) * 1.0); /* Adjusted relative size */
+            font-size: calc(var(--base-font-size) * 1.0); 
             color: var(--source-name-color);
-            padding: 1.5rem 0; /* Adjusted padding */
+            padding: 1.5rem 0; 
             transition: color 0.3s ease;
         }
 
@@ -844,7 +844,7 @@
         }
         /* Dark mode specific shadow for modal content */
         body.dark-mode .modal-content {
-            box-shadow: 0 6px 10px 2px var(--box-shadow-color);
+            box-shadow: 0 2px 3px 1px var(--box-shadow-color); /* Reduced shadow size */
         }
 
         .close-button {
@@ -1164,7 +1164,6 @@
 
         // Helper function to extract YouTube video ID from a URL
         function extractYouTubeVideoId(url) {
-            // More robust regex to capture various YouTube video URL patterns
             const regex = /(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|live\/|playlist\?list=[\w-]+&v=)([\w-]{11})(?:\S+)?/i;
             const match = url.match(regex);
             return match ? match[1] : null;
@@ -1201,8 +1200,8 @@
         const modalPasswordInput = document.getElementById('password');
         const modalErrorMessage = document.getElementById('modal-error-message');
         const modalInfoMessage = document.getElementById('modal-info-message');
-        let myFeedTab; // Declared here, will be assigned after dynamic creation
-        let youtubeVideosTab; // YouTube Videos tab element
+        let myFeedTab; 
+        let youtubeVideosTab; 
 
 
         // Elements for hamburger menu
@@ -1342,7 +1341,9 @@
                 const response = await fetch(proxyUrl);
 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    // Try to parse error message from response body if available
+                    const errorDetails = await response.text();
+                    throw new Error(`HTTP error! Status: ${response.status}. Details: ${errorDetails.substring(0, 100)}`);
                 }
 
                 const data = await response.json();
@@ -1382,6 +1383,7 @@
                     return articles;
                 } catch (error) {
                     failedSources.push(config.name);
+                    // Instead of throwing, just return null so Promise.allSettled can continue
                     return null;
                 }
             });
@@ -1394,7 +1396,7 @@
                     return null;
                 }
                 try {
-                    const articles = await fetchNewsForSource(youtubeRssUrl, config.name, true); // Mark as YouTube
+                    const articles = await fetchNewsForSource(youtubeRssUrl, config.name, true); 
                     return articles;
                 } catch (error) {
                     failedSources.push(config.name);
@@ -1418,13 +1420,19 @@
                 return;
             }
             
-            allArticlesFromAllSources = combinedArticles.map(item => ({
-                ...item,
-                title: item.title || 'No Title',
-                description: stripHtmlTags(item.description || 'No description available.'),
-                // Ensure pubDate is a Date object or can be reliably sorted
-                pubDate: item.pubDate ? new Date(item.pubDate) : new Date(0) // Default to epoch for unsortable
-            }));
+            allArticlesFromAllSources = combinedArticles.map(item => {
+                // Parse pubDate reliably. RSS2JSON often uses 'pubDate' or 'date'. YouTube RSS uses 'pubDate'.
+                let date = new Date(item.pubDate || item.date || 0);
+                if (isNaN(date.getTime())) { // If date parsing failed, set to a default (e.g., epoch)
+                    date = new Date(0);
+                }
+                return {
+                    ...item,
+                    title: item.title || 'No Title',
+                    description: stripHtmlTags(item.description || 'No description available.'),
+                    pubDate: date
+                };
+            });
 
             // Sort all articles from latest to oldest
             allArticlesFromAllSources.sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
@@ -1481,7 +1489,6 @@
                                 </div>
                             `;
                         } else {
-                            // Fallback if video ID cannot be extracted, show thumbnail if available
                             const imageUrl = extractImageUrl(article);
                             mediaHtml = imageUrl ? 
                                 `<img src="${imageUrl}" alt="${article.title || 'YouTube Video Thumbnail'}" class="news-image block w-full h-auto">` : 
@@ -1510,7 +1517,7 @@
                             <div class="collapsible-content" role="region" aria-hidden="true">
                                 <p class="text-base mb-4">${fullDescription}</p>
                                 <a href="${articleLink}" target="_blank" rel="noopener noreferrer" class="hover:underline mt-4 block" tabindex="0">Read Original Article →</a>
-                                ${article.pubDate ? `<p class="text-sm mt-2">${article.pubDate.toLocaleString()}</p>` : ''}
+                                ${article.pubDate.getTime() !== new Date(0).getTime() ? `<p class="text-sm mt-2">${article.pubDate.toLocaleString()}</p>` : ''}
                             </div>
                         </div>
                     `;
@@ -1589,17 +1596,14 @@
             hideErrorMessage();
 
             if (filterKey === 'All') {
-                // 'All News' tab now only shows non-YouTube articles
                 currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => !article.isYouTube);
             } else if (filterKey === 'MyFeed') {
                 if (userPreferences.rss.length > 0 || userPreferences.youtube.length > 0) {
                     currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => {
-                        // Check if article is an RSS feed and its source key is in userPreferences.rss
                         if (!article.isYouTube) {
                             const rssSourceKey = Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === article.sourceName);
                             return rssSourceKey && userPreferences.rss.includes(rssSourceKey);
                         }
-                        // Check if article is a YouTube video and its source key is in userPreferences.youtube
                         if (article.isYouTube) {
                             const youtubeSourceKey = Object.keys(YOUTUBE_FEEDS).find(key => YOUTUBE_FEEDS[key].name === article.sourceName);
                             return youtubeSourceKey && userPreferences.youtube.includes(youtubeSourceKey);
@@ -1610,9 +1614,9 @@
                     currentlyDisplayedArticles = [];
                     newsContainer.innerHTML = `<p class="text-center text-lg text-gray-500">Select your preferred sources in the preferences menu (☰) to customize your feed.</p>`;
                 }
-            } else if (filterKey === 'YouTube') { // Filter for ALL YouTube Videos
+            } else if (filterKey === 'YouTube') { 
                 currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => article.isYouTube);
-            } else { // Specific general news source tab clicked
+            } else { 
                 currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => article.sourceName === RSS_FEEDS[filterKey].name);
             }
             displayNextBatchOfNews();
@@ -1621,7 +1625,7 @@
 
         // Function to populate the off-canvas menu with checkboxes
         function populatePreferencesMenu() {
-            preferencesCheckboxList.innerHTML = ''; // Clear existing
+            preferencesCheckboxList.innerHTML = ''; 
             
             // Add YouTube feeds as a collapsible section (now at the top)
             if (Object.keys(YOUTUBE_FEEDS).length > 0) {
@@ -1653,12 +1657,12 @@
                     collapsibleBody.appendChild(itemDiv);
 
                     const checkbox = itemDiv.querySelector('.preference-checkbox');
-                    checkbox.checked = userPreferences.youtube.includes(sourceKey); // Set initial state
+                    checkbox.checked = userPreferences.youtube.includes(sourceKey); 
 
                     checkbox.addEventListener('change', async (event) => {
                         const changedSourceKey = event.target.dataset.source;
                         if (!userId) {
-                            event.target.checked = !event.target.checked; // Revert checkbox state
+                            event.target.checked = !event.target.checked; 
                             showModalMessage('Login to save your preferences.', true);
                             return;
                         }
@@ -1670,7 +1674,7 @@
                         } else {
                             userPreferences.youtube = userPreferences.youtube.filter(pref => pref !== changedSourceKey);
                         }
-                        await saveUserPreferences(); // Save instantly
+                        await saveUserPreferences(); 
 
                         if (currentActiveTab === 'MyFeed') {
                             applyNewsFilterAndDisplay('MyFeed');
@@ -1679,11 +1683,9 @@
                 });
                 preferencesCheckboxList.appendChild(youtubeSection);
 
-                // Add event listener for the collapsible header
                 collapsibleHeader.addEventListener('click', () => {
                     collapsibleHeader.classList.toggle('expanded');
                     collapsibleBody.classList.toggle('expanded');
-                    // Adjust max-height for smooth transition
                     if (collapsibleBody.classList.contains('expanded')) {
                         collapsibleBody.style.maxHeight = collapsibleBody.scrollHeight + "px";
                     } else {
@@ -1706,13 +1708,12 @@
                 preferencesCheckboxList.appendChild(itemDiv);
 
                 const checkbox = itemDiv.querySelector('.preference-checkbox');
-                checkbox.checked = userPreferences.rss.includes(sourceKey); // Set initial state
+                checkbox.checked = userPreferences.rss.includes(sourceKey); 
 
-                // Add event listener for instant saving
                 checkbox.addEventListener('change', async (event) => {
                     const changedSourceKey = event.target.dataset.source;
                     if (!userId) {
-                        event.target.checked = !event.target.checked; // Revert checkbox state
+                        event.target.checked = !event.target.checked; 
                         showModalMessage('Login to save your preferences.', true);
                         return;
                     }
@@ -1724,9 +1725,8 @@
                     } else {
                         userPreferences.rss = userPreferences.rss.filter(pref => pref !== changedSourceKey);
                     }
-                    await saveUserPreferences(); // Save instantly
+                    await saveUserPreferences(); 
 
-                    // If 'My Feed' is the active tab, refresh it
                     if (currentActiveTab === 'MyFeed') {
                         applyNewsFilterAndDisplay('MyFeed');
                     }
@@ -1736,7 +1736,7 @@
 
         // Function to dynamically generate news source tabs
         function generateNewsSourceTabs() {
-            newsSourcesDiv.innerHTML = ''; // Clear existing tabs
+            newsSourcesDiv.innerHTML = ''; 
 
             // Add 'All News' tab
             const allNewsTab = document.createElement('button');
@@ -1748,13 +1748,13 @@
             newsSourcesDiv.appendChild(allNewsTab);
 
             // Add 'My Feed' tab
-            myFeedTab = document.createElement('button'); // Assign to global myFeedTab
+            myFeedTab = document.createElement('button'); 
             myFeedTab.classList.add('tab-button');
             myFeedTab.dataset.source = 'MyFeed';
             myFeedTab.setAttribute('tabindex', '0');
             myFeedTab.setAttribute('role', 'tab');
             myFeedTab.textContent = 'My Feed';
-            myFeedTab.style.display = 'none'; // Initially hidden
+            myFeedTab.style.display = 'none'; 
             newsSourcesDiv.appendChild(myFeedTab);
 
             // Add dynamic general news source tabs
@@ -1769,7 +1769,6 @@
             });
 
             // Add dynamic "YouTube Videos" tab
-            // Only add this tab if there are YouTube feeds configured
             if (Object.keys(YOUTUBE_FEEDS).length > 0) {
                 youtubeVideosTab = document.createElement('button');
                 youtubeVideosTab.classList.add('tab-button');
@@ -1798,37 +1797,36 @@
 
             // Initial state: Anonymous user display
             userIdDisplay.textContent = 'Anonymous';
-            userIdDisplay.classList.remove('hidden'); // Ensure it's visible by default
+            userIdDisplay.classList.remove('hidden'); 
 
 
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
                     userId = user.uid;
-                    userEmail = user.email; // Capture email
+                    userEmail = user.email; 
                     userIdDisplay.textContent = userEmail ? `Logged in as: ${userEmail}` : `User ID: ${userId}`;
                     userIdDisplay.classList.remove('hidden');
                     loginSignupBtn.classList.add('hidden');
                     logoutBtn.classList.remove('hidden');
-                    myFeedTab.style.display = 'block'; // Show My Feed tab for logged-in users
+                    myFeedTab.style.display = 'block'; 
                     prefMenuStatus.textContent = 'Select sources for your customized "My Feed".';
                     
                     await loadUserPreferences(userId);
-                    populatePreferencesMenu(); // Populate and set checked states
+                    populatePreferencesMenu(); 
 
                     applyNewsFilterAndDisplay(currentActiveTab);
 
                 } else {
                     userId = null;
                     userEmail = null;
-                    userIdDisplay.textContent = 'Anonymous'; // Set to "Anonymous" on logout
+                    userIdDisplay.textContent = 'Anonymous'; 
                     loginSignupBtn.classList.remove('hidden');
                     logoutBtn.classList.add('hidden');
-                    myFeedTab.style.display = 'none'; // Hide My Feed tab for logged-out users
+                    myFeedTab.style.display = 'none'; 
                     prefMenuStatus.textContent = 'Login to save your preferences.';
-                    userPreferences = { rss: [], youtube: [] }; // Reset preferences on logout
-                    populatePreferencesMenu(); // Clear checkboxes on logout
+                    userPreferences = { rss: [], youtube: [] }; 
+                    populatePreferencesMenu(); 
 
-                    // Reset active tab to 'All' on logout if 'My Feed' was active
                     if (currentActiveTab === 'MyFeed' || !document.querySelector('.tab-button.active')) {
                         document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
                             btn.classList.remove('active');
@@ -1862,7 +1860,7 @@
             infiniteScrollLoadingIndicator.querySelector('p').textContent = 'Loading more news...';
             
             await fetchAllNewsAndPrepareForInfiniteScroll();
-            populatePreferencesMenu(); // Initial population for anonymous users too
+            populatePreferencesMenu(); 
         });
 
 
@@ -1872,11 +1870,9 @@
                 const prefDocRef = doc(db, `artifacts/${firebaseConfig.projectId}/users/${uid}/preferences`, 'sources');
                 const prefDocSnap = await getDoc(prefDocRef);
                 if (prefDocSnap.exists()) {
-                    // Ensure the structure is an object with rss and youtube arrays
                     const data = prefDocSnap.data();
-                    userPreferences.rss = data.preferredSources?.rss || []; // Backward compatibility for old format
+                    userPreferences.rss = data.preferredSources?.rss || []; 
                     userPreferences.youtube = data.preferredSources?.youtube || [];
-                    // Handle very old formats where preferredSources was a simple array
                     if (!data.preferredSources?.rss && Array.isArray(data.preferredSources)) {
                          userPreferences.rss = data.preferredSources.filter(key => RSS_FEEDS[key]);
                          userPreferences.youtube = data.preferredSources.filter(key => YOUTUBE_FEEDS[key]);
@@ -1900,7 +1896,6 @@
             }
             try {
                 const prefDocRef = doc(db, `artifacts/${firebaseConfig.projectId}/users/${userId}/preferences`, 'sources');
-                // Save preferences as an object with rss and youtube arrays
                 await setDoc(prefDocRef, { preferredSources: userPreferences }, { merge: true });
             } catch (error) {
                 console.error("Error saving user preferences:", error);
@@ -1913,7 +1908,7 @@
         hamburgerMenuBtn.addEventListener('click', () => {
             offCanvasMenu.classList.add('open');
             overlay.style.display = 'block';
-            offCanvasMenu.focus(); // Focus the menu for accessibility
+            offCanvasMenu.focus(); 
         });
 
 
@@ -1943,7 +1938,7 @@
             modalEmailInput.value = '';
             modalPasswordInput.value = '';
             hideModalMessages();
-            loginModal.focus(); // Focus the modal for accessibility
+            loginModal.focus(); 
         });
 
 
@@ -2011,15 +2006,14 @@
             try {
                 await signOut(auth);
                 showModalMessage('Logged out successfully!');
-                // After logout, reset all tab states and revert to 'All News'
                 document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
-                    btn.classList.remove('active'); // Remove active class
+                    btn.classList.remove('active'); 
                     btn.setAttribute('aria-selected', 'false');
                 });
-                document.querySelector('.tab-button[data-source="All"]').classList.add('active'); // Set 'All News' as active
+                document.querySelector('.tab-button[data-source="All"]').classList.add('active'); 
                 document.querySelector('.tab-button[data-source="All"]').setAttribute('aria-selected', 'true');
-                currentActiveTab = 'All'; // Update state
-                applyNewsFilterAndDisplay('All'); // Display all news
+                currentActiveTab = 'All'; 
+                applyNewsFilterAndDisplay('All'); 
             } catch (error) {
                 console.error("Logout Error:", error);
                 showErrorMessage(`Logout failed: ${error.message}`);

@@ -109,6 +109,8 @@
             padding: 0;
             font-size: var(--base-font-size);
             line-height: 1.6;
+            /* Default padding-bottom for desktop, will be overridden for mobile */
+            padding-bottom: 0; 
         }
 
         /* Adjust font sizes relative to --base-font-size */
@@ -553,11 +555,12 @@
             flex-direction: column;
             align-items: center;
             margin-top: 0rem;
-            margin-bottom: 1.5rem; 
+            margin-bottom: 1.5rem; /* Default margin-bottom for desktop */
             gap: 0.75rem; 
         }
 
-        .tab-button-group {
+        /* Tab button group (desktop styles) */
+        #news-sources {
             display: flex;
             flex-wrap: wrap;
             gap: 0.05rem;
@@ -572,8 +575,7 @@
             border: 1px solid var(--border-color);
             transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        /* Dark mode specific shadow for tab button group */
-        body.dark-mode .tab-button-group {
+        body.dark-mode #news-sources {
             box-shadow: 0 1px 2px 0.5px var(--box-shadow-color); 
         }
 
@@ -602,7 +604,6 @@
             color: var(--headline-color);
         }
 
-        /* Base style for the underline bar */
         .tab-button::after {
             content: '';
             position: absolute;
@@ -616,7 +617,6 @@
             transform-origin: bottom center;
         }
 
-        /* Active tab underline */
         .tab-button.active::after {
             transform: scaleX(1); 
         }
@@ -911,6 +911,44 @@
 
 
         @media (max-width: 768px) {
+            body {
+                padding-bottom: 60px; /* Space for the fixed bottom tab bar (approximate height of tab bar) */
+            }
+
+            .header-content {
+                margin-bottom: 0.5rem; /* Reduce margin when tabs are fixed to bottom */
+            }
+            
+            #mobile-tab-bar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background-color: var(--section-bg); /* Match header/main bg */
+                box-shadow: 0 -2px 5px var(--box-shadow-color); /* Shadow on top */
+                z-index: 100; /* Ensure it's above other content */
+                display: flex; /* Make it a flex container */
+                padding: 0.5rem 0; /* Some padding for appearance */
+                box-sizing: border-box; /* Include padding in width */
+                border-top: 1px solid var(--border-color); /* Subtle border */
+                transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            }
+
+            /* Dark mode specific shadow for fixed tab bar */
+            body.dark-mode #mobile-tab-bar {
+                box-shadow: 0 -1px 2px 0.5px var(--box-shadow-color);
+            }
+
+            #news-sources {
+                /* Reset desktop styles for mobile fixed tab bar */
+                background-color: transparent; /* Inner tab group takes no extra bg */
+                box-shadow: none;
+                border: none;
+                max-width: none; /* Allow full width within fixed bar */
+                width: 100%; /* Ensure it fills the nav */
+                padding: 0 0.5rem; /* Inner padding for tabs within the fixed bar */
+            }
+
             .header-content-wrapper {
                 flex-direction: column;
                 align-items: center;
@@ -932,11 +970,7 @@
                 text-align: center;
                 margin-bottom: 0;
             }
-            .header-content {
-                margin-top: 1rem;
-                flex-direction: column;
-                align-items: center;
-            }
+            
             .tab-button-group {
                 width: 100%;
             }
@@ -967,7 +1001,7 @@
                 margin-bottom: 0.75rem;
             }
             #scroll-navigation-btn {
-                bottom: 0.5rem;
+                bottom: calc(1rem + 60px); /* Adjust to be above the new fixed tab bar */
                 right: 0.5rem;
                 width: 30px;
                 height: 60px;
@@ -977,7 +1011,7 @@
                 height: 16px;
             }
             #dark-mode-toggle {
-                bottom: 4.75rem;
+                bottom: calc(4.75rem + 60px); /* Adjust to be above the new fixed tab bar */
                 right: 0.5rem;
                 width: 30px;
                 height: 30px;
@@ -1042,9 +1076,12 @@
     <main class="site-main-content">
         <div class="content-area">
             <div class="header-content">
-                <div id="news-sources" class="tab-button-group" role="tablist">
-                    <!-- Tabs will be dynamically loaded here -->
-                </div>
+                <!-- Tab selection section -->
+                <nav id="mobile-tab-bar" class="w-full max-w-none"> <!-- New wrapper for fixed mobile tabs -->
+                    <div id="news-sources" class="tab-button-group" role="tablist">
+                        <!-- Tabs will be dynamically loaded here -->
+                    </div>
+                </nav>
             </div>
 
             <div id="loading" class="flex justify-center items-center h-40" style="display: none;" role="status" aria-live="polite">
@@ -1210,6 +1247,8 @@
         const overlay = document.getElementById('overlay');
         const preferencesCheckboxList = document.getElementById('preferences-checkbox-list');
         const prefMenuStatus = document.getElementById('pref-menu-status');
+        // New element for the fixed mobile tab bar
+        const mobileTabBar = document.getElementById('mobile-tab-bar');
 
 
         const fontSizeDecreaseBtn = document.getElementById('font-size-decrease');
@@ -1852,7 +1891,7 @@
                     const data = prefDocSnap.data();
                     userPreferences.rss = data.preferredSources?.rss || []; 
                     userPreferences.youtube = data.preferredSources?.youtube || [];
-                    if (!data.preferredSources?.rss && Array.isArray(data.preferredSources)) { // Backward compatibility
+                    if (!data.preferredSources?.rss && Array.isArray(data.preferredSources)) { 
                          userPreferences.rss = data.preferredSources.filter(key => RSS_FEEDS[key]);
                          userPreferences.youtube = data.preferredSources.filter(key => YOUTUBE_FEEDS[key]);
                     }

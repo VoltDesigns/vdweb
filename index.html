@@ -313,8 +313,6 @@
         }
 
 
-
-
         .font-size-controls {
             display: flex;
             gap: 0.25rem;
@@ -1042,7 +1040,7 @@
         const scrollNavigationBtn = document.getElementById('scroll-navigation-btn');
         const readingProgressBar = document.getElementById('reading-progress-bar');
         const root = document.documentElement;
-
+        
         // Font Size Controls
         const fontSizeDecreaseBtn = document.getElementById('font-size-decrease');
         const fontSizeResetBtn = document.getElementById('font-size-reset');
@@ -1069,13 +1067,13 @@
         const sources = ['All', 'MyFeed', 'DW', 'BBC', 'The Hill', 'Forbes', 'WSJ', 'YouTube', 'Reuters'];
         // This is a placeholder for your backend endpoints. Replace with actual URLs.
         const sourceEndpoints = {
-            'DW': '/get-news?source=dw',
-            'BBC': '/get-news?source=bbc',
-            'The Hill': '/get-news?source=the-hill',
-            'Forbes': '/get-news?source=forbes',
-            'WSJ': '/get-news?source=wsj',
-            'YouTube': '/get-youtube-videos',
-            'Reuters': '/get-reuters-news'
+            'DW': 'https://your-backend.com/get-news?source=dw', // Placeholder
+            'BBC': 'https://your-backend.com/get-news?source=bbc', // Placeholder
+            'The Hill': 'https://your-backend.com/get-news?source=the-hill', // Placeholder
+            'Forbes': 'https://your-backend.com/get-news?source=forbes', // Placeholder
+            'WSJ': 'https://your-backend.com/get-news?source=wsj', // Placeholder
+            'YouTube': 'https://your-backend.com/get-youtube-videos', // Placeholder
+            'Reuters': 'https://your-backend.com/get-reuters-news' // Placeholder
         };
 
         // Event Handlers
@@ -1111,7 +1109,13 @@
                 userIdDisplay.classList.remove('hidden');
                 loginSignupBtn.classList.add('hidden');
                 logoutBtn.classList.remove('hidden');
-                document.getElementById('MyFeed').style.display = 'block';
+                
+                // Correctly show the My Feed tab
+                const myFeedTab = document.querySelector('.tab-button[data-source="MyFeed"]');
+                if (myFeedTab) {
+                    myFeedTab.style.display = 'block';
+                }
+
                 prefMenuStatus.textContent = 'You are logged in. Your preferences are saved automatically.';
                 await loadUserPreferences();
             } else {
@@ -1120,7 +1124,13 @@
                 userIdDisplay.classList.add('hidden');
                 loginSignupBtn.classList.remove('hidden');
                 logoutBtn.classList.add('hidden');
-                document.getElementById('MyFeed').style.display = 'none';
+                
+                // Correctly hide the My Feed tab
+                const myFeedTab = document.querySelector('.tab-button[data-source="MyFeed"]');
+                if (myFeedTab) {
+                    myFeedTab.style.display = 'none';
+                }
+
                 prefMenuStatus.textContent = 'Login to save your preferences.';
                 userPreferences = {};
             }
@@ -1246,36 +1256,45 @@
             currentlyDisplayedArticles = [];
 
             try {
+                let fetchPromises = [];
+                let sourcesToFetch = [];
+
                 if (source === 'All') {
-                    const allEndpoints = Object.values(sourceEndpoints);
-                    const responses = await Promise.all(allEndpoints.map(endpoint => fetch(endpoint).catch(e => {
-                        console.error(`Error fetching from ${endpoint}:`, e);
-                        return null;
-                    })));
-                    const dataPromises = responses.filter(r => r).map(r => r.json());
-                    const allData = await Promise.all(dataPromises);
-                    allArticles = allData.flatMap(d => d.articles || d.videos || []);
+                    sourcesToFetch = Object.keys(sourceEndpoints);
                 } else if (source === 'MyFeed') {
-                    const activeSources = Object.keys(userPreferences).filter(s => userPreferences[s] && sourceEndpoints[s]);
-                    const responses = await Promise.all(activeSources.map(s => fetch(sourceEndpoints[s]).catch(e => {
-                        console.error(`Error fetching from ${sourceEndpoints[s]}:`, e);
-                        return null;
-                    })));
-                    const dataPromises = responses.filter(r => r).map(r => r.json());
-                    const allData = await Promise.all(dataPromises);
-                    allArticles = allData.flatMap(d => d.articles || d.videos || []);
+                    sourcesToFetch = Object.keys(userPreferences).filter(s => userPreferences[s] && sourceEndpoints[s]);
                 } else if (sourceEndpoints[source]) {
-                    const response = await fetch(sourceEndpoints[source]);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    allArticles = data.articles || data.videos || [];
+                    sourcesToFetch = [source];
                 } else {
-                    showErrorMessage('Invalid news source selected.');
+                    showErrorMessage('Invalid news source selected or no backend configured for this source.');
                     return;
                 }
                 
+                if (sourcesToFetch.length === 0) {
+                    showErrorMessage('No news sources selected for your feed. Please update your preferences in the menu.');
+                    hideLoadingIndicator();
+                    return;
+                }
+
+                // Create a fetch promise for each source. Use a placeholder that returns an empty array if the fetch fails.
+                fetchPromises = sourcesToFetch.map(s =>
+                    fetch(sourceEndpoints[s])
+                        .then(response => {
+                            if (!response.ok) {
+                                console.warn(`Could not fetch news from ${s}. Please ensure your backend is running at ${sourceEndpoints[s]}`);
+                                return { articles: [], videos: [] };
+                            }
+                            return response.json();
+                        })
+                        .catch(e => {
+                            console.warn(`Error fetching from ${s}:`, e);
+                            return { articles: [], videos: [] };
+                        })
+                );
+
+                const allData = await Promise.all(fetchPromises);
+                allArticles = allData.flatMap(d => d.articles || d.videos || []);
+
                 // Shuffle articles for 'All News' and 'My Feed' to mix them up
                 if (source === 'All' || source === 'MyFeed') {
                     allArticles = allArticles.sort(() => Math.random() - 0.5);

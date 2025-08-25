@@ -65,14 +65,15 @@
             display: flex;
             flex-wrap: wrap;
             gap: 0.05rem;
-            background-color: #d1e1f3; /* Lighter blue for tab group background */
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08); /* Lighter inner shadow */
+            background-color: transparent; /* Changed to transparent */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Outer shadow for outline effect */
             overflow: hidden;
             flex-grow: 1;
             justify-content: center;
             width: 100%;
             max-width: 900px;
-            border-radius: 0.5rem; /* Rounded corners for the group */
+            border-radius: 0; /* Removed rounded corners */
+            border: 1px solid #d1e1f3; /* Added subtle border for outline */
         }
 
         .tab-button {
@@ -91,7 +92,7 @@
         }
 
         .tab-button:hover:not(.active) {
-            background-color: #d1e1f3; /* Subtle blue on hover for inactive tabs */
+            background-color: #e6f2fb; /* Subtle blue on hover for inactive tabs (matching body background for blend) */
             color: #000000;
         }
 
@@ -272,6 +273,7 @@
                 <button class="tab-button" data-source="BBC">BBC News</button>
                 <button class="tab-button" data-source="The Hill">The Hill</button>
                 <button class="tab-button" data-source="Forbes">Forbes</button>
+                <button class="tab-button" data-source="Reuters">Reuters</button>
                 <button class="tab-button" data-source="WSJ">Wall Street Journal</button>
             </div>
         </div>
@@ -301,6 +303,7 @@
             BBC: { name: 'BBC News', url: 'http://feeds.bbci.co.uk/news/rss.xml' },
             'The Hill': { name: 'The Hill', url: 'https://thehill.com/rss/' },
             Forbes: { name: 'Forbes', url: 'https://www.forbes.com/business/feed/' },
+            Reuters: { name: 'Reuters', url: 'http://www.reuters.com/news/rss' }, // Updated Reuters RSS feed
             WSJ: { name: 'Wall Street Journal', url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml' }
         };
 
@@ -312,6 +315,7 @@
             tabBBC: 'BBC News',
             tabTheHill: 'The Hill',
             tabForbes: 'Forbes',
+            tabReuters: 'Reuters',
             tabWSJ: 'Wall Street Journal',
             loadingMessage: 'Loading news...',
             errorTitle: 'Error!',
@@ -598,7 +602,7 @@
                         <div class="collapsible-content">
                             <p class="text-gray-700 text-base mb-4">${fullDescription}</p>
                             <a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline mt-4 block">${translations.readOriginal}</a>
-                            ${article.pubDate ? `<p class="text-sm text-gray-500 mt-2">${translations.published} ${new Date(article.pubDate).toLocaleString()}</p>` : ''}
+                            ${article.pubDate ? `<p class="text-sm text-gray-500 mt-2">${new Date(article.pubDate).toLocaleString()}</p>` : ''}
                         </div>
                     </div>
                 `;
@@ -724,6 +728,7 @@
             document.querySelector('[data-source="BBC"]').textContent = translations.tabBBC;
             document.querySelector('[data-source="The Hill"]').textContent = translations.tabTheHill;
             document.querySelector('[data-source="Forbes"]').textContent = translations.tabForbes;
+            document.querySelector('[data-source="Reuters"]').textContent = translations.tabReuters;
             document.querySelector('[data-source="WSJ"]').textContent = translations.tabWSJ;
 
             // Ensure pagination button texts are set

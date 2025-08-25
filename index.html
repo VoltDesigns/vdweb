@@ -565,7 +565,7 @@
         }
 
         async function fetchAllNewsAndInterleave() {
-            showLoading(true); // This call will now effectively do nothing
+            showLoading(true); // This call will now effectively do nothing to show the loading indicator
             hideErrorMessage();
             newsContainer.innerHTML = '';
             paginationContainer.innerHTML = '';
@@ -842,18 +842,9 @@
         });
 
         goToTopBtn.addEventListener('click', () => {
+            // Immediately hide the button on click
+            goToTopBtn.classList.remove('show');
             window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // Use requestAnimationFrame to repeatedly check scroll position
-            // and hide the button only when it has truly reached the top.
-            const checkScrollEnd = () => {
-                if (window.scrollY === 0) {
-                    goToTopBtn.classList.remove('show');
-                } else {
-                    requestAnimationFrame(checkScrollEnd);
-                }
-            };
-            requestAnimationFrame(checkScrollEnd);
         });
 
         goToBottomBtn.addEventListener('click', () => {

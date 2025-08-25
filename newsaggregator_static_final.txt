@@ -562,4 +562,505 @@
         <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.61.764-3.778a9.735 9.735 0 00-6.711 8.923 9.718 9.718 0 009.75 9.75 9.735 9.735 0 008.923-6.711z" />
         </svg>
-        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColo
+        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12H5.25m-.386-6.364l1.591 1.591M12 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+    </button>
+
+    <!-- Unified Scroll Navigation Button -->
+    <button id="scroll-navigation-btn" aria-label="Scroll navigation" tabindex="0">
+        <svg class="scroll-up-arrow" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+        <svg class="scroll-down-arrow" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+    </button>
+
+    <script>
+        const RSS_FEEDS = {
+            DW: { name: 'DW News', url: 'https://rss.dw.com/rdf/rss-en-all' },
+            BBC: { name: 'BBC News', url: 'http://feeds.bbci.co.uk/news/rss.xml' },
+            'The Hill': { name: 'The Hill', url: 'https://thehill.com/rss/' },
+            Forbes: { name: 'Forbes', url: 'https://www.forbes.com/business/feed/' },
+            WSJ: { name: 'Wall Street Journal', url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml' }
+        };
+
+        const translations = {
+            appTitle: 'News Aggregator',
+            mainTitle: '📰 News Aggregator',
+            tabAllNews: 'All News',
+            tabDW: 'DW News',
+            tabBBC: 'BBC News',
+            tabTheHill: 'The Hill',
+            tabForbes: 'Forbes',
+            tabWSJ: 'Wall Street Journal',
+            loadingMessage: 'Loading news...',
+            errorTitle: 'Error!',
+            readOriginal: 'Read Original Article →',
+            published: 'Published:',
+            noNewsFound: 'No news found for this selection.',
+            failedSources: 'Some news sources failed to load:',
+            couldNotLoad: 'Could not load news from',
+            tryAgain: 'Please try again later. (Details:',
+            couldNotLoadAny: 'Could not load any news sources. Please check your internet connection and try again.',
+            unknownSource: 'Unknown Source',
+            noDescriptionAvailable: 'No description available.',
+            showDetails: 'Show Details',
+            hideDetails: 'Hide Details',
+            loadingMoreNews: 'Loading more news...',
+            noMoreNews: 'No more news to load.',
+            displayingAvailableNews: 'Displaying available news.',
+            apiError: 'API error. Please check configuration.',
+        };
+
+        let allArticlesFromAllSources = [];
+        let currentlyDisplayedArticles = [];
+        let displayedArticleCount = 0;
+        const articlesPerLoad = 10;
+        let isLoadingMore = false;
+
+        const newsContainer = document.getElementById('news-container');
+        const newsSourcesDiv = document.getElementById('news-sources');
+        const initialLoadingIndicator = document.getElementById('loading');
+        const infiniteScrollLoadingIndicator = document.getElementById('infinite-scroll-loading');
+        const noMoreNewsMessage = document.getElementById('no-more-news-message');
+        const errorMessageDiv = document.getElementById('error-message');
+        const errorTextSpan = document.getElementById('error-text');
+        const scrollNavigationBtn = document.getElementById('scroll-navigation-btn');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+        const readingProgressBar = document.getElementById('reading-progress-bar');
+
+        const fontSizeDecreaseBtn = document.getElementById('font-size-decrease');
+        const fontSizeResetBtn = document.getElementById('font-size-reset');
+        const fontSizeIncreaseBtn = document.getElementById('font-size-increase');
+        const root = document.documentElement;
+        let baseFontSize = parseFloat(getComputedStyle(root).getPropertyValue('--base-font-size')) || 16;
+        const FONT_SIZE_STEP = 2;
+        const MAX_FONT_SIZE = 24;
+        const MIN_FONT_SIZE = 12;
+        const DEFAULT_FONT_SIZE = 16;
+
+
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error("Caught a global error:", { message, source, lineno, colno, error });
+            showErrorMessage(`An unexpected error occurred: ${message}. Check console for details.`);
+            return true;
+        };
+
+        function showInitialLoading(show) {
+            initialLoadingIndicator.style.display = show ? 'flex' : 'none';
+        }
+
+        function showInfiniteScrollLoading(show) {
+            infiniteScrollLoadingIndicator.style.display = show ? 'flex' : 'none';
+            noMoreNewsMessage.style.display = 'none';
+        }
+
+        function showNoMoreNewsMessage() {
+            infiniteScrollLoadingIndicator.style.display = 'none';
+            noMoreNewsMessage.textContent = translations.noMoreNews;
+            noMoreNewsMessage.style.display = 'block';
+        }
+
+        function showErrorMessage(message) {
+            errorTextSpan.setAttribute('data-original-error', message);
+            let displayedMessage = message;
+
+            if (message.includes('Could not load news from')) {
+                const sourceNameMatch = message.match(/Could not load news from (\w[\w\s.-]*)\./);
+                if (sourceNameMatch) {
+                    const sourceKey = Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === sourceNameMatch[1]);
+                    const sourceDisplayName = sourceKey ? RSS_FEEDS[key].name : sourceNameMatch[1];
+                    const detailsPart = message.substring(message.indexOf('(Details:'));
+                    displayedMessage = `${translations.couldNotLoad} ${sourceDisplayName}. ${translations.tryAgain} ${detailsPart}`;
+                }
+            } else if (message.includes('Could not load any news sources.')) {
+                displayedMessage = translations.couldNotLoadAny;
+            } else if (message.includes('Some news sources failed to load:')) {
+                const failedSourcesText = message.substring(message.indexOf(':') + 1, message.indexOf('. Displaying available news.'));
+                const failedSourceNames = failedSourcesText.split(', ').map(s => s.trim());
+
+                const failedSourceNamesDisplay = failedSourceNames.map(name => {
+                    const originalKey = Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === name);
+                    return originalKey ? RSS_FEEDS[originalKey].name : name;
+                });
+                displayedMessage = `${translations.failedSources} ${failedSourceNamesDisplay.join(', ')}. ${translations.displayingAvailableNews}`;
+            } else if (message.includes('API error.')) {
+                 displayedMessage = translations.apiError;
+            } else if (message.includes('Authentication/Authorization error with API.')) {
+                 displayedMessage = `Authentication/Authorization error with API. Please ensure your environment is configured correctly.`;
+            } else if (message.includes('API Key is not configured.')) {
+                 displayedMessage = `API Key is not configured. Please check environment.`;
+            } else if (message.includes('An unexpected error occurred:')) {
+                displayedMessage = `An unexpected error occurred. Check console for details.`;
+            }
+
+            errorTextSpan.textContent = displayedMessage;
+            errorMessageDiv.classList.remove('hidden');
+            errorMessageDiv.focus();
+        }
+
+        function hideErrorMessage() {
+            errorMessageDiv.classList.add('hidden');
+            errorTextSpan.removeAttribute('data-original-error');
+        }
+
+        function extractImageUrl(item) {
+            if (item.thumbnail) {
+                return item.thumbnail;
+            }
+            if (item.enclosure && item.enclosure.link && item.enclosure.type && item.enclosure.type.startsWith('image/')) {
+                return item.enclosure.link;
+            }
+            if (item.description) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(item.description, 'text/html');
+                const img = doc.querySelector('img');
+                if (img && img.src) {
+                    return img.src;
+                }
+            }
+            return null;
+        }
+
+        function stripHtmlTags(htmlString) {
+            const doc = new DOMParser().parseFromString(htmlString, 'text/html');
+            return doc.body.textContent || "";
+        }
+
+        async function fetchNewsForSource(rssUrl, sourceDisplayName) {
+            try {
+                const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+                const response = await fetch(proxyUrl);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.status === 'error') {
+                    throw new Error(data.message || 'Failed to fetch news from proxy.');
+                }
+
+                return data.items.map(item => ({ ...item, sourceName: sourceDisplayName }));
+
+            } catch (error) {
+                console.error(`Error fetching news for ${sourceDisplayName}:`, error);
+                throw new Error(`Could not load news from ${sourceDisplayName}. (Details: ${error.message})`);
+            }
+        }
+
+        async function fetchAllNewsAndPrepareForInfiniteScroll() {
+            showInitialLoading(true);
+            hideErrorMessage();
+            newsContainer.innerHTML = '';
+            showInfiniteScrollLoading(false);
+            noMoreNewsMessage.style.display = 'none';
+
+            let combinedArticles = [];
+            let failedSources = [];
+
+            const fetchPromises = Object.entries(RSS_FEEDS).map(async ([key, config]) => {
+                try {
+                    const articles = await fetchNewsForSource(config.url, config.name);
+                    return articles;
+                } catch (error) {
+                    failedSources.push(config.name);
+                    return null;
+                }
+            });
+
+            const results = await Promise.allSettled(fetchPromises);
+
+            results.forEach(result => {
+                if (result.status === 'fulfilled' && result.value) {
+                    combinedArticles = combinedArticles.concat(result.value);
+                }
+            });
+
+            if (combinedArticles.length === 0) {
+                showErrorMessage(translations.couldNotLoadAny);
+                showInitialLoading(false);
+                return;
+            }
+            
+            allArticlesFromAllSources = combinedArticles.map(item => ({
+                ...item,
+                title: item.title || 'No Title',
+                description: stripHtmlTags(item.description || translations.noDescriptionAvailable)
+            }));
+
+            const interleavedArticles = [];
+            let sourcesWithArticles = {};
+            allArticlesFromAllSources.forEach(article => {
+                const sourceKey = Object.keys(RSS_FEEDS).find(key => 
+                    RSS_FEEDS[key].name === article.sourceName
+                );
+                if (sourceKey) {
+                    if (!sourcesWithArticles[sourceKey]) {
+                        sourcesWithArticles[sourceKey] = [];
+                    }
+                    sourcesWithArticles[sourceKey].push(article);
+                }
+            });
+
+            let activeSources = Object.keys(sourcesWithArticles).filter(key => sourcesWithArticles[key].length > 0);
+            let lastSourceKey = null;
+            let attemptLimit = 1000;
+
+            while (activeSources.length > 0 && attemptLimit > 0) {
+                attemptLimit--;
+                let eligibleSources = activeSources.filter(sourceKey => sourceKey !== lastSourceKey);
+                if (eligibleSources.length === 0) {
+                    eligibleSources = activeSources;
+                }
+                if (eligibleSources.length === 0) break;
+
+                const randomIndex = Math.floor(Math.random() * eligibleSources.length);
+                const currentSourceKey = eligibleSources[randomIndex];
+
+                if (currentSourceKey && sourcesWithArticles[currentSourceKey] && sourcesWithArticles[currentSourceKey].length > 0) {
+                    interleavedArticles.push(sourcesWithArticles[currentSourceKey].shift());
+                    lastSourceKey = currentSourceKey;
+                    if (sourcesWithArticles[currentSourceKey].length === 0) {
+                        activeSources = activeSources.filter(key => key !== currentSourceKey);
+                    }
+                } else {
+                    activeSources = activeSources.filter(key => key !== currentSourceKey);
+                }
+            }
+            
+            allArticlesFromAllSources = interleavedArticles;
+
+            if (failedSources.length > 0) {
+                const failedSourceNamesDisplay = failedSources.map(name => {
+                    const originalKey = Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === name);
+                    return originalKey ? RSS_FEEDS[originalKey].name : name;
+                });
+                showErrorMessage(`${translations.failedSources} ${failedSourceNamesDisplay.join(', ')}. ${translations.displayingAvailableNews}`);
+            } else {
+                hideErrorMessage();
+            }
+
+            currentlyDisplayedArticles = allArticlesFromAllSources;
+            displayedArticleCount = 0;
+            displayNextBatchOfNews();
+            showInitialLoading(false);
+        }
+
+        function displayNextBatchOfNews() {
+            if (isLoadingMore) return;
+            isLoadingMore = true;
+            showInfiniteScrollLoading(true);
+
+            setTimeout(() => {
+                const startIndex = displayedArticleCount;
+                const endIndex = startIndex + articlesPerLoad;
+                const articlesToRender = currentlyDisplayedArticles.slice(startIndex, endIndex);
+
+                if (articlesToRender.length === 0 && displayedArticleCount > 0) {
+                    showNoMoreNewsMessage();
+                    isLoadingMore = false;
+                    return;
+                }
+                if (articlesToRender.length === 0 && displayedArticleCount === 0) {
+                    newsContainer.innerHTML = `<p class="text-center text-lg">${translations.noNewsFound}</p>`;
+                    showInfiniteScrollLoading(false);
+                    isLoadingMore = false;
+                    return;
+                }
+
+                articlesToRender.forEach(article => {
+                    const newsItem = document.createElement('div');
+                    newsItem.classList.add('news-item');
+                    newsItem.setAttribute('tabindex', '0');
+
+                    const fullDescription = article.description;
+                    const imageUrl = extractImageUrl(article);
+
+                    const imageHtml = imageUrl ? 
+                        `<img src="${imageUrl}" alt="${article.title || 'News Image'}" class="news-image">` : 
+                        '';
+
+                    newsItem.innerHTML = `
+                        <div class="news-item-header">
+                            ${imageHtml}
+                            <div class="news-item-content">
+                                <h2 class="font-semibold">${article.title}</h2>
+                                <span class="source-name">${article.sourceName || translations.unknownSource}</span>
+                            </div>
+                        </div>
+                        <div class="collapsible-container">
+                            <button class="toggle-details-button" data-full-description="${escapeHtml(fullDescription)}" tabindex="0" aria-expanded="false">
+                                <span>${translations.showDetails}</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="collapsible-content" role="region" aria-hidden="true">
+                                <p class="text-base mb-4">${fullDescription}</p>
+                                <a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer" class="hover:underline mt-4 block" tabindex="0">${translations.readOriginal}</a>
+                                ${article.pubDate ? `<p class="text-sm mt-2">${new Date(article.pubDate).toLocaleString()}</p>` : ''}
+                            </div>
+                        </div>
+                    `;
+                    newsContainer.appendChild(newsItem);
+                });
+
+                document.querySelectorAll('.news-item:nth-last-child(-n+' + articlesToRender.length + ') .toggle-details-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const content = button.closest('.collapsible-container').querySelector('.collapsible-content');
+                        const spanText = button.querySelector('span');
+                        
+                        if (content.classList.contains('expanded')) {
+                            content.classList.remove('expanded');
+                            spanText.textContent = translations.showDetails;
+                            button.classList.remove('expanded');
+                            button.setAttribute('aria-expanded', 'false');
+                            content.setAttribute('aria-hidden', 'true');
+                        } else {
+                            spanText.textContent = translations.hideDetails;
+                            content.classList.add('expanded');
+                            button.classList.add('expanded');
+                            button.setAttribute('aria-expanded', 'true');
+                            content.setAttribute('aria-hidden', 'false');
+                        }
+                    });
+                });
+
+                displayedArticleCount += articlesToRender.length;
+                showInfiniteScrollLoading(false);
+                isLoadingMore = false;
+
+                if (displayedArticleCount >= currentlyDisplayedArticles.length) {
+                    showNoMoreNewsMessage();
+                }
+
+            }, 500);
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        newsSourcesDiv.addEventListener('click', (event) => {
+            const button = event.target;
+            if (button.tagName === 'BUTTON') {
+                document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-selected', 'false');
+                });
+                button.classList.add('active');
+                button.setAttribute('aria-selected', 'true');
+
+                const sourceKey = button.dataset.source;
+                
+                newsContainer.innerHTML = '';
+                displayedArticleCount = 0;
+                noMoreNewsMessage.style.display = 'none';
+                hideErrorMessage();
+
+                if (sourceKey === 'All') {
+                    currentlyDisplayedArticles = allArticlesFromAllSources;
+                } else {
+                    currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => article.sourceName === RSS_FEEDS[sourceKey].name);
+                }
+                displayNextBatchOfNews();
+            }
+        });
+
+        scrollNavigationBtn.addEventListener('click', (event) => {
+            const btnRect = scrollNavigationBtn.getBoundingClientRect();
+            const clickY = event.clientY - btnRect.top;
+
+            if (clickY < btnRect.height / 2) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+            }
+        });
+
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            updateDarkModeIcons(isDarkMode);
+        });
+
+        function updateDarkModeIcons(isDarkMode) {
+            if (isDarkMode) {
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            const totalScrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolledPercentage = (window.scrollY / totalScrollHeight) * 100;
+            readingProgressBar.style.width = scrolledPercentage + '%';
+
+            if (!isLoadingMore && (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500)) {
+                if (displayedArticleCount < currentlyDisplayedArticles.length) {
+                    displayNextBatchOfNews();
+                } else {
+                    showNoMoreNewsMessage();
+                }
+            }
+        });
+
+        function updateFontSize(newSize) {
+            baseFontSize = Math.min(MAX_FONT_SIZE, Math.max(MIN_FONT_SIZE, newSize));
+            root.style.setProperty('--base-font-size', `${baseFontSize}px`);
+            localStorage.setItem('baseFontSize', baseFontSize);
+        }
+
+        fontSizeDecreaseBtn.addEventListener('click', () => updateFontSize(baseFontSize - FONT_SIZE_STEP));
+        fontSizeResetBtn.addEventListener('click', () => updateFontSize(DEFAULT_FONT_SIZE));
+        fontSizeIncreaseBtn.addEventListener('click', () => updateFontSize(baseFontSize + FONT_SIZE_STEP));
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.title = translations.appTitle;
+            document.getElementById('mainTitle').textContent = translations.mainTitle;
+
+            document.querySelector('[data-source="All"]').textContent = translations.tabAllNews;
+            document.querySelector('[data-source="DW"]').textContent = translations.tabDW;
+            document.querySelector('[data-source="BBC"]').textContent = translations.tabBBC;
+            document.querySelector('[data-source="The Hill"]').textContent = translations.tabTheHill;
+            document.querySelector('[data-source="Forbes"]').textContent = translations.tabForbes;
+            document.querySelector('[data-source="WSJ"]').textContent = translations.tabWSJ;
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                updateDarkModeIcons(true);
+            } else {
+                updateDarkModeIcons(false);
+            }
+
+            const savedFontSize = parseFloat(localStorage.getItem('baseFontSize'));
+            if (!isNaN(savedFontSize)) {
+                updateFontSize(savedFontSize);
+            } else {
+                updateFontSize(DEFAULT_FONT_SIZE);
+            }
+
+            infiniteScrollLoadingIndicator.querySelector('p').textContent = translations.loadingMoreNews;
+            
+            fetchAllNewsAndPrepareForInfiniteScroll();
+        });
+    </script>
+</body>
+</html>

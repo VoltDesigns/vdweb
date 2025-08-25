@@ -787,7 +787,7 @@
         <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.61.764-3.778a9.735 9.735 0 00-6.711 8.923 9.718 9.718 0 009.75 9.75 9.735 9.735 0 008.923-6.711z" />
         </svg>
-        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden">
+        <svg id="sun-icon" xmlns="http://www.w3.000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12H5.25m-.386-6.364l1.591 1.591M12 12a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
     </button>
@@ -805,8 +805,21 @@
     <script type="module">
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Configuration (REPLACE with YOUR actual firebaseConfig from Firebase Console) ---
+        // This object must contain your project-specific Firebase details.
+        const firebaseConfig = {
+            apiKey: "AIzaSyDXPwoPownBLlOINEy1cviqQgcseghcFhc",
+            authDomain: "news-aggregator-25e10.firebaseapp.com",
+            projectId: "news-aggregator-25e10",
+            storageBucket: "news-aggregator-25e10.firebasestorage.app",
+            messagingSenderId: "793900965133",
+            appId: "1:793900965133:web:8ce58f3abc789dfd01a444",
+            measurementId: "G-3P1SVT79L6"
+        };
+        // --- End Firebase Configuration ---
 
         // Firebase App and Services
         let app, auth, db;
@@ -1295,62 +1308,111 @@
             displayNextBatchOfNews();
         }
 
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                userId = user.uid;
-                userIdDisplay.textContent = `User ID: ${userId}`;
-                userIdDisplay.classList.remove('hidden');
-                loginSignupBtn.classList.add('hidden');
-                logoutBtn.classList.remove('hidden');
-                myFeedTab.style.display = 'block';
-                savePreferencesBtn.style.display = 'block';
+        // Firebase Auth State Listener must be set up after app and auth are initialized
+        // This is crucial for user experience and data loading.
+        document.addEventListener('DOMContentLoaded', async () => {
+            document.title = translations.appTitle;
+            document.getElementById('mainTitle').textContent = translations.mainTitle;
 
-                await loadUserPreferences(userId);
-                updatePreferenceTabsUI();
+            document.querySelector('[data-source="All"]').textContent = translations.tabAllNews;
+            myFeedTab.textContent = translations.tabMyFeed;
+            document.querySelector('[data-source="DW"]').textContent = translations.tabDW;
+            document.querySelector('[data-source="BBC"]').textContent = translations.tabBBC;
+            document.querySelector('[data-source="The Hill"]').textContent = translations.tabTheHill;
+            document.querySelector('[data-source="Forbes"]').textContent = translations.tabForbes;
+            document.querySelector('[data-source="WSJ"]').textContent = translations.tabWSJ;
+            savePreferencesBtn.textContent = translations.savePreferences;
+            loginSignupBtn.textContent = translations.loginSignup;
+            logoutBtn.textContent = translations.logout;
 
-                if (currentActiveTab === 'MyFeed') {
-                     applyNewsFilterAndDisplay('MyFeed');
-                } else if (currentActiveTab === 'All') {
-                     applyNewsFilterAndDisplay('All');
-                } else {
-                    const currentTabButton = document.querySelector(`.tab-button[data-source="${currentActiveTab}"]`);
-                    if (currentTabButton) {
-                        document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
-                            btn.classList.remove('active');
-                            btn.setAttribute('aria-selected', 'false');
-                        });
-                        currentTabButton.classList.add('active');
-                        currentTabButton.setAttribute('aria-selected', 'true');
+            // Initialize Firebase App FIRST
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+
+            // Set up Auth State Listener immediately after auth is initialized
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    userId = user.uid;
+                    userIdDisplay.textContent = `User ID: ${userId}`;
+                    userIdDisplay.classList.remove('hidden');
+                    loginSignupBtn.classList.add('hidden');
+                    logoutBtn.classList.remove('hidden');
+                    myFeedTab.style.display = 'block';
+                    savePreferencesBtn.style.display = 'block';
+
+                    await loadUserPreferences(userId);
+                    updatePreferenceTabsUI();
+
+                    if (currentActiveTab === 'MyFeed') {
+                        applyNewsFilterAndDisplay('MyFeed');
+                    } else if (currentActiveTab === 'All') {
+                        applyNewsFilterAndDisplay('All');
+                    } else {
+                        const currentTabButton = document.querySelector(`.tab-button[data-source="${currentActiveTab}"]`);
+                        if (currentTabButton) {
+                            document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
+                                btn.classList.remove('active');
+                                btn.setAttribute('aria-selected', 'false');
+                            });
+                            currentTabButton.classList.add('active');
+                            currentTabButton.setAttribute('aria-selected', 'true');
+                        }
                     }
-                }
 
-            } else {
-                userId = null;
-                userIdDisplay.classList.add('hidden');
-                loginSignupBtn.classList.remove('hidden');
-                logoutBtn.classList.add('hidden');
-                myFeedTab.style.display = 'none';
-                savePreferencesBtn.style.display = 'none';
-                userPreferences = [];
-                updatePreferenceTabsUI();
+                } else {
+                    userId = null;
+                    userIdDisplay.classList.add('hidden');
+                    loginSignupBtn.classList.remove('hidden');
+                    logoutBtn.classList.add('hidden');
+                    myFeedTab.style.display = 'none';
+                    savePreferencesBtn.style.display = 'none';
+                    userPreferences = [];
+                    updatePreferenceTabsUI();
 
-                if (currentActiveTab === 'MyFeed' || !document.querySelector('.tab-button.active')) {
-                    document.querySelector('.tab-button[data-source="All"]').classList.add('active');
-                    document.querySelector('.tab-button[data-source="All"]').setAttribute('aria-selected', 'true');
-                    currentActiveTab = 'All';
-                    applyNewsFilterAndDisplay('All');
+                    if (currentActiveTab === 'MyFeed' || !document.querySelector('.tab-button.active')) {
+                        document.querySelector('.tab-button[data-source="All"]').classList.add('active');
+                        document.querySelector('.tab-button[data-source="All"]').setAttribute('aria-selected', 'true');
+                        currentActiveTab = 'All';
+                        applyNewsFilterAndDisplay('All');
+                    }
+                    document.querySelectorAll('.tab-button').forEach(btn => {
+                        btn.classList.remove('selected-pref');
+                    });
                 }
-                document.querySelectorAll('.tab-button').forEach(btn => {
-                    btn.classList.remove('selected-pref');
-                });
+            });
+
+            // Sign in anonymously if no user is currently authenticated when the app starts.
+            // This ensures Firebase is ready for the auth state listener.
+            if (!auth.currentUser) {
+                await signInAnonymously(auth);
             }
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                updateDarkModeIcons(true);
+            } else {
+                updateDarkModeIcons(false);
+            }
+
+            const savedFontSize = parseFloat(localStorage.getItem('baseFontSize'));
+            if (!isNaN(savedFontSize)) {
+                updateFontSize(savedFontSize);
+            } else {
+                updateFontSize(DEFAULT_FONT_SIZE);
+            }
+
+            infiniteScrollLoadingIndicator.querySelector('p').textContent = translations.loadingMoreNews;
+            
+            await fetchAllNewsAndPrepareForInfiniteScroll();
         });
+
 
         async function loadUserPreferences(uid) {
             if (!uid) return;
             try {
-                // Use firebaseConfig.projectId instead of __app_id
-                const prefDocRef = doc(db, `artifacts/$news-aggregator-25e10/users/${uid}/preferences`, 'sources');
+                const prefDocRef = doc(db, `artifacts/${firebaseConfig.projectId}/users/${uid}/preferences`, 'sources');
                 const prefDocSnap = await getDoc(prefDocRef);
                 if (prefDocSnap.exists()) {
                     userPreferences = prefDocSnap.data().preferredSources || [];
@@ -1367,10 +1429,7 @@
         async function saveUserPreferences() {
             if (!userId) return;
             try {
-                // Use firebaseConfig.projectId instead of __app_id
-                const prefDocRef = doc(db, `artifacts/$news-aggregator-25e10/users/${uid}/preferences`, 'sources');
-
-
+                const prefDocRef = doc(db, `artifacts/${firebaseConfig.projectId}/users/${userId}/preferences`, 'sources');
                 await setDoc(prefDocRef, { preferredSources: userPreferences }, { merge: true });
                 showModalMessage(translations.prefSaved);
             } catch (error) {
@@ -1527,66 +1586,6 @@
         fontSizeDecreaseBtn.addEventListener('click', () => updateFontSize(baseFontSize - FONT_SIZE_STEP));
         fontSizeResetBtn.addEventListener('click', () => updateFontSize(DEFAULT_FONT_SIZE));
         fontSizeIncreaseBtn.addEventListener('click', () => updateFontSize(baseFontSize + FONT_SIZE_STEP));
-
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            document.title = translations.appTitle;
-            document.getElementById('mainTitle').textContent = translations.mainTitle;
-
-            document.querySelector('[data-source="All"]').textContent = translations.tabAllNews;
-            myFeedTab.textContent = translations.tabMyFeed;
-            document.querySelector('[data-source="DW"]').textContent = translations.tabDW;
-            document.querySelector('[data-source="BBC"]').textContent = translations.tabBBC;
-            document.querySelector('[data-source="The Hill"]').textContent = translations.tabTheHill;
-            document.querySelector('[data-source="Forbes"]').textContent = translations.tabForbes;
-            document.querySelector('[data-source="WSJ"]').textContent = translations.tabWSJ;
-            savePreferencesBtn.textContent = translations.savePreferences;
-            loginSignupBtn.textContent = translations.loginSignup;
-            logoutBtn.textContent = translations.logout;
-
-            // --- Start Firebase Initialization for Static Hosting (Replace with your actual config) ---
-            // Replace with YOUR actual firebaseConfig from Firebase Console
-            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDXPwoPownBLlOINEy1cviqQgcseghcFhc",
-  authDomain: "news-aggregator-25e10.firebaseapp.com",
-  projectId: "news-aggregator-25e10",
-  storageBucket: "news-aggregator-25e10.firebasestorage.app",
-  messagingSenderId: "793900965133",
-  appId: "1:793900965133:web:8ce58f3abc789dfd01a444",
-  measurementId: "G-3P1SVT79L6"
-};
-        // Initialize Firebase App
-        app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
-
-        // Sign in anonymously if no user is currently authenticated
-        // For GitHub Pages, we will primarily rely on email/password or anonymous auth.
-        // Remove the __initial_auth_token check as it's for specific environments.
-        if (!auth.currentUser) {
-            await signInAnonymously(auth);
-        }
-
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-                updateDarkModeIcons(true);
-            } else {
-                updateDarkModeIcons(false);
-            }
-
-            const savedFontSize = parseFloat(localStorage.getItem('baseFontSize'));
-            if (!isNaN(savedFontSize)) {
-                updateFontSize(savedFontSize);
-            } else {
-                updateFontSize(DEFAULT_FONT_SIZE);
-            }
-
-            infiniteScrollLoadingIndicator.querySelector('p').textContent = translations.loadingMoreNews;
-            
-            await fetchAllNewsAndPrepareForInfiniteScroll();
-        });
     </script>
 </body>
 </html>

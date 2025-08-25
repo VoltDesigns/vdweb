@@ -909,6 +909,7 @@
                     <button class="tab-button" data-source="The Hill" tabindex="0" role="tab" aria-selected="false">The Hill</button>
                     <button class="tab-button" data-source="Forbes" tabindex="0" role="tab" aria-selected="false">Forbes</button>
                     <button class="tab-button" data-source="WSJ" tabindex="0" role="tab" aria-selected="false">Wall Street Journal</button>
+                    <button class="tab-button" data-source="Onlinekhabar" tabindex="0" role="tab" aria-selected="false">Onlinekhabar</button>
                 </div>
             </div>
 
@@ -1001,7 +1002,8 @@
             BBC: { name: 'BBC News', url: 'http://feeds.bbci.co.uk/news/rss.xml' },
             'The Hill': { name: 'The Hill', url: 'https://thehill.com/rss/' },
             Forbes: { name: 'Forbes', url: 'https://www.forbes.com/business/feed/' },
-            WSJ: { name: 'Wall Street Journal', url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml' }
+            WSJ: { name: 'Wall Street Journal', url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml' },
+            Onlinekhabar: { name: 'Onlinekhabar', url: 'https://www.onlinekhabar.com/feed' } // New source added
         };
 
         const translations = {
@@ -1014,6 +1016,7 @@
             tabTheHill: 'The Hill',
             tabForbes: 'Forbes',
             tabWSJ: 'Wall Street Journal',
+            tabOnlinekhabar: 'Onlinekhabar', // New translation
             loadingMessage: 'Loading news...',
             errorTitle: 'Error!',
             readOriginal: 'Read Original Article →',
@@ -1430,7 +1433,7 @@
 
             const sourceKey = button.dataset.source;
 
-            // Step 1: Update the 'active' class (underline) for the currently viewed content tab.
+            // Update the 'active' class (underline) for the currently viewed content tab.
             document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
                 btn.classList.remove('active');
                 btn.setAttribute('aria-selected', 'false');
@@ -1439,7 +1442,7 @@
             button.setAttribute('aria-selected', 'true');
             currentActiveTab = sourceKey; // Update current active tab state
             
-            // Step 2: Apply the news filter based on the newly active tab.
+            // Apply the news filter based on the newly active tab.
             applyNewsFilterAndDisplay(sourceKey);
         });
 
@@ -1470,6 +1473,11 @@
         function populatePreferencesMenu() {
             preferencesCheckboxList.innerHTML = ''; // Clear existing
             Object.keys(RSS_FEEDS).forEach(sourceKey => {
+                // Skip 'All' and 'MyFeed' in the preferences menu
+                if (sourceKey === 'All' || sourceKey === 'MyFeed') {
+                    return;
+                }
+
                 const sourceDisplayName = RSS_FEEDS[sourceKey].name;
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('menu-source-item');
@@ -1522,6 +1530,7 @@
             document.querySelector('[data-source="The Hill"]').textContent = translations.tabTheHill;
             document.querySelector('[data-source="Forbes"]').textContent = translations.tabForbes;
             document.querySelector('[data-source="WSJ"]').textContent = translations.tabWSJ;
+            document.querySelector('[data-source="Onlinekhabar"]').textContent = translations.tabOnlinekhabar; // New tab translation
             loginSignupBtn.textContent = translations.loginSignup;
             logoutBtn.textContent = translations.logout;
             
@@ -1768,7 +1777,7 @@
                 moonIcon.classList.remove('hidden');
                 sunIcon.classList.add('hidden');
             }
-        }
+        });
 
         window.addEventListener('scroll', () => {
             const totalScrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;

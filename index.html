@@ -996,6 +996,7 @@
         let userEmail = null; // Will store email if logged in with email/password, or null for anonymous
         let userPreferences = []; // Stores user's preferred source keys
 
+
         const RSS_FEEDS = {
             DW: { name: 'DW News', url: 'https://rss.dw.com/rdf/rss-en-all' },
             BBC: { name: 'BBC News', url: 'http://feeds.bbci.co.uk/news/rss.xml' },
@@ -1004,46 +1005,6 @@
             WSJ: { name: 'Wall Street Journal', url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml' }
         };
 
-        const translations = {
-            appTitle: 'News Aggregator',
-            mainTitle: '📰 News Aggregator',
-            tabAllNews: 'All News',
-            tabMyFeed: 'My Feed',
-            tabDW: 'DW News',
-            tabBBC: 'BBC News',
-            tabTheHill: 'The Hill',
-            tabForbes: 'Forbes',
-            tabWSJ: 'Wall Street Journal',
-            loadingMessage: 'Loading news...',
-            errorTitle: 'Error!',
-            readOriginal: 'Read Original Article →',
-            published: 'Published:',
-            noNewsFound: 'No news found for this selection.',
-            failedSources: 'Some news sources failed to load:',
-            couldNotLoad: 'Could not load news from',
-            tryAgain: 'Please try again later. (Details:',
-            couldNotLoadAny: 'Could not load any news sources. Please check your internet connection and try again.',
-            unknownSource: 'Unknown Source',
-            noDescriptionAvailable: 'No description available.',
-            showDetails: 'Show Details',
-            hideDetails: 'Hide Details',
-            loadingMoreNews: 'Loading more news...',
-            noMoreNews: 'No more news to load.',
-            displayingAvailableNews: 'Displaying available news.',
-            apiError: 'API error. Please check configuration.',
-            loginSignup: 'Login/Signup',
-            logout: 'Logout',
-            prefSaved: 'Preferences saved!',
-            prefLoadError: 'Could not load preferences.',
-            prefSaveError: 'Failed to save preferences.',
-            enterEmailPassword: 'Please enter both email and password.',
-            invalidEmailPass: 'Invalid email or password.',
-            emailExists: 'Email already in use. Please login or use a different email.',
-            weakPassword: 'Password should be at least 6 characters.',
-            anonymousUser: 'Anonymous',
-            prefMenuStatusLoggedIn: 'Select sources for your customized "My Feed".',
-            prefMenuStatusLoggedOut: 'Login to save your preferences.'
-        };
 
         let allArticlesFromAllSources = [];
         let currentlyDisplayedArticles = [];
@@ -1051,6 +1012,7 @@
         const articlesPerLoad = 10;
         let isLoadingMore = false;
         let currentActiveTab = 'All'; // Track the currently active content-viewing tab
+
 
         const newsContainer = document.getElementById('news-container');
         const newsSourcesDiv = document.getElementById('news-sources');
@@ -1075,6 +1037,7 @@
         const modalErrorMessage = document.getElementById('modal-error-message');
         const modalInfoMessage = document.getElementById('modal-info-message');
         const myFeedTab = document.querySelector('[data-source="MyFeed"]');
+
 
         // New elements for hamburger menu
         const hamburgerMenuBtn = document.getElementById('hamburger-menu-btn');
@@ -1101,20 +1064,24 @@
             return true;
         };
 
+
         function showInitialLoading(show) {
             initialLoadingIndicator.style.display = show ? 'flex' : 'none';
         }
+
 
         function showInfiniteScrollLoading(show) {
             infiniteScrollLoadingIndicator.style.display = show ? 'flex' : 'none';
             noMoreNewsMessage.style.display = 'none';
         }
 
+
         function showNoMoreNewsMessage() {
             infiniteScrollLoadingIndicator.style.display = 'none';
-            noMoreNewsMessage.textContent = translations.noMoreNews;
+            noMoreNewsMessage.textContent = 'No more news to load.';
             noMoreNewsMessage.style.display = 'block';
         }
+
 
         function showErrorMessage(message) {
             errorTextSpan.setAttribute('data-original-error', message);
@@ -1123,24 +1090,18 @@
             if (message.includes('Could not load news from')) {
                 const sourceNameMatch = message.match(/Could not load news from (\w[\w\s.-]*)\./);
                 if (sourceNameMatch) {
-                    const sourceKey = Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === sourceNameMatch[1]);
-                    const sourceDisplayName = sourceKey ? RSS_FEEDS[key].name : sourceNameMatch[1];
+                    const sourceName = sourceNameMatch[1];
                     const detailsPart = message.substring(message.indexOf('(Details:'));
-                    displayedMessage = `${translations.couldNotLoad} ${sourceDisplayName}. ${translations.tryAgain} ${detailsPart}`;
+                    displayedMessage = `Could not load news from ${sourceName}. Please try again later. ${detailsPart}`;
                 }
             } else if (message.includes('Could not load any news sources.')) {
-                displayedMessage = translations.couldNotLoadAny;
+                displayedMessage = 'Could not load any news sources. Please check your internet connection and try again.';
             } else if (message.includes('Some news sources failed to load:')) {
                 const failedSourcesText = message.substring(message.indexOf(':') + 1, message.indexOf('. Displaying available news.'));
                 const failedSourceNames = failedSourcesText.split(', ').map(s => s.trim());
-
-                const failedSourceNamesDisplay = failedSourceNames.map(name => {
-                    const originalKey = Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === name);
-                    return originalKey ? RSS_FEEDS[originalKey].name : name;
-                });
-                displayedMessage = `${translations.failedSources} ${failedSourceNamesDisplay.join(', ')}. ${translations.displayingAvailableNews}`;
+                displayedMessage = `Some news sources failed to load: ${failedSourceNames.join(', ')}. Displaying available news.`;
             } else if (message.includes('API error.')) {
-                 displayedMessage = translations.apiError;
+                 displayedMessage = 'API error. Please check configuration.';
             } else if (message.includes('Authentication/Authorization error with API.')) {
                  displayedMessage = `Authentication/Authorization error with API. Please ensure your environment is configured correctly.`;
             } else if (message.includes('API Key is not configured.')) {
@@ -1154,10 +1115,12 @@
             errorMessageDiv.focus();
         }
 
+
         function hideErrorMessage() {
             errorMessageDiv.classList.add('hidden');
             errorTextSpan.removeAttribute('data-original-error');
         }
+
 
         function showModalMessage(message, isError = false) {
             if (isError) {
@@ -1175,6 +1138,7 @@
                 else modalInfoMessage.focus();
             }, 100);
         }
+
 
         function hideModalMessages() {
             modalErrorMessage.classList.add('hidden');
@@ -1200,10 +1164,12 @@
             return null;
         }
 
+
         function stripHtmlTags(htmlString) {
             const doc = new DOMParser().parseFromString(htmlString, 'text/html');
             return doc.body.textContent || "";
         }
+
 
         async function fetchNewsForSource(rssUrl, sourceDisplayName) {
             try {
@@ -1227,6 +1193,7 @@
                 throw new Error(`Could not load news from ${sourceDisplayName}. (Details: ${error.message})`);
             }
         }
+
 
         async function fetchAllNewsAndPrepareForInfiniteScroll() {
             showInitialLoading(true);
@@ -1256,8 +1223,9 @@
                 }
             });
 
+
             if (combinedArticles.length === 0) {
-                showErrorMessage(translations.couldNotLoadAny);
+                showErrorMessage('Could not load any news sources. Please check your internet connection and try again.');
                 showInitialLoading(false);
                 return;
             }
@@ -1265,9 +1233,10 @@
             allArticlesFromAllSources = combinedArticles.map(item => ({
                 ...item,
                 title: item.title || 'No Title',
-                description: stripHtmlTags(item.description || translations.noDescriptionAvailable)
+                description: stripHtmlTags(item.description || 'No description available.')
             }));
 
+            // Interleave articles from different sources
             const interleavedArticles = [];
             let sourcesWithArticles = {};
             allArticlesFromAllSources.forEach(article => {
@@ -1284,7 +1253,7 @@
 
             let activeSources = Object.keys(sourcesWithArticles).filter(key => sourcesWithArticles[key].length > 0);
             let lastSourceKey = null;
-            let attemptLimit = 1000;
+            let attemptLimit = 1000; // Prevent infinite loops in case of all sources having only one article
 
             while (activeSources.length > 0 && attemptLimit > 0) {
                 attemptLimit--;
@@ -1292,7 +1261,7 @@
                 if (eligibleSources.length === 0) {
                     eligibleSources = activeSources;
                 }
-                if (eligibleSources.length === 0) break;
+                if (eligibleSources.length === 0) break; // All sources exhausted
 
                 const randomIndex = Math.floor(Math.random() * eligibleSources.length);
                 const currentSourceKey = eligibleSources[randomIndex];
@@ -1311,11 +1280,7 @@
             allArticlesFromAllSources = interleavedArticles;
 
             if (failedSources.length > 0) {
-                const failedSourceNamesDisplay = failedSources.map(name => {
-                    const originalKey = Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === name);
-                    return originalKey ? RSS_FEEDS[originalKey].name : name;
-                });
-                showErrorMessage(`${translations.failedSources} ${failedSourceNamesDisplay.join(', ')}. ${translations.displayingAvailableNews}`);
+                showErrorMessage(`Some news sources failed to load: ${failedSources.join(', ')}. Displaying available news.`);
             } else {
                 hideErrorMessage();
             }
@@ -1323,6 +1288,7 @@
             applyNewsFilterAndDisplay(currentActiveTab); 
             showInitialLoading(false);
         }
+
 
         function displayNextBatchOfNews() {
             if (isLoadingMore) return;
@@ -1340,7 +1306,7 @@
                     return;
                 }
                 if (articlesToRender.length === 0 && displayedArticleCount === 0) {
-                    newsContainer.innerHTML = `<p class="text-center text-lg">${translations.noNewsFound}</p>`;
+                    newsContainer.innerHTML = `<p class="text-center text-lg">No news found for this selection.</p>`;
                     showInfiniteScrollLoading(false);
                     isLoadingMore = false;
                     return;
@@ -1363,17 +1329,17 @@
                             ${imageHtml}
                             <div class="news-item-content">
                                 <h2 class="font-semibold">${article.title}</h2>
-                                <span class="source-name">${article.sourceName || translations.unknownSource}</span>
+                                <span class="source-name">${article.sourceName || 'Unknown Source'}</span>
                             </div>
                         </div>
                         <div class="collapsible-container">
                             <button class="toggle-details-button" data-full-description="${escapeHtml(fullDescription)}" tabindex="0" aria-expanded="false">
-                                <span>${translations.showDetails}</span>
+                                <span>Show Details</span>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
                             <div class="collapsible-content" role="region" aria-hidden="true">
                                 <p class="text-base mb-4">${fullDescription}</p>
-                                <a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer" class="hover:underline mt-4 block" tabindex="0">${translations.readOriginal}</a>
+                                <a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer" class="hover:underline mt-4 block" tabindex="0">Read Original Article →</a>
                                 ${article.pubDate ? `<p class="text-sm mt-2">${new Date(article.pubDate).toLocaleString()}</p>` : ''}
                             </div>
                         </div>
@@ -1388,12 +1354,12 @@
                         
                         if (content.classList.contains('expanded')) {
                             content.classList.remove('expanded');
-                            spanText.textContent = translations.showDetails;
+                            spanText.textContent = 'Show Details';
                             button.classList.remove('expanded');
                             button.setAttribute('aria-expanded', 'false');
                             content.setAttribute('aria-hidden', 'true');
                         } else {
-                            spanText.textContent = translations.hideDetails;
+                            spanText.textContent = 'Hide Details';
                             content.classList.add('expanded');
                             button.classList.add('expanded');
                             button.setAttribute('aria-expanded', 'true');
@@ -1413,6 +1379,7 @@
             }, 500);
         }
 
+
         function escapeHtml(text) {
             const map = {
                 '&': '&amp;',
@@ -1423,6 +1390,7 @@
             };
             return text.replace(/[&<>"']/g, function(m) { return map[m]; });
         }
+
 
         newsSourcesDiv.addEventListener('click', (event) => {
             const button = event.target.closest('.tab-button'); // Ensure we get the tab button itself
@@ -1442,6 +1410,7 @@
             // Step 2: Apply the news filter based on the newly active tab.
             applyNewsFilterAndDisplay(sourceKey);
         });
+
 
         function applyNewsFilterAndDisplay(filterKey) {
             newsContainer.innerHTML = '';
@@ -1466,6 +1435,7 @@
             displayNextBatchOfNews();
         }
 
+
         // Function to populate the off-canvas menu with checkboxes
         function populatePreferencesMenu() {
             preferencesCheckboxList.innerHTML = ''; // Clear existing
@@ -1489,7 +1459,7 @@
                     const changedSourceKey = event.target.dataset.source;
                     if (!userId) {
                         event.target.checked = !event.target.checked; // Revert checkbox state
-                        showModalMessage(translations.prefMenuStatusLoggedOut, true); // Use specific translation
+                        showModalMessage('Login to save your preferences.', true);
                         return;
                     }
 
@@ -1511,27 +1481,16 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            document.title = translations.appTitle;
-            document.getElementById('mainTitle').textContent = translations.mainTitle;
 
-            document.querySelector('[data-source="All"]').textContent = translations.tabAllNews;
-            myFeedTab.textContent = translations.tabMyFeed;
-            document.querySelector('[data-source="DW"]').textContent = translations.tabDW;
-            document.querySelector('[data-source="BBC"]').textContent = translations.tabBBC;
-            document.querySelector('[data-source="The Hill"]').textContent = translations.tabTheHill;
-            document.querySelector('[data-source="Forbes"]').textContent = translations.tabForbes;
-            document.querySelector('[data-source="WSJ"]').textContent = translations.tabWSJ;
-            loginSignupBtn.textContent = translations.loginSignup;
-            logoutBtn.textContent = translations.logout;
-            
+        document.addEventListener('DOMContentLoaded', async () => {
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
 
             // Initial state: Anonymous user display
-            userIdDisplay.textContent = translations.anonymousUser;
+            userIdDisplay.textContent = 'Anonymous';
             userIdDisplay.classList.remove('hidden'); // Ensure it's visible by default
+
 
             onAuthStateChanged(auth, async (user) => {
                 console.log("onAuthStateChanged triggered. User:", user ? user.uid : "null");
@@ -1543,7 +1502,7 @@
                     loginSignupBtn.classList.add('hidden');
                     logoutBtn.classList.remove('hidden');
                     myFeedTab.style.display = 'block';
-                    prefMenuStatus.textContent = translations.prefMenuStatusLoggedIn; // Update menu status
+                    prefMenuStatus.textContent = 'Select sources for your customized "My Feed".';
                     
                     await loadUserPreferences(userId);
                     populatePreferencesMenu(); // Populate and set checked states
@@ -1553,11 +1512,11 @@
                 } else {
                     userId = null;
                     userEmail = null;
-                    userIdDisplay.textContent = translations.anonymousUser; // Set to "Anonymous" on logout
+                    userIdDisplay.textContent = 'Anonymous'; // Set to "Anonymous" on logout
                     loginSignupBtn.classList.remove('hidden');
                     logoutBtn.classList.add('hidden');
                     myFeedTab.style.display = 'none';
-                    prefMenuStatus.textContent = translations.prefMenuStatusLoggedOut; // Update menu status
+                    prefMenuStatus.textContent = 'Login to save your preferences.';
                     userPreferences = [];
                     populatePreferencesMenu(); // Clear checkboxes on logout
 
@@ -1575,7 +1534,6 @@
                 }
             });
 
-            // No automatic anonymous sign-in here. `onAuthStateChanged` handles initial user state.
 
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
@@ -1585,6 +1543,7 @@
                 updateDarkModeIcons(false);
             }
 
+
             const savedFontSize = parseFloat(localStorage.getItem('baseFontSize'));
             if (!isNaN(savedFontSize)) {
                 updateFontSize(savedFontSize);
@@ -1592,7 +1551,7 @@
                 updateFontSize(DEFAULT_FONT_SIZE);
             }
 
-            infiniteScrollLoadingIndicator.querySelector('p').textContent = translations.loadingMoreNews;
+            infiniteScrollLoadingIndicator.querySelector('p').textContent = 'Loading more news...';
             
             await fetchAllNewsAndPrepareForInfiniteScroll();
             populatePreferencesMenu(); // Initial population for anonymous users too
@@ -1614,10 +1573,11 @@
                 }
             } catch (error) {
                 console.error("Error loading user preferences:", error);
-                showErrorMessage(translations.prefLoadError);
+                showErrorMessage('Could not load preferences.');
                 userPreferences = [];
             }
         }
+
 
         async function saveUserPreferences() {
             if (!userId) {
@@ -1630,9 +1590,10 @@
                 console.log("Preferences saved successfully!");
             } catch (error) {
                 console.error("Error saving user preferences:", error);
-                showErrorMessage(translations.prefSaveError);
+                showErrorMessage('Failed to save preferences.');
             }
         }
+
 
         // Hamburger Menu Event Listeners
         hamburgerMenuBtn.addEventListener('click', () => {
@@ -1641,15 +1602,18 @@
             offCanvasMenu.focus(); // Focus the menu for accessibility
         });
 
+
         closeOffCanvasBtn.addEventListener('click', () => {
             offCanvasMenu.classList.remove('open');
             overlay.style.display = 'none';
         });
 
+
         overlay.addEventListener('click', () => {
             offCanvasMenu.classList.remove('open');
             overlay.style.display = 'none';
         });
+
 
         // Close menu on Escape key
         document.addEventListener('keydown', (event) => {
@@ -1668,10 +1632,12 @@
             loginModal.focus(); // Focus the modal for accessibility
         });
 
+
         closeLoginModalBtn.addEventListener('click', () => {
             loginModal.style.display = 'none';
             hideModalMessages();
         });
+
 
         loginModal.addEventListener('click', (event) => {
             if (event.target === loginModal) {
@@ -1680,40 +1646,43 @@
             }
         });
 
+
         loginForm.addEventListener('submit', async (event) => {
             event.preventDefault();
             hideModalMessages();
             const email = modalEmailInput.value;
             const password = modalPasswordInput.value;
 
+
             if (!email || !password) {
-                showModalMessage(translations.enterEmailPassword, true);
+                showModalMessage('Please enter both email and password.', true);
                 return;
             }
 
+
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                showModalMessage(translations.loginSuccess);
+                showModalMessage('Login successful!');
                 loginModal.style.display = 'none';
             } catch (signInError) {
                 if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/wrong-password') {
-                    showModalMessage(translations.invalidEmailPass, true);
+                    showModalMessage('Invalid email or password.', true);
                 } else if (signInError.code === 'auth/invalid-email') {
-                    showModalMessage(translations.invalidEmailPass, true);
+                    showModalMessage('Invalid email or password.', true);
                 } else if (signInError.code === 'auth/too-many-requests') {
                     showModalMessage('Access to this account has been temporarily disabled due to many failed login attempts. Please try again later.', true);
                 } else {
                     try {
                         await createUserWithEmailAndPassword(auth, email, password);
-                        showModalMessage(translations.signupSuccess);
+                        showModalMessage('Signup successful!');
                         loginModal.style.display = 'none';
                     } catch (signUpError) {
                         if (signUpError.code === 'auth/email-already-in-use') {
-                            showModalMessage(translations.emailExists, true);
+                            showModalMessage('Email already in use. Please login or use a different email.', true);
                         } else if (signUpError.code === 'auth/weak-password') {
-                            showModalMessage(translations.weakPassword, true);
+                            showModalMessage('Password should be at least 6 characters.', true);
                         } else if (signUpError.code === 'auth/invalid-email') {
-                            showModalMessage(translations.invalidEmailPass, true);
+                            showModalMessage('Invalid email or password.', true);
                         } else {
                             console.error("Auth Error (Signup):", signUpError);
                             showModalMessage(`Authentication failed: ${signUpError.message}`, true);
@@ -1723,10 +1692,11 @@
             }
         });
 
+
         logoutBtn.addEventListener('click', async () => {
             try {
                 await signOut(auth);
-                showModalMessage(translations.logoutSuccess);
+                showModalMessage('Logged out successfully!');
                 // After logout, reset all tab states and revert to 'All News'
                 document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
                     btn.classList.remove('active'); // Remove active class
@@ -1742,6 +1712,7 @@
             }
         });
 
+
         scrollNavigationBtn.addEventListener('click', (event) => {
             const btnRect = scrollNavigationBtn.getBoundingClientRect();
             const clickY = event.clientY - btnRect.top;
@@ -1753,12 +1724,14 @@
             }
         });
 
+
         darkModeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             const isDarkMode = document.body.classList.contains('dark-mode');
             localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
             updateDarkModeIcons(isDarkMode);
         });
+
 
         function updateDarkModeIcons(isDarkMode) {
             if (isDarkMode) {
@@ -1769,6 +1742,7 @@
                 sunIcon.classList.add('hidden');
             }
         }
+
 
         window.addEventListener('scroll', () => {
             const totalScrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -1784,11 +1758,13 @@
             }
         });
 
+
         function updateFontSize(newSize) {
             baseFontSize = Math.min(MAX_FONT_SIZE, Math.max(MIN_FONT_SIZE, newSize));
             root.style.setProperty('--base-font-size', `${baseFontSize}px`);
             localStorage.setItem('baseFontSize', baseFontSize);
         }
+
 
         fontSizeDecreaseBtn.addEventListener('click', () => updateFontSize(baseFontSize - FONT_SIZE_STEP));
         fontSizeResetBtn.addEventListener('click', () => updateFontSize(DEFAULT_FONT_SIZE));
@@ -1796,4 +1772,3 @@
     </script>
 </body>
 </html>
-

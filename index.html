@@ -434,7 +434,6 @@
         const newsPerPage = 10;
         let currentPage = 1;
         let currentArticles = [];
-        let isScrollingToTop = false; // Flag to manage "Go to Top" button state during smooth scroll
 
         const newsContainer = document.getElementById('news-container');
         const newsSourcesDiv = document.getElementById('news-sources');
@@ -827,19 +826,14 @@
             const scrollThreshold = 200; // Pixels scrolled to show/hide buttons
             const scrollFromBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
 
-            // Go to Top button visibility:
+            // Go to Top button visibility: Show if scrolled down past threshold
             if (window.scrollY > scrollThreshold) {
-                // Only show if not currently scrolling to top via button click
-                if (!isScrollingToTop) {
-                    goToTopBtn.classList.add('show');
-                }
+                goToTopBtn.classList.add('show'); // Add show class to make it visible (translucent)
             } else {
-                // If we are at or near the top, always hide the button
-                goToTopBtn.classList.remove('show');
-                isScrollingToTop = false; // Reset flag when at the top
+                goToTopBtn.classList.remove('show'); // Remove show class to hide it
             }
 
-            // Go to Bottom button visibility:
+            // Go to Bottom button visibility: Hide only when near the very bottom
             if (scrollFromBottom <= scrollThreshold) {
                 goToBottomBtn.classList.add('hide'); // Hide it
             } else {
@@ -848,9 +842,18 @@
         });
 
         goToTopBtn.addEventListener('click', () => {
-            isScrollingToTop = true; // Set flag when button is clicked
-            goToTopBtn.classList.remove('show'); // Immediately hide on click for better UX
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Use requestAnimationFrame to repeatedly check scroll position
+            // and hide the button only when it has truly reached the top.
+            const checkScrollEnd = () => {
+                if (window.scrollY === 0) {
+                    goToTopBtn.classList.remove('show');
+                } else {
+                    requestAnimationFrame(checkScrollEnd);
+                }
+            };
+            requestAnimationFrame(checkScrollEnd);
         });
 
         goToBottomBtn.addEventListener('click', () => {

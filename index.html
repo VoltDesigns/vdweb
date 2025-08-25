@@ -246,8 +246,9 @@
             opacity: 1; /* Fully opaque on hover */
         }
 
+        /* Class to show the top button (translucent) */
         #go-to-top-btn.show {
-            opacity: 0.7; /* Translucent when shown */
+            opacity: 0.7;
             pointer-events: auto;
         }
 
@@ -825,11 +826,11 @@
             const scrollThreshold = 200; // Pixels scrolled to show/hide buttons
             const scrollFromBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
 
-            // Go to Top button visibility: Show if scrolled down past threshold
-            if (window.scrollY > scrollThreshold) {
-                goToTopBtn.classList.add('show');
+            // Go to Top button visibility: Hide if at or near the top
+            if (window.scrollY <= scrollThreshold) {
+                goToTopBtn.classList.add('hide'); // Add hide class to make it invisible
             } else {
-                goToTopBtn.classList.remove('show');
+                goToTopBtn.classList.remove('hide'); // Remove hide class to make it visible (translucent)
             }
 
             // Go to Bottom button visibility: Hide only when near the very bottom
@@ -842,7 +843,6 @@
 
         goToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            // The scroll listener will handle hiding the button once window.scrollY is <= scrollThreshold
         });
 
         goToBottomBtn.addEventListener('click', () => {

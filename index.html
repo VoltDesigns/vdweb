@@ -30,10 +30,14 @@
             --scroll-btn-bg: #4F85C5;
             --scroll-btn-hover-bg: #3e6a9e;
             --progress-bar-bg: #4F85C5;
-            --login-signup-btn-bg: #4F85C5;
-            --login-signup-btn-hover-bg: #3e6a9e;
-            --save-pref-btn-bg: #28a745;
-            --save-pref-btn-hover-bg: #218838;
+            /* Updated button styles */
+            --general-button-bg: #ffffff; /* Default for non-active buttons, matching tab background */
+            --general-button-text: #1a202c; /* Default text for non-active buttons, matching tab text */
+            --general-button-hover-bg: #e6f2fb; /* Hover for general buttons, matching tab hover */
+            --login-signup-btn-active-bg: #4F85C5; /* Matches active tab blue */
+            --login-signup-btn-active-text: #ffffff;
+            --save-pref-btn-bg: #28a745; /* Green for save, matches selected-pref tab */
+            --save-pref-btn-hover-bg: #218838; /* Darker green for save button hover */
             --pref-tab-active-bg: #28a745; /* Green for active preferred tabs */
 
             /* Font Size Variables for Accessibility */
@@ -61,8 +65,11 @@
             --scroll-btn-bg: #3a3a3a;
             --scroll-btn-hover-bg: #555555;
             --progress-bar-bg: #90cdf4;
-            --login-signup-btn-bg: #555555;
-            --login-signup-btn-hover-bg: #777777;
+            --general-button-bg: #000000;
+            --general-button-text: #ffffff;
+            --general-button-hover-bg: #1a1a1a;
+            --login-signup-btn-active-bg: #3a3a3a; /* Darker blue for active login in dark mode */
+            --login-signup-btn-active-text: #ffffff;
             --save-pref-btn-bg: #006400; /* Darker green for dark mode */
             --save-pref-btn-hover-bg: #008000;
             --pref-tab-active-bg: #006400; /* Darker green for active preferred tabs */
@@ -163,38 +170,56 @@
 
         .auth-buttons-container {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.05rem; /* Reduced gap to match tabs */
             align-items: center;
+            background-color: var(--card-bg); /* Match tab group styling */
+            box-shadow: 0 2px 5px var(--box-shadow-color);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .auth-button {
-            background-color: var(--login-signup-btn-bg);
-            color: #ffffff;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
+            /* New styling for general buttons */
+            background-color: var(--general-button-bg);
+            color: var(--general-button-text);
+            padding: 0.6rem 1rem; /* Match tab padding */
+            border-radius: 0; /* No rounded corners */
             border: none;
             cursor: pointer;
             font-weight: 500;
-            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
             outline: none;
-            font-size: calc(var(--base-font-size) * 0.9);
+            font-size: calc(var(--base-font-size) * 0.95); /* Match tab font size */
+            flex-grow: 1; /* Allow buttons to grow */
+            text-align: center;
         }
-        .auth-button:hover {
-            background-color: var(--login-signup-btn-hover-bg);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        .auth-button:hover:not(.active) {
+            background-color: var(--general-button-hover-bg);
+            color: var(--link-color); /* Hover color for general buttons */
+        }
+        .auth-button:active {
+            background-color: var(--login-signup-btn-active-bg);
+            color: var(--login-signup-btn-active-text);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         .auth-button:focus-visible {
             outline: 2px solid var(--link-color);
             outline-offset: 2px;
+        }
+        /* Specific active style for Login/Signup/Logout if we want it to be distinct */
+        #login-signup-btn.active, #logout-btn.active {
+            background-color: var(--login-signup-btn-active-bg);
+            color: var(--login-signup-btn-active-text);
         }
 
         #user-id-display {
             font-size: calc(var(--base-font-size) * 0.85);
             color: var(--source-name-color);
             margin-left: 0.5rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 120px;
+            white-space: normal; /* Allow wrapping */
+            overflow: visible; /* Prevent truncation */
+            text-overflow: clip; /* Prevent truncation */
+            max-width: none; /* Allow full width */
         }
         
         .site-main-content {
@@ -312,8 +337,8 @@
         }
 
         .tab-button.active {
-            background-color: #4F85C5;
-            color: #ffffff;
+            background-color: var(--login-signup-btn-active-bg); /* Use same active color as new auth buttons */
+            color: var(--login-signup-btn-active-text);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
@@ -420,20 +445,21 @@
 
         /* Save Preferences Button */
         #save-preferences-btn {
-            background-color: var(--save-pref-btn-bg);
+            /* New styling for save preferences button */
+            background-color: var(--save-pref-btn-bg); /* Use the green from preferred tabs */
             color: #ffffff;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
+            padding: 0.6rem 1rem; /* Match tab padding */
+            border-radius: 0; /* No rounded corners */
             border: none;
             cursor: pointer;
             font-weight: 500;
-            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
             outline: none;
             margin-top: 1rem;
             display: block;
             width: 100%;
             text-align: center;
-            font-size: calc(var(--base-font-size) * 0.9);
+            font-size: calc(var(--base-font-size) * 0.95); /* Match tab font size */
         }
         #save-preferences-btn:hover {
             background-color: var(--save-pref-btn-hover-bg);
@@ -593,7 +619,7 @@
         }
         .modal button[type="submit"] {
             width: 100%;
-            background-color: var(--login-signup-btn-bg);
+            background-color: var(--login-signup-btn-active-bg);
             color: white;
             padding: 0.75rem;
             border: none;
@@ -885,7 +911,7 @@
         let displayedArticleCount = 0;
         const articlesPerLoad = 10;
         let isLoadingMore = false;
-        let currentActiveTab = 'All';
+        let currentActiveTab = 'All'; // Track the currently active content-viewing tab
 
         const newsContainer = document.getElementById('news-container');
         const newsSourcesDiv = document.getElementById('news-sources');
@@ -997,6 +1023,7 @@
                 modalInfoMessage.classList.remove('hidden');
                 modalErrorMessage.classList.add('hidden');
             }
+            loginModal.style.display = 'flex'; // Show modal
             setTimeout(() => {
                 if (isError) modalErrorMessage.focus();
                 else modalInfoMessage.focus();
@@ -1147,9 +1174,7 @@
                 hideErrorMessage();
             }
 
-            currentlyDisplayedArticles = allArticlesFromAllSources;
-            displayedArticleCount = 0;
-            displayNextBatchOfNews();
+            applyNewsFilterAndDisplay(currentActiveTab); 
             showInitialLoading(false);
         }
 
@@ -1258,18 +1283,18 @@
             if (button.tagName === 'BUTTON') {
                 const sourceKey = button.dataset.source;
 
-                if (!userId || sourceKey === 'All' || sourceKey === 'MyFeed') {
-                    document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
-                        btn.classList.remove('active');
-                        btn.setAttribute('aria-selected', 'false');
-                    });
-                    button.classList.add('active');
-                    button.setAttribute('aria-selected', 'true');
-                    currentActiveTab = sourceKey;
-                    
-                    applyNewsFilterAndDisplay(sourceKey);
+                // First, manage the 'active' class for the currently viewed content tab (blue highlight)
+                document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-selected', 'false');
+                });
+                button.classList.add('active');
+                button.setAttribute('aria-selected', 'true');
+                currentActiveTab = sourceKey; // Update current active tab state
 
-                } else if (userId) {
+                // Second, handle preference toggling (green highlight) if the user is logged in
+                // and it's not the "All" or "My Feed" tab
+                if (userId && sourceKey !== 'All' && sourceKey !== 'MyFeed') {
                     button.classList.toggle('selected-pref');
                     if (button.classList.contains('selected-pref')) {
                         if (!userPreferences.includes(sourceKey)) {
@@ -1278,10 +1303,10 @@
                     } else {
                         userPreferences = userPreferences.filter(pref => pref !== sourceKey);
                     }
-                    if (currentActiveTab === 'MyFeed') {
-                        applyNewsFilterAndDisplay('MyFeed');
-                    }
                 }
+                
+                // Finally, apply the news filter based on the newly active tab or updated preferences
+                applyNewsFilterAndDisplay(sourceKey);
             }
         });
 
@@ -1302,7 +1327,7 @@
                     currentlyDisplayedArticles = [];
                     newsContainer.innerHTML = `<p class="text-center text-lg">Select your preferred sources below and click 'Save My Preferences'.</p>`;
                 }
-            } else {
+            } else { // Specific source tab clicked
                 currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => article.sourceName === RSS_FEEDS[filterKey].name);
             }
             displayNextBatchOfNews();
@@ -1332,6 +1357,7 @@
 
             // Set up Auth State Listener immediately after auth is initialized
             onAuthStateChanged(auth, async (user) => {
+                console.log("onAuthStateChanged triggered. User:", user ? user.uid : "null");
                 if (user) {
                     userId = user.uid;
                     userIdDisplay.textContent = `User ID: ${userId}`;
@@ -1344,21 +1370,10 @@
                     await loadUserPreferences(userId);
                     updatePreferenceTabsUI();
 
-                    if (currentActiveTab === 'MyFeed') {
-                        applyNewsFilterAndDisplay('MyFeed');
-                    } else if (currentActiveTab === 'All') {
-                        applyNewsFilterAndDisplay('All');
-                    } else {
-                        const currentTabButton = document.querySelector(`.tab-button[data-source="${currentActiveTab}"]`);
-                        if (currentTabButton) {
-                            document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
-                                btn.classList.remove('active');
-                                btn.setAttribute('aria-selected', 'false');
-                            });
-                            currentTabButton.classList.add('active');
-                            currentTabButton.setAttribute('aria-selected', 'true');
-                        }
-                    }
+                    // Re-apply filter based on currentActiveTab to ensure correct content is shown
+                    // For example, if user logged in while on 'MyFeed', it should refresh 'MyFeed'.
+                    // If on 'All', it should remain on 'All'.
+                    applyNewsFilterAndDisplay(currentActiveTab); 
 
                 } else {
                     userId = null;
@@ -1368,23 +1383,28 @@
                     myFeedTab.style.display = 'none';
                     savePreferencesBtn.style.display = 'none';
                     userPreferences = [];
-                    updatePreferenceTabsUI();
+                    updatePreferenceTabsUI(); // Clear preference selections on logout
 
+                    // If My Feed was active, switch to All
                     if (currentActiveTab === 'MyFeed' || !document.querySelector('.tab-button.active')) {
                         document.querySelector('.tab-button[data-source="All"]').classList.add('active');
                         document.querySelector('.tab-button[data-source="All"]').setAttribute('aria-selected', 'true');
                         currentActiveTab = 'All';
                         applyNewsFilterAndDisplay('All');
                     }
+                    // Ensure other tabs revert to non-preference selected state
                     document.querySelectorAll('.tab-button').forEach(btn => {
-                        btn.classList.remove('selected-pref');
+                        if (btn.dataset.source !== 'All') { // Keep 'All' as the default view
+                            btn.classList.remove('selected-pref');
+                        }
                     });
                 }
             });
 
             // Sign in anonymously if no user is currently authenticated when the app starts.
-            // This ensures Firebase is ready for the auth state listener.
+            // This ensures Firebase is ready for the auth state listener to pick up.
             if (!auth.currentUser) {
+                console.log("Signing in anonymously...");
                 await signInAnonymously(auth);
             }
 
@@ -1405,19 +1425,23 @@
 
             infiniteScrollLoadingIndicator.querySelector('p').textContent = translations.loadingMoreNews;
             
+            // Initial fetch of all news, so it's available for filtering
             await fetchAllNewsAndPrepareForInfiniteScroll();
         });
 
 
         async function loadUserPreferences(uid) {
             if (!uid) return;
+            console.log("Loading preferences for user:", uid);
             try {
                 const prefDocRef = doc(db, `artifacts/${firebaseConfig.projectId}/users/${uid}/preferences`, 'sources');
                 const prefDocSnap = await getDoc(prefDocRef);
                 if (prefDocSnap.exists()) {
                     userPreferences = prefDocSnap.data().preferredSources || [];
+                    console.log("Preferences loaded:", userPreferences);
                 } else {
                     userPreferences = [];
+                    console.log("No preferences found for user.");
                 }
             } catch (error) {
                 console.error("Error loading user preferences:", error);
@@ -1426,12 +1450,26 @@
             }
         }
 
+        savePreferencesBtn.addEventListener('click', async () => {
+            console.log("Save preferences button clicked.");
+            if (!userId) {
+                showModalMessage("You must be logged in to save preferences.", true);
+                return;
+            }
+            console.log("Saving preferences:", userPreferences);
+            await saveUserPreferences(); // Call the async function
+        });
+
         async function saveUserPreferences() {
-            if (!userId) return;
+            if (!userId) {
+                console.error("Attempted to save preferences without a userId.");
+                return; // Should be caught by the button listener, but double check
+            }
             try {
                 const prefDocRef = doc(db, `artifacts/${firebaseConfig.projectId}/users/${userId}/preferences`, 'sources');
                 await setDoc(prefDocRef, { preferredSources: userPreferences }, { merge: true });
                 showModalMessage(translations.prefSaved);
+                console.log("Preferences saved successfully!");
             } catch (error) {
                 console.error("Error saving user preferences:", error);
                 showErrorMessage(translations.prefSaveError);
@@ -1450,8 +1488,6 @@
                 }
             });
         }
-
-        savePreferencesBtn.addEventListener('click', saveUserPreferences);
 
 
         loginSignupBtn.addEventListener('click', () => {

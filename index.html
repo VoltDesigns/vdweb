@@ -842,8 +842,7 @@
 
         goToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            // Explicitly hide the button when it's clicked to scroll to the top
-            goToTopBtn.classList.remove('show');
+            // The scroll listener will handle hiding the button once window.scrollY is <= scrollThreshold
         });
 
         goToBottomBtn.addEventListener('click', () => {

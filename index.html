@@ -236,15 +236,17 @@
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             opacity: 0.7; /* Translucent by default */
-            transition: opacity 0.3s ease-in-out, transform 0.2s ease-in-out;
+            transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
             z-index: 1000; /* Ensure it's above other content */
         }
 
-        #scroll-navigation-btn:hover {
+        #scroll-navigation-btn:hover,
+        #scroll-navigation-btn:focus { /* Make opaque on hover or focus */
             background-color: #3e6a9e; /* Darker blue on hover */
-            transform: translateY(-2px); /* Slight lift effect */
-            opacity: 1; /* Fully opaque on hover */
+            opacity: 1; /* Fully opaque */
+            outline: none; /* Remove default focus outline for aesthetics */
         }
+        /* No transform on hover for unified button */
 
         #scroll-navigation-btn svg {
             margin: 0.25rem 0; /* Space out the arrows */

@@ -513,7 +513,7 @@
             border-radius: 0.75rem;
             box-shadow: 0 4px 6px var(--box-shadow-color);
             padding: 1rem; 
-            margin-bottom: 1rem; 
+            margin-bottom: 1rem; /* Default for desktop */
             transition: transform 0.2s ease-in-out, background-color 0.3s ease, box-shadow 0.3s ease;
         }
         .news-item:hover {
@@ -535,7 +535,7 @@
             font-size: calc(var(--base-font-size) * 0.85); 
             font-weight: 500;
             color: var(--source-name-color);
-            margin-bottom: 0.5rem; 
+            margin-bottom: 0.5rem; /* Default for desktop */
             display: block;
             transition: color 0.3s ease;
         }
@@ -646,7 +646,7 @@
         .collapsible-content.expanded {
             max-height: 500px; 
             padding-top: 0.4rem; 
-            padding-bottom: 0.8rem; 
+            padding-bottom: 0.8rem; /* Default for desktop */
         }
         /* For responsive YouTube embeds */
         .video-container {
@@ -676,7 +676,7 @@
             border: 1px solid var(--toggle-details-button-border);
             cursor: pointer;
             transition: all 0.2s ease-in-out;
-            margin-top: 0.75rem; 
+            margin-top: 0.75rem; /* Default for desktop */
             display: inline-flex;
             align-items: center;
             font-weight: 500;
@@ -709,7 +709,7 @@
         .news-item-header {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 0.4rem; 
+            margin-bottom: 0.4rem; /* Default for desktop */
         }
         .news-image {
             width: 240px; 
@@ -990,7 +990,40 @@
                 height: 16px;
             }
 
-            /* General mobile adjustments */
+            /* General mobile adjustments for news cards spacing */
+            .news-item {
+                margin-bottom: 0.5rem; /* Half of desktop default */
+            }
+            .news-item h2 {
+                margin-bottom: 0.1rem; /* Slightly reduced if needed */
+            }
+            .news-item .source-name {
+                margin-bottom: 0.25rem; /* Half of desktop default */
+            }
+            .news-item-header {
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 0.2rem; /* Reduced spacing */
+            }
+            .news-image,
+            .video-container {
+                width: 100%;
+                height: 180px;
+                margin-right: 0;
+                margin-bottom: 0.4rem; /* Reduced spacing */
+            }
+            .news-item-content {
+                width: 100%;
+                text-align: center;
+            }
+            .toggle-details-button {
+                 margin-top: 0.4rem; /* Reduced spacing */
+            }
+            .collapsible-content.expanded {
+                padding-bottom: 0.4rem; /* Reduced spacing */
+            }
+
+            /* Other general mobile adjustments */
             .header-content-wrapper {
                 flex-direction: column;
                 align-items: center;
@@ -1013,34 +1046,8 @@
                 margin-bottom: 0;
             }
             
-            .tab-button-group {
-                width: 100%;
-            }
             .infinite-scroll-message {
                 padding: 1rem 0;
-            }
-            .toggle-details-button {
-                 margin-top: 0.5rem;
-            }
-            .news-item-header {
-                flex-direction: column;
-                align-items: center;
-            }
-            .news-image {
-                width: 100%;
-                height: 180px;
-                margin-right: 0;
-                margin-bottom: 0.75rem;
-            }
-            .news-item-content {
-                width: 100%;
-                text-align: center;
-            }
-            .video-container {
-                width: 100%;
-                height: 180px; 
-                margin-right: 0;
-                margin-bottom: 0.75rem;
             }
             .site-main-content {
                 padding: 0.5rem;

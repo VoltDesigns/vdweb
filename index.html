@@ -55,7 +55,7 @@
             --hamburger-item-border: #d1e1f3;
 
             /* Font Size Variables for Accessibility */
-            --base-font-size: 16px;
+            --base-font-size: 14px; /* Reduced from 16px */
         }
 
         /* Dark Mode overrides */
@@ -511,12 +511,12 @@
             background-color: var(--card-bg);
             border-radius: 0.75rem;
             box-shadow: 0 4px 6px var(--box-shadow-color);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 1rem; /* Adjusted padding */
+            margin-bottom: 1rem; /* Adjusted margin */
             transition: transform 0.2s ease-in-out, background-color 0.3s ease, box-shadow 0.3s ease;
         }
         .news-item:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px); /* Slightly less pronounced hover */
         }
         /* Dark mode specific shadow for news items */
         body.dark-mode .news-item {
@@ -524,17 +524,17 @@
         }
 
         .news-item h2 {
-            font-size: calc(var(--base-font-size) * 1.5);
+            font-size: calc(var(--base-font-size) * 1.35); /* Adjusted relative size */
             font-weight: 600;
             color: var(--headline-color);
             margin-bottom: 0.25rem;
             transition: color 0.3s ease;
         }
         .news-item .source-name {
-            font-size: calc(var(--base-font-size) * 0.9);
+            font-size: calc(var(--base-font-size) * 0.85); /* Adjusted relative size */
             font-weight: 500;
             color: var(--source-name-color);
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem; /* Adjusted margin */
             display: block;
             transition: color 0.3s ease;
         }
@@ -553,8 +553,8 @@
             flex-direction: column;
             align-items: center;
             margin-top: 0rem;
-            margin-bottom: 2rem;
-            gap: 1rem;
+            margin-bottom: 1.5rem; /* Adjusted margin */
+            gap: 0.75rem; /* Adjusted gap */
         }
 
         .tab-button-group {
@@ -578,8 +578,8 @@
         }
 
         .tab-button {
-            padding: 0.6rem 1rem;
-            font-size: calc(var(--base-font-size) * 0.95);
+            padding: 0.5rem 0.8rem; /* Adjusted padding */
+            font-size: calc(var(--base-font-size) * 0.9); /* Adjusted relative size */
             font-weight: 500;
             color: var(--tab-button-text);
             background-color: transparent; /* Default state for all tabs */
@@ -639,15 +639,15 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-out;
-            padding: 0 1rem;
+            padding: 0 0.75rem; /* Adjusted padding */
             color: var(--collapsible-text);
             line-height: 1.6;
             transition: color 0.3s ease;
         }
         .collapsible-content.expanded {
             max-height: 500px; /* This needs to be sufficiently large for content, consider dynamic calculation */
-            padding-top: 0.5rem;
-            padding-bottom: 1rem;
+            padding-top: 0.4rem; /* Adjusted padding */
+            padding-bottom: 0.8rem; /* Adjusted padding */
         }
         /* For responsive YouTube embeds */
         .video-container {
@@ -656,7 +656,7 @@
             padding-bottom: 56.25%; /* 16:9 aspect ratio */
             height: 0;
             overflow: hidden;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem; /* Adjusted margin */
             border-radius: 0.5rem; /* Match image rounded corners */
             border: 1px solid var(--border-color);
         }
@@ -671,17 +671,17 @@
         .toggle-details-button {
             background-color: transparent;
             color: var(--tab-button-text);
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem; /* Adjusted padding */
             border-radius: 0;
             border: 1px solid var(--toggle-details-button-border);
             cursor: pointer;
             transition: all 0.2s ease-in-out;
-            margin-top: 1rem;
+            margin-top: 0.75rem; /* Adjusted margin */
             display: inline-flex;
             align-items: center;
             font-weight: 500;
             box-shadow: none;
-            font-size: calc(var(--base-font-size) * 0.9);
+            font-size: calc(var(--base-font-size) * 0.85); /* Adjusted relative size */
             outline: none;
         }
         .toggle-details-button:hover {
@@ -699,7 +699,7 @@
             outline-offset: 2px;
         }
         .toggle-details-button svg {
-            margin-left: 0.5rem;
+            margin-left: 0.4rem; /* Adjusted margin */
             transition: transform 0.2s;
         }
         .toggle-details-button.expanded svg {
@@ -709,14 +709,14 @@
         .news-item-header {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem; /* Adjusted margin */
         }
         .news-image {
-            width: 80px;
-            height: 80px;
+            width: 70px; /* Slightly smaller image */
+            height: 70px; /* Slightly smaller image */
             object-fit: cover;
             border-radius: 0.5rem;
-            margin-right: 1rem;
+            margin-right: 0.8rem; /* Adjusted margin */
             flex-shrink: 0;
             border: 1px solid var(--border-color);
             transition: border-color 0.3s ease;
@@ -724,9 +724,9 @@
         
         .infinite-scroll-message {
             text-align: center;
-            font-size: calc(var(--base-font-size) * 1.125);
+            font-size: calc(var(--base-font-size) * 1.0); /* Adjusted relative size */
             color: var(--source-name-color);
-            padding: 2rem 0;
+            padding: 1.5rem 0; /* Adjusted padding */
             transition: color 0.3s ease;
         }
 
@@ -1135,13 +1135,15 @@
             'The Hill': { name: 'The Hill', url: 'https://thehill.com/rss/' },
             Forbes: { name: 'Forbes', url: 'https://www.forbes.com/business/feed/' },
             WSJ: { name: 'Wall Street Journal', url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml' },
-            Reuters: { name: 'Reuters', url: 'http://feeds.reuters.com/reuters/topNews' },
             ESPN: { name: 'ESPN', url: 'https://www.espn.com/espn/rss/news' },
             TechCrunch: { name: 'TechCrunch', url: 'https://techcrunch.com/feed/' }
         };
 
         const YOUTUBE_FEEDS = {
-            'BreakingPoints': { name: 'Breaking Points', type: 'channelId', value: 'UCDRIjKy6eZOvKtOELtTdeUA' }
+            'BreakingPoints': { name: 'Breaking Points', type: 'channelId', value: 'UCDRIjKy6eZOvKtOELtTdeUA' },
+            'AssociatedPress': { name: 'Associated Press', type: 'channelId', value: 'UCF0y-U3h5WwN_S9bN6zHkLA' },
+            'DWNewsYouTube': { name: 'DW News', type: 'channelId', value: 'UCW39zufHfFgR-kZ4mm2s0gQ' },
+            'ReutersYouTube': { name: 'Reuters', type: 'channelId', value: 'UCD6w2zVpWi-vsmCM6WH-Dwg' }
         };
 
         // Helper function to get YouTube RSS URL from config
@@ -1210,11 +1212,11 @@
         const fontSizeResetBtn = document.getElementById('font-size-reset');
         const fontSizeIncreaseBtn = document.getElementById('font-size-increase');
         const root = document.documentElement;
-        let baseFontSize = parseFloat(getComputedStyle(root).getPropertyValue('--base-font-size')) || 16;
+        let baseFontSize = parseFloat(getComputedStyle(root).getPropertyValue('--base-font-size')) || 14; // Default to 14px
         const FONT_SIZE_STEP = 2;
-        const MAX_FONT_SIZE = 24;
-        const MIN_FONT_SIZE = 12;
-        const DEFAULT_FONT_SIZE = 16;
+        const MAX_FONT_SIZE = 20; // Adjusted max font size
+        const MIN_FONT_SIZE = 10; // Adjusted min font size
+        const DEFAULT_FONT_SIZE = 14; // Default to 14px
 
         window.onerror = function(message, source, lineno, colno, error) {
             console.error("Caught a global error:", { message, source, lineno, colno, error });
@@ -1328,6 +1330,14 @@
             return doc.body.textContent || "";
         }
 
+        // Simple shuffle function for arrays
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
 
         async function fetchNewsForSource(url, sourceDisplayName, isYouTube = false) {
             try {
@@ -1416,45 +1426,8 @@
                 description: stripHtmlTags(item.description || 'No description available.')
             }));
 
-            // Interleave articles from different sources for a varied display
-            const interleavedArticles = [];
-            let sourcesWithArticles = {};
-            // Combine all defined sources for interleaving logic
-            const allSourcesConfig = { ...RSS_FEEDS, ...YOUTUBE_FEEDS };
-
-            Object.keys(allSourcesConfig).forEach(sourceKey => {
-                sourcesWithArticles[sourceKey] = allArticlesFromAllSources.filter(article =>
-                    allSourcesConfig[sourceKey].name === article.sourceName
-                );
-            });
-
-            let activeSources = Object.keys(sourcesWithArticles).filter(key => sourcesWithArticles[key].length > 0);
-            let lastSourceKey = null;
-            let attemptLimit = 1000; // Prevent infinite loops in case of all sources having only one article
-
-            while (activeSources.length > 0 && attemptLimit > 0) {
-                attemptLimit--;
-                let eligibleSources = activeSources.filter(sourceKey => sourceKey !== lastSourceKey);
-                if (eligibleSources.length === 0) {
-                    eligibleSources = activeSources;
-                }
-                if (eligibleSources.length === 0) break; // All sources exhausted
-
-                const randomIndex = Math.floor(Math.random() * eligibleSources.length);
-                const currentSourceKey = eligibleSources[randomIndex];
-
-                if (currentSourceKey && sourcesWithArticles[currentSourceKey] && sourcesWithArticles[currentSourceKey].length > 0) {
-                    interleavedArticles.push(sourcesWithArticles[currentSourceKey].shift());
-                    lastSourceKey = currentSourceKey;
-                    if (sourcesWithArticles[currentSourceKey].length === 0) {
-                        activeSources = activeSources.filter(key => key !== currentSourceKey);
-                    }
-                } else {
-                    activeSources = activeSources.filter(key => key !== currentSourceKey);
-                }
-            }
-            
-            allArticlesFromAllSources = interleavedArticles;
+            // Shuffle all articles once to ensure a varied display
+            allArticlesFromAllSources = shuffleArray(allArticlesFromAllSources);
 
             if (failedSources.length > 0) {
                 showErrorMessage(`Some news sources failed to load: ${failedSources.join(', ')}. Displaying available news.`);
@@ -1615,17 +1588,20 @@
             hideErrorMessage();
 
             if (filterKey === 'All') {
+                // 'All News' tab now only shows non-YouTube articles
                 currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => !article.isYouTube);
             } else if (filterKey === 'MyFeed') {
                 if (userPreferences.rss.length > 0 || userPreferences.youtube.length > 0) {
                     currentlyDisplayedArticles = allArticlesFromAllSources.filter(article => {
-                        // Check if article is an RSS feed and its source is in userPreferences.rss
-                        if (!article.isYouTube && userPreferences.rss.includes(Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === article.sourceName))) {
-                            return true;
+                        // Check if article is an RSS feed and its source key is in userPreferences.rss
+                        if (!article.isYouTube) {
+                            const rssSourceKey = Object.keys(RSS_FEEDS).find(key => RSS_FEEDS[key].name === article.sourceName);
+                            return rssSourceKey && userPreferences.rss.includes(rssSourceKey);
                         }
-                        // Check if article is a YouTube video and its source is in userPreferences.youtube
-                        if (article.isYouTube && userPreferences.youtube.includes(Object.keys(YOUTUBE_FEEDS).find(key => YOUTUBE_FEEDS[key].name === article.sourceName))) {
-                            return true;
+                        // Check if article is a YouTube video and its source key is in userPreferences.youtube
+                        if (article.isYouTube) {
+                            const youtubeSourceKey = Object.keys(YOUTUBE_FEEDS).find(key => YOUTUBE_FEEDS[key].name === article.sourceName);
+                            return youtubeSourceKey && userPreferences.youtube.includes(youtubeSourceKey);
                         }
                         return false;
                     });
@@ -1646,48 +1622,7 @@
         function populatePreferencesMenu() {
             preferencesCheckboxList.innerHTML = ''; // Clear existing
             
-            // Add general RSS feeds
-            Object.keys(RSS_FEEDS).forEach(sourceKey => {
-                const sourceDisplayName = RSS_FEEDS[sourceKey].name;
-                const itemDiv = document.createElement('div');
-                itemDiv.classList.add('menu-source-item');
-                itemDiv.innerHTML = `
-                    <label for="pref-checkbox-${sourceKey}">
-                        ${sourceDisplayName}
-                    </label>
-                    <input type="checkbox" id="pref-checkbox-${sourceKey}" data-source="${sourceKey}" data-type="rss" class="preference-checkbox">
-                `;
-                preferencesCheckboxList.appendChild(itemDiv);
-
-                const checkbox = itemDiv.querySelector('.preference-checkbox');
-                checkbox.checked = userPreferences.rss.includes(sourceKey); // Set initial state
-
-                // Add event listener for instant saving
-                checkbox.addEventListener('change', async (event) => {
-                    const changedSourceKey = event.target.dataset.source;
-                    if (!userId) {
-                        event.target.checked = !event.target.checked; // Revert checkbox state
-                        showModalMessage('Login to save your preferences.', true);
-                        return;
-                    }
-
-                    if (event.target.checked) {
-                        if (!userPreferences.rss.includes(changedSourceKey)) {
-                            userPreferences.rss.push(changedSourceKey);
-                        }
-                    } else {
-                        userPreferences.rss = userPreferences.rss.filter(pref => pref !== changedSourceKey);
-                    }
-                    await saveUserPreferences(); // Save instantly
-
-                    // If 'My Feed' is the active tab, refresh it
-                    if (currentActiveTab === 'MyFeed') {
-                        applyNewsFilterAndDisplay('MyFeed');
-                    }
-                });
-            });
-
-            // Add YouTube feeds as a collapsible section
+            // Add YouTube feeds as a collapsible section (now at the top)
             if (Object.keys(YOUTUBE_FEEDS).length > 0) {
                 const youtubeSection = document.createElement('div');
                 youtubeSection.classList.add('youtube-preferences-section');
@@ -1747,7 +1682,7 @@
                 collapsibleHeader.addEventListener('click', () => {
                     collapsibleHeader.classList.toggle('expanded');
                     collapsibleBody.classList.toggle('expanded');
-                    // Adjust max-height for smooth transition, or remove it for instant reveal
+                    // Adjust max-height for smooth transition
                     if (collapsibleBody.classList.contains('expanded')) {
                         collapsibleBody.style.maxHeight = collapsibleBody.scrollHeight + "px";
                     } else {
@@ -1755,6 +1690,47 @@
                     }
                 });
             }
+
+            // Add general RSS feeds (now below YouTube)
+            Object.keys(RSS_FEEDS).forEach(sourceKey => {
+                const sourceDisplayName = RSS_FEEDS[sourceKey].name;
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('menu-source-item');
+                itemDiv.innerHTML = `
+                    <label for="pref-checkbox-${sourceKey}">
+                        ${sourceDisplayName}
+                    </label>
+                    <input type="checkbox" id="pref-checkbox-${sourceKey}" data-source="${sourceKey}" data-type="rss" class="preference-checkbox">
+                `;
+                preferencesCheckboxList.appendChild(itemDiv);
+
+                const checkbox = itemDiv.querySelector('.preference-checkbox');
+                checkbox.checked = userPreferences.rss.includes(sourceKey); // Set initial state
+
+                // Add event listener for instant saving
+                checkbox.addEventListener('change', async (event) => {
+                    const changedSourceKey = event.target.dataset.source;
+                    if (!userId) {
+                        event.target.checked = !event.target.checked; // Revert checkbox state
+                        showModalMessage('Login to save your preferences.', true);
+                        return;
+                    }
+
+                    if (event.target.checked) {
+                        if (!userPreferences.rss.includes(changedSourceKey)) {
+                            userPreferences.rss.push(changedSourceKey);
+                        }
+                    } else {
+                        userPreferences.rss = userPreferences.rss.filter(pref => pref !== changedSourceKey);
+                    }
+                    await saveUserPreferences(); // Save instantly
+
+                    // If 'My Feed' is the active tab, refresh it
+                    if (currentActiveTab === 'MyFeed') {
+                        applyNewsFilterAndDisplay('MyFeed');
+                    }
+                });
+            });
         }
 
         // Function to dynamically generate news source tabs
@@ -1897,8 +1873,14 @@
                 if (prefDocSnap.exists()) {
                     // Ensure the structure is an object with rss and youtube arrays
                     const data = prefDocSnap.data();
-                    userPreferences.rss = data.preferredSources?.rss || data.preferredSources || []; // Backward compatibility
+                    userPreferences.rss = data.preferredSources?.rss || []; // Backward compatibility for old format
                     userPreferences.youtube = data.preferredSources?.youtube || [];
+                    // Handle very old formats where preferredSources was a simple array
+                    if (!data.preferredSources?.rss && Array.isArray(data.preferredSources)) {
+                         userPreferences.rss = data.preferredSources.filter(key => RSS_FEEDS[key]);
+                         userPreferences.youtube = data.preferredSources.filter(key => YOUTUBE_FEEDS[key]);
+                    }
+
                 } else {
                     userPreferences = { rss: [], youtube: [] };
                 }

@@ -218,7 +218,8 @@
             cursor: pointer;
             outline: none;
         }
-        #off-canvas-menu .close-button:hover {
+        .close-button:hover,
+        .close-button:focus { /* Added focus state for accessibility */
             color: var(--link-color);
         }
         #off-canvas-menu h3 {
@@ -902,13 +903,7 @@
         <div class="content-area">
             <div class="header-content">
                 <div id="news-sources" class="tab-button-group" role="tablist">
-                    <button class="tab-button active" data-source="All" tabindex="0" role="tab" aria-selected="true">All News</button>
-                    <button class="tab-button" data-source="MyFeed" tabindex="0" role="tab" aria-selected="false" style="display: none;">My Feed</button>
-                    <button class="tab-button" data-source="DW" tabindex="0" role="tab" aria-selected="false">DW News</button>
-                    <button class="tab-button" data-source="BBC" tabindex="0" role="tab" aria-selected="false">BBC News</button>
-                    <button class="tab-button" data-source="The Hill" tabindex="0" role="tab" aria-selected="false">The Hill</button>
-                    <button class="tab-button" data-source="Forbes" tabindex="0" role="tab" aria-selected="false">Forbes</button>
-                    <button class="tab-button" data-source="WSJ" tabindex="0" role="tab" aria-selected="false">Wall Street Journal</button>
+                    <!-- Tabs will be dynamically loaded here -->
                 </div>
             </div>
 
@@ -1003,6 +998,8 @@
             'The Hill': { name: 'The Hill', url: 'https://thehill.com/rss/' },
             Forbes: { name: 'Forbes', url: 'https://www.forbes.com/business/feed/' },
             WSJ: { name: 'Wall Street Journal', url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml' }
+            // Add new news sources here following the same structure:
+            // NEW_SOURCE_KEY: { name: 'New Source Display Name', url: 'https://example.com/rss-feed' }
         };
 
 
@@ -1036,7 +1033,7 @@
         const modalPasswordInput = document.getElementById('password');
         const modalErrorMessage = document.getElementById('modal-error-message');
         const modalInfoMessage = document.getElementById('modal-info-message');
-        const myFeedTab = document.querySelector('[data-source="MyFeed"]');
+        let myFeedTab; // Declared here, will be assigned after dynamic creation
 
 
         // New elements for hamburger menu
@@ -1236,7 +1233,7 @@
                 description: stripHtmlTags(item.description || 'No description available.')
             }));
 
-            // Interleave articles from different sources
+            // Interleave articles from different sources for a varied display
             const interleavedArticles = [];
             let sourcesWithArticles = {};
             allArticlesFromAllSources.forEach(article => {
@@ -1392,22 +1389,22 @@
         }
 
 
+        // Event listener for tab buttons
         newsSourcesDiv.addEventListener('click', (event) => {
-            const button = event.target.closest('.tab-button'); // Ensure we get the tab button itself
+            const button = event.target.closest('.tab-button');
             if (!button) return;
 
             const sourceKey = button.dataset.source;
 
-            // Step 1: Update the 'active' class (underline) for the currently viewed content tab.
+            // Update active class for tabs
             document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
                 btn.classList.remove('active');
                 btn.setAttribute('aria-selected', 'false');
             });
             button.classList.add('active');
             button.setAttribute('aria-selected', 'true');
-            currentActiveTab = sourceKey; // Update current active tab state
+            currentActiveTab = sourceKey;
             
-            // Step 2: Apply the news filter based on the newly active tab.
             applyNewsFilterAndDisplay(sourceKey);
         });
 
@@ -1481,11 +1478,54 @@
             });
         }
 
+        // Function to dynamically generate news source tabs
+        function generateNewsSourceTabs() {
+            newsSourcesDiv.innerHTML = ''; // Clear existing tabs
+
+            // Add 'All News' tab
+            const allNewsTab = document.createElement('button');
+            allNewsTab.classList.add('tab-button');
+            allNewsTab.dataset.source = 'All';
+            allNewsTab.setAttribute('tabindex', '0');
+            allNewsTab.setAttribute('role', 'tab');
+            allNewsTab.textContent = 'All News';
+            newsSourcesDiv.appendChild(allNewsTab);
+
+            // Add 'My Feed' tab
+            myFeedTab = document.createElement('button'); // Assign to global myFeedTab
+            myFeedTab.classList.add('tab-button');
+            myFeedTab.dataset.source = 'MyFeed';
+            myFeedTab.setAttribute('tabindex', '0');
+            myFeedTab.setAttribute('role', 'tab');
+            myFeedTab.textContent = 'My Feed';
+            myFeedTab.style.display = 'none'; // Initially hidden
+            newsSourcesDiv.appendChild(myFeedTab);
+
+            // Add dynamic source tabs
+            Object.keys(RSS_FEEDS).forEach(sourceKey => {
+                const tabButton = document.createElement('button');
+                tabButton.classList.add('tab-button');
+                tabButton.dataset.source = sourceKey;
+                tabButton.setAttribute('tabindex', '0');
+                tabButton.setAttribute('role', 'tab');
+                tabButton.textContent = RSS_FEEDS[sourceKey].name;
+                newsSourcesDiv.appendChild(tabButton);
+            });
+
+            // Set 'All News' as active by default initially
+            document.querySelector('.tab-button[data-source="All"]').classList.add('active');
+            document.querySelector('.tab-button[data-source="All"]').setAttribute('aria-selected', 'true');
+            currentActiveTab = 'All';
+        }
+
 
         document.addEventListener('DOMContentLoaded', async () => {
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
+
+            // Generate tabs first
+            generateNewsSourceTabs();
 
             // Initial state: Anonymous user display
             userIdDisplay.textContent = 'Anonymous';
@@ -1501,7 +1541,7 @@
                     userIdDisplay.classList.remove('hidden');
                     loginSignupBtn.classList.add('hidden');
                     logoutBtn.classList.remove('hidden');
-                    myFeedTab.style.display = 'block';
+                    myFeedTab.style.display = 'block'; // Show My Feed tab for logged-in users
                     prefMenuStatus.textContent = 'Select sources for your customized "My Feed".';
                     
                     await loadUserPreferences(userId);
@@ -1515,7 +1555,7 @@
                     userIdDisplay.textContent = 'Anonymous'; // Set to "Anonymous" on logout
                     loginSignupBtn.classList.remove('hidden');
                     logoutBtn.classList.add('hidden');
-                    myFeedTab.style.display = 'none';
+                    myFeedTab.style.display = 'none'; // Hide My Feed tab for logged-out users
                     prefMenuStatus.textContent = 'Login to save your preferences.';
                     userPreferences = [];
                     populatePreferencesMenu(); // Clear checkboxes on logout

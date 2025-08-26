@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Music</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .video-card {
+            background-color: #1e293b;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        }
+        .loading-spinner {
+            border-top-color: #6366f1;
+            -webkit-animation: spinner 1.5s linear infinite;
+            animation: spinner 1.5s linear infinite;
+        }
+        @-webkit-keyframes spinner {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 flex flex-col min-h-screen p-4">
+
+    <!-- Header -->
+    <header class="text-center py-8">
+        <h1 class="text-5xl font-extrabold text-blue-500 tracking-tight">Explore YouTube Music</h1>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto p-4 md:p-8">
+
+        <!-- Sorting and Status Section -->
+        <div class="flex flex-col md:flex-row items-center justify-between mb-8 space-y-4 md:space-y-0">
+            <div id="statusMessage" class="text-gray-400 italic text-center text-sm md:text-left"></div>
+            <div class="flex items-center space-x-4 w-full md:w-auto md:ml-4">
+                <label for="sort-by" class="text-lg font-semibold text-gray-300">Sort By:</label>
+                <select id="sort-by"
+                        class="p-2 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:outline-none focus:border-blue-500 transition-all duration-200">
+                    <option value="date">Upload Date</option>
+                    <option value="views">Number of Views</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Video Grid -->
+        <div id="video-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Video cards will be injected here -->
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="hidden flex items-center justify-center py-12">
+            <div class="loading-spinner w-16 h-16 border-4 border-gray-700 rounded-full"></div>
+            <span class="ml-4 text-xl text-gray-400">Loading videos...</span>
+        </div>
+
+        <!-- Error Message Modal -->
+        <div id="errorModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center p-4">
+            <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-lg w-full text-center">
+                <h2 class="text-2xl font-bold text-red-400 mb-4">Error</h2>
+                <p id="errorMessage" class="text-gray-300 mb-6"></p>
+                <button id="closeModal" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transition-colors">
+                    Close
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-6 text-gray-500 text-sm">
+        <p>Powered by the YouTube Data API</p>
+    </footer>
+
+    <script>
+        // Use an IIFE (Immediately Invoked Function Expression) to avoid polluting the global scope
+        (function() {
+            // --- DOM Elements ---
+            const sortBySelect = document.getElementById('sort-by');
+            const videoGrid = document.getElementById('video-grid');
+            const loadingIndicator = document.getElementById('loading');
+            const statusMessage = document.getElementById('statusMessage');
+            const errorModal = document.getElementById('errorModal');
+            const errorMessage = document.getElementById('errorMessage');
+            const closeModalButton = document.getElementById('closeModal');
+
+            // --- API Configuration ---
+            const API_KEY = 'AIzaSyBRiD7kcjp2BB9OvJAVb0NSl46x5sM--Hg';
+            const PLAYLIST_ID = 'RDCLAK5uy_kmPRjHDECIcuVwnKsx2Ng7fyNgFKWNJFs';
+            const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3/';
+            // Set the update interval to 5 minutes (300,000 milliseconds)
+            const UPDATE_INTERVAL = 5 * 60 * 1000;
+
+            // --- State Variables ---
+            let videoData = [];
+
+            // --- Event Listeners ---
+            sortBySelect.addEventListener('change', renderVideos);
+            closeModalButton.addEventListener('click', () => errorModal.classList.add('hidden'));
+            
+            // --- Core Functions ---
+
+            /**
+             * Handles showing an error message in the modal.
+             * @param {string} message The error message to display.
+             */
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorModal.classList.remove('hidden');
+            }
+
+            /**
+             * Fetches videos from the specified YouTube playlist.
+             * It makes two API calls: one to get playlist items and another to get video details.
+             */
+            async function loadVideos() {
+                // Show loading state, but only on initial load or if the user is waiting
+                if (videoData.length === 0) {
+                    videoGrid.innerHTML = '';
+                    loadingIndicator.classList.remove('hidden');
+                }
+                statusMessage.textContent = 'Fetching videos...';
+
+                try {
+                    // Step 1: Fetch playlist items to get video IDs and upload dates
+                    const playlistItemsUrl = `${YOUTUBE_API_BASE_URL}playlistItems?part=snippet&maxResults=50&playlistId=${PLAYLIST_ID}&key=${API_KEY}`;
+                    const playlistItemsResponse = await fetch(playlistItemsUrl);
+                    if (!playlistItemsResponse.ok) {
+                        const errorJson = await playlistItemsResponse.json();
+                        throw new Error(errorJson.error.message || `API Error: ${playlistItemsResponse.status}`);
+                    }
+                    const playlistItemsData = await playlistItemsResponse.json();
+                    
+                    if (!playlistItemsData.items || playlistItemsData.items.length === 0) {
+                        statusMessage.textContent = 'No videos found in this playlist.';
+                        loadingIndicator.classList.add('hidden');
+                        return;
+                    }
+
+                    // Extract video IDs and initial data
+                    const videoIds = playlistItemsData.items.map(item => item.snippet.resourceId.videoId);
+                    const initialVideoData = playlistItemsData.items.map(item => ({
+                        id: item.snippet.resourceId.videoId,
+                        title: item.snippet.title,
+                        channelTitle: item.snippet.channelTitle,
+                        thumbnail: item.snippet.thumbnails.high.url,
+                        publishedAt: item.snippet.publishedAt,
+                        viewCount: null, // Placeholder, to be filled in the next step
+                    }));
+
+                    // Step 2: Fetch video details to get view counts
+                    const videosUrl = `${YOUTUBE_API_BASE_URL}videos?part=statistics&id=${videoIds.join(',')}&key=${API_KEY}`;
+                    const videosResponse = await fetch(videosUrl);
+                    if (!videosResponse.ok) {
+                        const errorJson = await videosResponse.json();
+                        throw new Error(errorJson.error.message || `API Error: ${videosResponse.status}`);
+                    }
+                    const videosData = await videosResponse.json();
+
+                    // Combine data from both API calls
+                    const combinedData = initialVideoData.map(video => {
+                        const stats = videosData.items.find(item => item.id === video.id)?.statistics;
+                        return {
+                            ...video,
+                            viewCount: stats ? parseInt(stats.viewCount) : 0
+                        };
+                    });
+
+                    videoData = combinedData;
+
+                    statusMessage.textContent = `Last updated: ${new Date().toLocaleTimeString()} | Found ${videoData.length} videos.`;
+                    renderVideos();
+
+                } catch (error) {
+                    console.error('Failed to load videos:', error);
+                    showError(`Failed to load videos. Details: ${error.message}. Please ensure your API key is valid.`);
+                    statusMessage.textContent = `Failed to load videos. Retrying in ${UPDATE_INTERVAL / 60000} mins.`;
+                } finally {
+                    loadingIndicator.classList.add('hidden');
+                }
+            }
+
+            /**
+             * Renders the video cards to the DOM based on the current sort order.
+             */
+            function renderVideos() {
+                // Get the current sort order from the dropdown
+                const sortBy = sortBySelect.value;
+
+                // Sort the video data
+                let sortedData = [...videoData];
+                if (sortBy === 'date') {
+                    sortedData.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+                } else if (sortBy === 'views') {
+                    sortedData.sort((a, b) => b.viewCount - a.viewCount);
+                }
+
+                // Clear the existing grid
+                videoGrid.innerHTML = '';
+
+                // Create and append a card for each video
+                sortedData.forEach(video => {
+                    const videoCard = document.createElement('div');
+                    videoCard.className = 'video-card rounded-2xl shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105';
+                    videoCard.innerHTML = `
+                        <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank" rel="noopener noreferrer">
+                            <!-- Thumbnail with fallback image -->
+                            <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-auto object-cover" onerror="this.onerror=null;this.src='https://placehold.co/480x360/1f2937/d1d5db?text=No+Image';">
+                        </a>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold text-gray-50 line-clamp-2">${video.title}</h3>
+                            <p class="text-sm text-gray-400 mt-1">${video.channelTitle}</p>
+                            <div class="flex items-center justify-between text-xs text-gray-500 mt-2">
+                                <span class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    ${video.viewCount.toLocaleString()} views
+                                </span>
+                                <span class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h.01M16 11h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    ${new Date(video.publishedAt).toLocaleDateString()}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    videoGrid.appendChild(videoCard);
+                });
+            }
+
+            // --- Initialization ---
+            document.addEventListener('DOMContentLoaded', () => {
+                // Initial load when the page is ready
+                loadVideos();
+                // Set an interval to automatically refresh the video list
+                setInterval(loadVideos, UPDATE_INTERVAL);
+            });
+        })();
+    </script>
+
+</body>
+</html>

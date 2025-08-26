@@ -201,7 +201,7 @@
             padding: 1.5rem 1rem;
             display: flex;
             flex-direction: column;
-            overflow-y: auto; /* Enable scrolling for the menu */
+            overflow-y: hidden; /* Manage scrolling on #preferences-checkbox-list instead */
             color: var(--hamburger-text);
         }
         #off-canvas-menu.open {
@@ -227,7 +227,18 @@
             margin-bottom: 1rem;
             border-bottom: 1px solid var(--hamburger-item-border);
             padding-bottom: 0.5rem;
+            flex-shrink: 0; /* Prevent from shrinking */
         }
+        #off-canvas-menu p {
+            flex-shrink: 0; /* Prevent status message from shrinking */
+        }
+
+        #preferences-checkbox-list {
+            flex-grow: 1; /* Allow it to take available space */
+            overflow-y: auto; /* Ensure it scrolls within that space */
+            padding-right: 0.5rem; /* Add some padding for scrollbar */
+        }
+        
         .menu-category-header {
             display: flex;
             justify-content: space-between;
@@ -237,9 +248,10 @@
             border-bottom: 1px solid var(--hamburger-item-border);
             margin-top: 1rem;
             font-size: calc(var(--base-font-size) * 1.1);
-            font-weight: 60            0;
+            font-weight: 600;
             color: var(--headline-color);
             transition: background-color 0.2s ease;
+            flex-shrink: 0;
         }
         .menu-category-header:hover {
             background-color: var(--hamburger-hover-bg);
@@ -257,7 +269,7 @@
             border-bottom: 1px solid var(--hamburger-item-border); /* Separator for collapsed content */
         }
         .menu-category-content.expanded {
-            max-height: 500px; /* Or a suitable value */
+            max-height: 500px; /* Or a suitable value, should allow all items to show */
             border-bottom: none; /* No extra border when expanded */
         }
         .menu-source-item {
@@ -1058,6 +1070,8 @@
         const YOUTUBE_CHANNELS = {
             NatGeo: { name: 'National Geographic', channelId: 'UCSt-AMOS_S9f2y8NlJ2_Kgw' }, // Example Channel ID
             Veritasium: { name: 'Veritasium', channelId: 'UCHnyfMqiRRG1u-aidsWfQrg' },
+            Kurzgesagt: { name: 'Kurzgesagt – In a Nutshell', channelId: 'UCsXVk37bltHxD1rDPwtNM8Q' },
+            TED: { name: 'TED', channelId: 'UCsT0YUGdEO-old4s_w-yM1w' },
             // Add more YouTube channels here following the same format
             // Example: 'CrashCourse': { name: 'Crash Course', channelId: 'UCX6b17PVsYBQ0ip5aLh3s0Q' },
         };
@@ -1106,6 +1120,7 @@
             prefMenuStatusLoggedOut: 'Login to save your preferences.',
             newsSourcesCategory: 'News Sources', // New category title
             youtubeChannelsCategory: 'YouTube Channels', // New category title
+            youtubeVideoNotAvailable: 'YouTube Video Not Available', // New translation
         };
 
 
@@ -1212,11 +1227,11 @@
                 const failedSourceNames = failedSourcesText.split(', ').map(s => s.trim());
 
                 const failedSourceNamesDisplay = failedSourceNames.map(name => {
-                    // Check RSS feeds
+                    // Determine if it's an RSS or YouTube source for display
                     let foundName = Object.values(RSS_FEEDS).find(config => config.name === name)?.name;
-                    if (foundName) return foundName;
-                    // Check YouTube channels
-                    foundName = Object.values(YOUTUBE_CHANNELS).find(config => config.name === name)?.name;
+                    if (!foundName) {
+                        foundName = Object.values(YOUTUBE_CHANNELS).find(config => config.name === name)?.name;
+                    }
                     return foundName || name;
                 });
                 displayedMessage = `${translations.failedSources} ${failedSourceNamesDisplay.join(', ')}. ${translations.displayingAvailableNews}`;
@@ -1317,10 +1332,10 @@
             // Mock data for demonstration, now with more realistic descriptions and simulated view counts
             const mockVideos = [
                 {
-                    id: { videoId: 'dQw4w9WgXcQ' },
+                    id: { videoId: 'dQw4w9WgXcQ' }, // Rick Astley - Never Gonna Give You Up (Very stable)
                     snippet: {
-                        title: `The Wonders of Deep Sea Exploration by ${channelName}`,
-                        description: `Join us on an incredible journey to the deepest parts of the ocean, where bizarre creatures and stunning landscapes await. Learn about the technology that allows us to explore these uncharted territories and the scientific discoveries being made.`,
+                        title: `The Power of the Human Voice by ${channelName}`,
+                        description: `Explore the incredible capabilities of the human voice, from operatic highs to the nuanced whispers of a storyteller. Discover how vocal training can unlock hidden potential.`,
                         thumbnails: {
                             high: { url: `https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg` }
                         },
@@ -1331,10 +1346,10 @@
                     }
                 },
                 {
-                    id: { videoId: 'VewGjQzR2qU' },
+                    id: { videoId: 'VewGjQzR2qU' }, // Veritasium - Why The Sky Is Blue (Very stable)
                     snippet: {
-                        title: `Understanding Quantum Physics in 5 Minutes by ${channelName}`,
-                        description: `Demystifying the complex world of quantum mechanics! This video breaks down the fundamental concepts of quantum physics into easily digestible pieces, perfect for beginners and curious minds.`,
+                        title: `The Science Behind Blue Skies by ${channelName}`,
+                        description: `A fascinating dive into Rayleigh scattering and how light interacts with our atmosphere to create the beautiful blue color we see every day.`,
                         thumbnails: {
                             high: { url: `https://i.ytimg.com/vi/VewGjQzR2qU/hqdefault.jpg` }
                         },
@@ -1345,10 +1360,10 @@
                     }
                 },
                 {
-                    id: { videoId: 'xvFZjo5PgG0' },
+                    id: { videoId: 'xvFZjo5PgG0' }, // Veritasium - The World's Simplest Electric Car (Very stable)
                     snippet: {
-                        title: `The Science of Sleep: Why We Need It by ${channelName}`,
-                        description: `Ever wondered why sleep is so important? Dive into the fascinating science behind sleep, its critical role in our physical and mental health, and tips for improving your sleep quality.`,
+                        title: `Building the Simplest Electric Car Ever by ${channelName}`,
+                        description: `Watch as we construct a functional electric car using minimal components, demonstrating basic principles of electrical engineering and mechanics.`,
                         thumbnails: {
                             high: { url: `https://i.ytimg.com/vi/xvFZjo5PgG0/hqdefault.jpg` }
                         },
@@ -1356,6 +1371,34 @@
                     },
                     statistics: { // Simulated statistics
                         viewCount: Math.floor(Math.random() * 500000 + 100000).toLocaleString(), // 100k to 600k views
+                    }
+                },
+                {
+                    id: { videoId: 'h8kI-1v9MzA' }, // Kurzgesagt - What Is Life? Is Death Real?
+                    snippet: {
+                        title: `What is Life? The Deep Question by ${channelName}`,
+                        description: `A philosophical and scientific exploration into the definition of life, the concept of death, and our place in the universe.`,
+                        thumbnails: {
+                            high: { url: `https://i.ytimg.com/vi/h8kI-1v9MzA/hqdefault.jpg` }
+                        },
+                        publishedAt: new Date(Date.now() - Math.random() * 86400000 * 28).toISOString(),
+                    },
+                    statistics: {
+                        viewCount: Math.floor(Math.random() * 3000000 + 1500000).toLocaleString(),
+                    }
+                },
+                {
+                    id: { videoId: 'Qv1yH6q9cE8' }, // TED - The single biggest cause of climate change
+                    snippet: {
+                        title: `Understanding Climate Change: The Biggest Cause by ${channelName}`,
+                        description: `An eye-opening talk on the primary drivers of climate change and what actions individuals and societies can take to make a difference.`,
+                        thumbnails: {
+                            high: { url: `https://i.ytimg.com/vi/Qv1yH6q9cE8/hqdefault.jpg` }
+                        },
+                        publishedAt: new Date(Date.now() - Math.random() * 86400000 * 35).toISOString(),
+                    },
+                    statistics: {
+                        viewCount: Math.floor(Math.random() * 4000000 + 2000000).toLocaleString(),
                     }
                 }
             ];
@@ -1558,14 +1601,22 @@
                         itemElement.classList.add('youtube-item');
                         const videoId = item.videoId;
                         
+                        const videoEmbedHtml = videoId ? `
+                            <iframe class="youtube-video-embed" 
+                                    src="https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                            </iframe>
+                        ` : `
+                            <div class="youtube-video-embed flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-gray-500 rounded-lg">
+                                <p>${translations.youtubeVideoNotAvailable}</p>
+                            </div>
+                        `;
+
                         itemElement.innerHTML = `
                             <div class="news-item-header flex-col items-start">
-                                <iframe class="youtube-video-embed" 
-                                        src="https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0" 
-                                        frameborder="0" 
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                        allowfullscreen>
-                                </iframe>
+                                ${videoEmbedHtml}
                                 <div class="news-item-content w-full">
                                     <h2 class="font-semibold">${item.title}</h2>
                                     <span class="source-name">${item.sourceName || translations.unknownSource} (YouTube)</span>
@@ -1707,7 +1758,7 @@
             youtubeCategoryHeader.classList.add('menu-category-header');
             youtubeCategoryHeader.setAttribute('tabindex', '0');
             youtubeCategoryHeader.setAttribute('role', 'button');
-            youtubeCategoryHeader.setAttribute('aria-expanded', 'false');
+            youtubeCategoryHeader.setAttribute('aria-expanded', 'false'); // Default to collapsed
             youtubeCategoryHeader.innerHTML = `
                 <span>${translations.youtubeChannelsCategory}</span>
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -1896,7 +1947,7 @@
                             btn.classList.remove('active');
                             btn.setAttribute('aria-selected', 'false');
                         });
-                        document.querySelector('.tab-button[data-source="All"]').classList.add('active');
+                        document.querySelector('.tab-button[data-source="All"]').classList.add('active'); // Set 'All News' as active
                         document.querySelector('.tab-button[data-source="All"]').setAttribute('aria-selected', 'true');
                         currentActiveTab = { type: 'rss', source: 'All' };
                         applyNewsFilterAndDisplay('All', 'rss');
@@ -1961,7 +2012,7 @@
                 console.error("Error saving user preferences:", error);
                 showErrorMessage(translations.prefSaveError);
             }
-        }
+        });
 
 
         // Hamburger Menu Event Listeners

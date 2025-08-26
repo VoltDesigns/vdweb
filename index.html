@@ -228,14 +228,37 @@
             border-bottom: 1px solid var(--hamburger-item-border);
             padding-bottom: 0.5rem;
         }
-        .menu-category-title {
-            font-size: calc(var(--base-font-size) * 1.1);
-            font-weight: 600;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-            color: var(--headline-color);
+        .menu-category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            cursor: pointer;
             border-bottom: 1px solid var(--hamburger-item-border);
-            padding-bottom: 0.25rem;
+            margin-top: 1rem;
+            font-size: calc(var(--base-font-size) * 1.1);
+            font-weight: 60            0;
+            color: var(--headline-color);
+            transition: background-color 0.2s ease;
+        }
+        .menu-category-header:hover {
+            background-color: var(--hamburger-hover-bg);
+        }
+        .menu-category-header svg {
+            transition: transform 0.2s ease;
+        }
+        .menu-category-header.expanded svg {
+            transform: rotate(180deg);
+        }
+        .menu-category-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            border-bottom: 1px solid var(--hamburger-item-border); /* Separator for collapsed content */
+        }
+        .menu-category-content.expanded {
+            max-height: 500px; /* Or a suitable value */
+            border-bottom: none; /* No extra border when expanded */
         }
         .menu-source-item {
             display: flex;
@@ -607,15 +630,11 @@
             border: 1px solid var(--border-color);
             transition: border-color 0.3s ease;
         }
-        .youtube-thumbnail {
-            width: 100%; /* Make thumbnail responsive */
-            height: auto;
-            max-height: 200px; /* Limit max height */
-            object-fit: cover;
+        .youtube-video-embed {
+            width: 100%;
+            aspect-ratio: 16 / 9;
             border-radius: 0.5rem;
             margin-bottom: 1rem;
-            border: 1px solid var(--border-color);
-            transition: border-color 0.3s ease;
         }
         
         .infinite-scroll-message {
@@ -840,7 +859,7 @@
                 flex-direction: column;
                 align-items: center;
             }
-            .news-image, .youtube-thumbnail {
+            .news-image, .youtube-video-embed {
                 width: 100%;
                 height: 180px; /* Adjust height for mobile */
                 margin-right: 0;
@@ -940,7 +959,7 @@
 
             <div id="loading" class="flex justify-center items-center h-40" style="display: none;" role="status" aria-live="polite">
                 <div class="loading-spinner"></div>
-                <p class="ml-4 text-lg text-gray-600">Loading news...</p>
+                <p class="ml-4 text-lg text-gray-600">Loading content...</p>
             </div>
 
             <div id="news-container" class="space-y-6" role="feed">
@@ -950,9 +969,9 @@
             <!-- Infinite Scroll Loading Indicator -->
             <div id="infinite-scroll-loading" class="flex justify-center items-center h-24" style="display: none;" role="status" aria-live="polite">
                 <div class="loading-spinner"></div>
-                <p class="ml-4 text-lg text-gray-600">Loading more news...</p>
+                <p class="ml-4 text-lg text-gray-600">Loading more content...</p>
             </div>
-            <p id="no-more-news-message" class="infinite-scroll-message" style="display: none;" role="status" aria-live="polite">No more news to load.</p>
+            <p id="no-more-news-message" class="infinite-scroll-message" style="display: none;" role="status" aria-live="polite">No more content to load.</p>
 
             <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md relative mt-6" role="alert" tabindex="-1">
                 <strong class="font-bold">Error!</strong>
@@ -982,7 +1001,7 @@
         <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.61.764-3.778a9.735 9.735 0 00-6.711 8.923 9.718 9.718 0 009.75 9.75 9.735 9.735 0 008.923-6.711z" />
         </svg>
-        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden">
+        <svg id="sun-icon" xmlns="http://www.w3.000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12H5.25m-.386-6.364l1.591 1.591M12 12a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
     </button>
@@ -1059,6 +1078,7 @@
             readOriginal: 'Read Original Article →',
             watchVideo: 'Watch on YouTube →', // New translation for YouTube
             published: 'Published:',
+            views: 'Views:', // New translation for YouTube views
             noNewsFound: 'No content found for this selection.', // Generic "no content"
             failedSources: 'Some sources failed to load:', // Generic "some sources"
             couldNotLoad: 'Could not load content from', // Generic "could not load"
@@ -1294,28 +1314,48 @@
             // that then calls the YouTube Data API v3.
             // Example: https://www.googleapis.com/youtube/v3/search?key=YOUR_API_KEY&channelId=CHANNEL_ID&part=snippet,id&order=date&maxResults=10
 
-            // Mock data for demonstration
+            // Mock data for demonstration, now with more realistic descriptions and simulated view counts
             const mockVideos = [
                 {
                     id: { videoId: 'dQw4w9WgXcQ' },
                     snippet: {
-                        title: `Mock Video 1 from ${channelName}`,
-                        description: `This is a mock description for video 1 from ${channelName}. It's a great video about [topic].`,
+                        title: `The Wonders of Deep Sea Exploration by ${channelName}`,
+                        description: `Join us on an incredible journey to the deepest parts of the ocean, where bizarre creatures and stunning landscapes await. Learn about the technology that allows us to explore these uncharted territories and the scientific discoveries being made.`,
                         thumbnails: {
                             high: { url: `https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg` }
                         },
                         publishedAt: new Date(Date.now() - Math.random() * 86400000 * 7).toISOString(), // Random date within last 7 days
+                    },
+                    statistics: { // Simulated statistics
+                        viewCount: Math.floor(Math.random() * 1000000 + 500000).toLocaleString(), // 500k to 1.5M views
                     }
                 },
                 {
                     id: { videoId: 'VewGjQzR2qU' },
                     snippet: {
-                        title: `Mock Video 2 from ${channelName}`,
-                        description: `Another fantastic video from ${channelName} covering [another topic].`,
+                        title: `Understanding Quantum Physics in 5 Minutes by ${channelName}`,
+                        description: `Demystifying the complex world of quantum mechanics! This video breaks down the fundamental concepts of quantum physics into easily digestible pieces, perfect for beginners and curious minds.`,
                         thumbnails: {
                             high: { url: `https://i.ytimg.com/vi/VewGjQzR2qU/hqdefault.jpg` }
                         },
                         publishedAt: new Date(Date.now() - Math.random() * 86400000 * 14).toISOString(), // Random date within last 14 days
+                    },
+                    statistics: { // Simulated statistics
+                        viewCount: Math.floor(Math.random() * 2000000 + 1000000).toLocaleString(), // 1M to 3M views
+                    }
+                },
+                {
+                    id: { videoId: 'xvFZjo5PgG0' },
+                    snippet: {
+                        title: `The Science of Sleep: Why We Need It by ${channelName}`,
+                        description: `Ever wondered why sleep is so important? Dive into the fascinating science behind sleep, its critical role in our physical and mental health, and tips for improving your sleep quality.`,
+                        thumbnails: {
+                            high: { url: `https://i.ytimg.com/vi/xvFZjo5PgG0/hqdefault.jpg` }
+                        },
+                        publishedAt: new Date(Date.now() - Math.random() * 86400000 * 21).toISOString(), // Random date within last 21 days
+                    },
+                    statistics: { // Simulated statistics
+                        viewCount: Math.floor(Math.random() * 500000 + 100000).toLocaleString(), // 100k to 600k views
                     }
                 }
             ];
@@ -1330,7 +1370,8 @@
                         pubDate: video.snippet.publishedAt,
                         sourceName: channelName,
                         type: 'youtube', // Add type
-                        videoId: video.id.videoId
+                        videoId: video.id.videoId,
+                        viewCount: video.statistics.viewCount // Simulated view count
                     }));
                     resolve(videos);
                 }, 1000); // Simulate network delay
@@ -1488,9 +1529,10 @@
                     if (item.type === 'rss') {
                         itemElement.classList.add('news-item');
                         const imageUrl = extractImageUrl(item);
+                        // Removed placeholder image if imageUrl is null
                         const imageHtml = imageUrl ? 
                             `<img src="${imageUrl}" onerror="this.onerror=null;this.src='https://placehold.co/80x80/cccccc/333333?text=No+Image';" alt="${item.title || 'News Image'}" class="news-image">` : 
-                            `<img src="https://placehold.co/80x80/cccccc/333333?text=No+Image" alt="No Image Available" class="news-image">`;
+                            ''; // Empty string if no image
 
                         itemElement.innerHTML = `
                             <div class="news-item-header">
@@ -1514,24 +1556,29 @@
                         `;
                     } else if (item.type === 'youtube') {
                         itemElement.classList.add('youtube-item');
-                        const thumbnailUrl = item.thumbnail || `https://placehold.co/320x180/cccccc/333333?text=No+Video+Image`; // Placeholder for YouTube
+                        const videoId = item.videoId;
                         
                         itemElement.innerHTML = `
                             <div class="news-item-header flex-col items-start">
-                                <img src="${thumbnailUrl}" onerror="this.onerror=null;this.src='https://placehold.co/320x180/cccccc/333333?text=No+Video+Image';" alt="${item.title || 'YouTube Video'}" class="youtube-thumbnail">
+                                <iframe class="youtube-video-embed" 
+                                        src="https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0" 
+                                        frameborder="0" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                        allowfullscreen>
+                                </iframe>
                                 <div class="news-item-content w-full">
                                     <h2 class="font-semibold">${item.title}</h2>
                                     <span class="source-name">${item.sourceName || translations.unknownSource} (YouTube)</span>
                                 </div>
                             </div>
                             <div class="collapsible-container">
-                                <button class="toggle-details-button" data-full-description="${escapeHtml(item.description)}" data-video-id="${item.videoId}" tabindex="0" aria-expanded="false">
+                                <button class="toggle-details-button" data-full-description="${escapeHtml(item.description)}" data-view-count="${item.viewCount || 'N/A'}" tabindex="0" aria-expanded="false">
                                     <span>${translations.showDetails}</span>
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                 </button>
                                 <div class="collapsible-content" role="region" aria-hidden="true">
-                                    <p class="text-base mb-4">${item.description}</p>
-                                    <div class="youtube-player-placeholder"></div> <!-- Placeholder for iframe -->
+                                    <p class="text-base mb-2">${item.description}</p>
+                                    <p class="text-sm">${translations.views} ${item.viewCount || 'N/A'}</p>
                                     <a href="${item.link || '#'}" target="_blank" rel="noopener noreferrer" class="hover:underline mt-4 block" tabindex="0">${translations.watchVideo}</a>
                                     ${item.pubDate ? `<p class="text-sm mt-2">${translations.published} ${new Date(item.pubDate).toLocaleString()}</p>` : ''}
                                 </div>
@@ -1545,8 +1592,6 @@
                     button.addEventListener('click', () => {
                         const content = button.closest('.collapsible-container').querySelector('.collapsible-content');
                         const spanText = button.querySelector('span');
-                        const videoId = button.dataset.videoId;
-                        const youtubePlayerPlaceholder = content.querySelector('.youtube-player-placeholder');
                         
                         if (content.classList.contains('expanded')) {
                             content.classList.remove('expanded');
@@ -1554,26 +1599,12 @@
                             button.classList.remove('expanded');
                             button.setAttribute('aria-expanded', 'false');
                             content.setAttribute('aria-hidden', 'true');
-                            // Remove iframe when collapsing
-                            if (youtubePlayerPlaceholder) {
-                                youtubePlayerPlaceholder.innerHTML = '';
-                            }
                         } else {
                             spanText.textContent = translations.hideDetails;
                             content.classList.add('expanded');
                             button.classList.add('expanded');
                             button.setAttribute('aria-expanded', 'true');
                             content.setAttribute('aria-hidden', 'false');
-                            // Embed YouTube video if it's a YouTube item
-                            if (videoId && youtubePlayerPlaceholder) {
-                                youtubePlayerPlaceholder.innerHTML = `
-                                    <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0" 
-                                            frameborder="0" 
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                            allowfullscreen>
-                                    </iframe>
-                                `;
-                            }
                         }
                     });
                 });
@@ -1650,9 +1681,14 @@
                     item.type === 'rss' && item.sourceName === RSS_FEEDS[filterKey]?.name
                 );
             } else if (filterType === 'youtube') {
-                filteredArticles = allArticlesFromAllSources.filter(item => 
-                    item.type === 'youtube' && item.sourceName === YOUTUBE_CHANNELS[filterKey]?.name
-                );
+                // Fix for YouTube tab not populating: filter all youtube items if filterKey is 'YouTube'
+                if (filterKey === 'YouTube') {
+                    filteredArticles = allArticlesFromAllSources.filter(item => item.type === 'youtube');
+                } else {
+                    filteredArticles = allArticlesFromAllSources.filter(item => 
+                        item.type === 'youtube' && item.sourceName === YOUTUBE_CHANNELS[filterKey]?.name
+                    );
+                }
             }
             
             currentlyDisplayedArticles = filteredArticles;
@@ -1663,56 +1699,25 @@
         function populatePreferencesMenu() {
             preferencesCheckboxList.innerHTML = ''; // Clear existing
 
-            // Add RSS News Sources
-            const rssCategoryTitle = document.createElement('div');
-            rssCategoryTitle.classList.add('menu-category-title');
-            rssCategoryTitle.textContent = translations.newsSourcesCategory;
-            preferencesCheckboxList.appendChild(rssCategoryTitle);
+            // --- YouTube Channels (Collapsible, at top) ---
+            const youtubeCategoryContainer = document.createElement('div');
+            youtubeCategoryContainer.classList.add('youtube-preferences-category'); // Add a specific class
 
-            Object.keys(RSS_FEEDS).forEach(sourceKey => {
-                const sourceDisplayName = RSS_FEEDS[sourceKey].name;
-                const itemDiv = document.createElement('div');
-                itemDiv.classList.add('menu-source-item');
-                itemDiv.innerHTML = `
-                    <label for="pref-checkbox-rss-${sourceKey}">
-                        ${sourceDisplayName}
-                    </label>
-                    <input type="checkbox" id="pref-checkbox-rss-${sourceKey}" data-type="rss" data-source="${sourceKey}" class="preference-checkbox">
-                `;
-                preferencesCheckboxList.appendChild(itemDiv);
+            const youtubeCategoryHeader = document.createElement('div');
+            youtubeCategoryHeader.classList.add('menu-category-header');
+            youtubeCategoryHeader.setAttribute('tabindex', '0');
+            youtubeCategoryHeader.setAttribute('role', 'button');
+            youtubeCategoryHeader.setAttribute('aria-expanded', 'false');
+            youtubeCategoryHeader.innerHTML = `
+                <span>${translations.youtubeChannelsCategory}</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            `;
+            youtubeCategoryContainer.appendChild(youtubeCategoryHeader);
 
-                const checkbox = itemDiv.querySelector('.preference-checkbox');
-                checkbox.checked = userPreferences.includes(sourceKey); // Set initial state
-
-                checkbox.addEventListener('change', async (event) => {
-                    const changedSourceKey = event.target.dataset.source;
-                    if (!userId) {
-                        event.target.checked = !event.target.checked; // Revert checkbox state
-                        showModalMessage(translations.prefMenuStatusLoggedOut, true);
-                        return;
-                    }
-
-                    if (event.target.checked) {
-                        if (!userPreferences.includes(changedSourceKey)) {
-                            userPreferences.push(changedSourceKey);
-                        }
-                    } else {
-                        userPreferences = userPreferences.filter(pref => pref !== changedSourceKey);
-                    }
-                    console.log(`Preferences updated for ${changedSourceKey}:`, userPreferences);
-                    await saveUserPreferences();
-
-                    if (currentActiveTab.source === 'MyFeed') {
-                        applyNewsFilterAndDisplay('MyFeed', 'all'); // 'all' type indicates it can be mixed
-                    }
-                });
-            });
-
-            // Add YouTube Channels
-            const youtubeCategoryTitle = document.createElement('div');
-            youtubeCategoryTitle.classList.add('menu-category-title');
-            youtubeCategoryTitle.textContent = translations.youtubeChannelsCategory;
-            preferencesCheckboxList.appendChild(youtubeCategoryTitle);
+            const youtubeCategoryContent = document.createElement('div');
+            youtubeCategoryContent.classList.add('menu-category-content');
+            youtubeCategoryContent.setAttribute('aria-hidden', 'true');
+            youtubeCategoryContainer.appendChild(youtubeCategoryContent);
 
             Object.keys(YOUTUBE_CHANNELS).forEach(channelKey => {
                 const channelDisplayName = YOUTUBE_CHANNELS[channelKey].name;
@@ -1724,15 +1729,15 @@
                     </label>
                     <input type="checkbox" id="pref-checkbox-youtube-${channelKey}" data-type="youtube" data-source="${channelKey}" class="preference-checkbox">
                 `;
-                preferencesCheckboxList.appendChild(itemDiv);
+                youtubeCategoryContent.appendChild(itemDiv);
 
                 const checkbox = itemDiv.querySelector('.preference-checkbox');
-                checkbox.checked = userPreferences.includes(channelKey); // Set initial state
+                checkbox.checked = userPreferences.includes(channelKey);
 
                 checkbox.addEventListener('change', async (event) => {
                     const changedChannelKey = event.target.dataset.source;
                     if (!userId) {
-                        event.target.checked = !event.target.checked; // Revert checkbox state
+                        event.target.checked = !event.target.checked;
                         showModalMessage(translations.prefMenuStatusLoggedOut, true);
                         return;
                     }
@@ -1748,9 +1753,87 @@
                     await saveUserPreferences();
 
                     if (currentActiveTab.source === 'MyFeed') {
-                        applyNewsFilterAndDisplay('MyFeed', 'all'); // 'all' type indicates it can be mixed
+                        applyNewsFilterAndDisplay('MyFeed', 'all');
                     }
                 });
+            });
+            preferencesCheckboxList.appendChild(youtubeCategoryContainer); // Append YouTube category first
+
+            youtubeCategoryHeader.addEventListener('click', () => {
+                youtubeCategoryContent.classList.toggle('expanded');
+                youtubeCategoryHeader.classList.toggle('expanded');
+                const isExpanded = youtubeCategoryContent.classList.contains('expanded');
+                youtubeCategoryHeader.setAttribute('aria-expanded', isExpanded);
+                youtubeCategoryContent.setAttribute('aria-hidden', !isExpanded);
+            });
+
+
+            // --- RSS News Sources ---
+            const rssCategoryContainer = document.createElement('div');
+            rssCategoryContainer.classList.add('rss-preferences-category'); // Add a specific class
+
+            const rssCategoryHeader = document.createElement('div');
+            rssCategoryHeader.classList.add('menu-category-header');
+            rssCategoryHeader.setAttribute('tabindex', '0');
+            rssCategoryHeader.setAttribute('role', 'button');
+            rssCategoryHeader.setAttribute('aria-expanded', 'true'); // Default to expanded
+            rssCategoryHeader.innerHTML = `
+                <span>${translations.newsSourcesCategory}</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            `;
+            rssCategoryContainer.appendChild(rssCategoryHeader);
+
+            const rssCategoryContent = document.createElement('div');
+            rssCategoryContent.classList.add('menu-category-content', 'expanded'); // Default to expanded
+            rssCategoryContent.setAttribute('aria-hidden', 'false');
+            rssCategoryContainer.appendChild(rssCategoryContent);
+
+            Object.keys(RSS_FEEDS).forEach(sourceKey => {
+                const sourceDisplayName = RSS_FEEDS[sourceKey].name;
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('menu-source-item');
+                itemDiv.innerHTML = `
+                    <label for="pref-checkbox-rss-${sourceKey}">
+                        ${sourceDisplayName}
+                    </label>
+                    <input type="checkbox" id="pref-checkbox-rss-${sourceKey}" data-type="rss" data-source="${sourceKey}" class="preference-checkbox">
+                `;
+                rssCategoryContent.appendChild(itemDiv);
+
+                const checkbox = itemDiv.querySelector('.preference-checkbox');
+                checkbox.checked = userPreferences.includes(sourceKey);
+
+                checkbox.addEventListener('change', async (event) => {
+                    const changedSourceKey = event.target.dataset.source;
+                    if (!userId) {
+                        event.target.checked = !event.target.checked;
+                        showModalMessage(translations.prefMenuStatusLoggedOut, true);
+                        return;
+                    }
+
+                    if (event.target.checked) {
+                        if (!userPreferences.includes(changedSourceKey)) {
+                            userPreferences.push(changedSourceKey);
+                        }
+                    } else {
+                        userPreferences = userPreferences.filter(pref => pref !== changedSourceKey);
+                    }
+                    console.log(`Preferences updated for ${changedSourceKey}:`, userPreferences);
+                    await saveUserPreferences();
+
+                    if (currentActiveTab.source === 'MyFeed') {
+                        applyNewsFilterAndDisplay('MyFeed', 'all');
+                    }
+                });
+            });
+            preferencesCheckboxList.appendChild(rssCategoryContainer); // Append RSS category second
+
+            rssCategoryHeader.addEventListener('click', () => {
+                rssCategoryContent.classList.toggle('expanded');
+                rssCategoryHeader.classList.toggle('expanded');
+                const isExpanded = rssCategoryContent.classList.contains('expanded');
+                rssCategoryHeader.setAttribute('aria-expanded', isExpanded);
+                rssCategoryContent.setAttribute('aria-hidden', !isExpanded);
             });
         }
 
@@ -1808,7 +1891,7 @@
                     populatePreferencesMenu(); // Clear checkboxes on logout
 
                     // Reset active tab to 'All' on logout if 'My Feed' or a specific YouTube tab was active
-                    if (currentActiveTab.source === 'MyFeed' || currentActiveTab.type === 'youtube' || !document.querySelector('.tab-button.active')) {
+                    if (currentActiveTab.source === 'MyFeed' || currentActiveTab.source === 'YouTube' || !document.querySelector('.tab-button.active')) {
                         document.querySelectorAll('#news-sources .tab-button').forEach(btn => {
                             btn.classList.remove('active');
                             btn.setAttribute('aria-selected', 'false');

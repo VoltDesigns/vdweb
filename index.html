@@ -3,260 +3,418 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explore Music</title>
-    <!-- Tailwind CSS for styling -->
+    <title>Gesture App Launcher</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
-            color: #e2e8f0;
+            background-color: #f0f4f8;
+            color: #2d3748;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+            box-sizing: border-box;
         }
         .container {
-            max-width: 1200px;
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative; /* Needed for absolute positioning of gesture zone */
         }
-        .video-card {
-            background-color: #1e293b;
-            transition: transform 0.2s, box-shadow 0.2s;
+        video {
+            width: 100%;
+            max-height: 400px;
+            background-color: #e2e8f0;
+            border-radius: 1rem;
+            object-fit: cover;
+            border: 2px solid #a0aec0;
         }
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        canvas {
+            display: none; /* Hidden canvas for processing frames */
         }
-        .loading-spinner {
-            border-top-color: #6366f1;
-            -webkit-animation: spinner 1.5s linear infinite;
-            animation: spinner 1.5s linear infinite;
+        .control-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
-        @-webkit-keyframes spinner {
-            0% { -webkit-transform: rotate(0deg); }
-            100% { -webkit-transform: rotate(360deg); }
+        button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background-image: linear-gradient(to right, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
-        @keyframes spinner {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+        }
+        button:disabled {
+            background-image: none;
+            background-color: #cbd5e0;
+            cursor: not-allowed;
+            box-shadow: none;
+            color: #718096;
+        }
+        .message-box {
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            min-height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 1px solid #90cdf4;
+        }
+        .app-screen {
+            display: none; /* Hidden by default */
+            background-color: #ecfdf5;
+            color: #065f46;
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 2px solid #34d399;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+        .app-screen h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #047857;
+        }
+        .app-screen p {
+            font-size: 1.1rem;
+            color: #065f46;
+        }
+
+        /* Gesture zone visual indicator */
+        .gesture-zone-indicator {
+            position: absolute;
+            border: 3px dashed #f6ad55; /* Orange dashed border */
+            border-radius: 0.5rem;
+            pointer-events: none; /* Allows clicks to pass through */
+            z-index: 10;
+            opacity: 0.7;
+            box-shadow: 0 0 10px rgba(246, 173, 85, 0.5);
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .control-buttons {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100 flex flex-col min-h-screen p-4">
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold text-gray-800">Gesture App Launcher 📱</h1>
+        <p class="text-gray-600">Simulate launching an app with motion gestures detected by your camera.</p>
 
-    <!-- Header -->
-    <header class="text-center py-8">
-        <h1 class="text-5xl font-extrabold text-blue-500 tracking-tight">Explore YouTube Music</h1>
-    </header>
+        <div id="cameraView">
+            <video id="webcamFeed" autoplay playsinline muted></video>
+            <div id="gestureZoneIndicator" class="gesture-zone-indicator"></div>
+        </div>
+        <canvas id="gestureCanvas" width="640" height="480"></canvas>
+        <canvas id="prevFrameCanvas" width="640" height="480"></canvas> <!-- Canvas to store previous frame -->
 
-    <!-- Main Content Area -->
-    <main class="flex-grow container mx-auto p-4 md:p-8">
-
-        <!-- Sorting and Status Section -->
-        <div class="flex flex-col md:flex-row items-center justify-between mb-8 space-y-4 md:space-y-0">
-            <div id="statusMessage" class="text-gray-400 italic text-center text-sm md:text-left"></div>
-            <div class="flex items-center space-x-4 w-full md:w-auto md:ml-4">
-                <label for="sort-by" class="text-lg font-semibold text-gray-300">Sort By:</label>
-                <select id="sort-by"
-                        class="p-2 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:outline-none focus:border-blue-500 transition-all duration-200">
-                    <option value="date">Upload Date</option>
-                    <option value="views">Number of Views</option>
-                </select>
-            </div>
+        <div class="control-buttons">
+            <button id="startCameraButton">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-4 3 3 5-5V15z" />
+                </svg>
+                Start Camera
+            </button>
+            <button id="stopCameraButton" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+                Stop Camera
+            </button>
+            <button id="toggleScanButton" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                </svg>
+                Start Continuous Scan
+            </button>
         </div>
 
-        <!-- Video Grid -->
-        <div id="video-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Video cards will be injected here -->
+        <div id="messageDisplay" class="message-box">
+            Click 'Start Camera' to begin.
         </div>
 
-        <!-- Loading Indicator -->
-        <div id="loading" class="hidden flex items-center justify-center py-12">
-            <div class="loading-spinner w-16 h-16 border-4 border-gray-700 rounded-full"></div>
-            <span class="ml-4 text-xl text-gray-400">Loading videos...</span>
+        <div id="appScreen" class="app-screen">
+            <h2>🎉 My Cool App Launched! 🎉</h2>
+            <p>This is a simulated application. Imagine this is where your desired app would open.</p>
+            <p>You can customize this content to anything you like.</p>
+            <button id="backToCamera" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Go Back to Camera
+            </button>
         </div>
-
-        <!-- Error Message Modal -->
-        <div id="errorModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center p-4">
-            <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-lg w-full text-center">
-                <h2 class="text-2xl font-bold text-red-400 mb-4">Error</h2>
-                <p id="errorMessage" class="text-gray-300 mb-6"></p>
-                <button id="closeModal" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transition-colors">
-                    Close
-                </button>
-            </div>
-        </div>
-
-    </main>
-
-    <footer class="text-center py-6 text-gray-500 text-sm">
-        <p>Powered by the YouTube Data API</p>
-    </footer>
+    </div>
 
     <script>
-        // Use an IIFE (Immediately Invoked Function Expression) to avoid polluting the global scope
-        (function() {
-            // --- DOM Elements ---
-            const sortBySelect = document.getElementById('sort-by');
-            const videoGrid = document.getElementById('video-grid');
-            const loadingIndicator = document.getElementById('loading');
-            const statusMessage = document.getElementById('statusMessage');
-            const errorModal = document.getElementById('errorModal');
-            const errorMessage = document.getElementById('errorMessage');
-            const closeModalButton = document.getElementById('closeModal');
+        // Get references to DOM elements
+        const webcamFeed = document.getElementById('webcamFeed');
+        const gestureCanvas = document.getElementById('gestureCanvas');
+        const prevFrameCanvas = document.getElementById('prevFrameCanvas'); // Canvas for previous frame
+        const messageDisplay = document.getElementById('messageDisplay');
+        const startCameraButton = document.getElementById('startCameraButton');
+        const stopCameraButton = document.getElementById('stopCameraButton');
+        const toggleScanButton = document.getElementById('toggleScanButton');
+        const cameraView = document.getElementById('cameraView');
+        const appScreen = document.getElementById('appScreen');
+        const backToCameraBtn = document.getElementById('backToCamera');
+        const gestureZoneIndicator = document.getElementById('gestureZoneIndicator');
 
-            // --- API Configuration ---
-            const API_KEY = 'AIzaSyBRiD7kcjp2BB9OvJAVb0NSl46x5sM--Hg';
-            const PLAYLIST_ID = 'RDCLAK5uy_kmPRjHDECIcuVwnKsx2Ng7fyNgFKWNJFs';
-            const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3/';
-            // Set the update interval to 5 minutes (300,000 milliseconds)
-            const UPDATE_INTERVAL = 5 * 60 * 1000;
+        const ctx = gestureCanvas.getContext('2d');
+        const prevCtx = prevFrameCanvas.getContext('2d');
 
-            // --- State Variables ---
-            let videoData = [];
+        let mediaStream = null;
+        let animationFrameId = null;
+        let isScanning = false;
+        let gestureDetected = false;
 
-            // --- Event Listeners ---
-            sortBySelect.addEventListener('change', renderVideos);
-            closeModalButton.addEventListener('click', () => errorModal.classList.add('hidden'));
-            
-            // --- Core Functions ---
+        // Constants for gesture detection
+        const GESTURE_ZONE_WIDTH_PERCENT = 0.4; // 40% of video width
+        const GESTURE_ZONE_HEIGHT_PERCENT = 0.4; // 40% of video height
+        const MOTION_THRESHOLD = 20; // Minimum pixel intensity difference for motion
+        const MOTION_PIXEL_PERCENT_THRESHOLD = 0.05; // 5% of pixels in ROI must show motion
 
-            /**
-             * Handles showing an error message in the modal.
-             * @param {string} message The error message to display.
-             */
-            function showError(message) {
-                errorMessage.textContent = message;
-                errorModal.classList.remove('hidden');
+        /**
+         * Calculates the position and size of the gesture zone indicator
+         * relative to the video feed.
+         */
+        function updateGestureZoneIndicator() {
+            if (!webcamFeed.videoWidth || !webcamFeed.videoHeight) {
+                gestureZoneIndicator.style.display = 'none';
+                return;
+            }
+            gestureZoneIndicator.style.display = 'block';
+
+            const videoRect = webcamFeed.getBoundingClientRect();
+            const containerRect = cameraView.getBoundingClientRect(); // Use cameraView as reference for positioning
+
+            // Calculate gesture zone dimensions relative to video
+            const zoneWidth = webcamFeed.videoWidth * GESTURE_ZONE_WIDTH_PERCENT;
+            const zoneHeight = webcamFeed.videoHeight * GESTURE_ZONE_HEIGHT_PERCENT;
+
+            // Calculate position to center the zone
+            const zoneLeft = (webcamFeed.videoWidth - zoneWidth) / 2;
+            const zoneTop = (webcamFeed.videoHeight - zoneHeight) / 2;
+
+            // Scale these values to CSS pixels based on video's displayed size
+            const scaleX = videoRect.width / webcamFeed.videoWidth;
+            const scaleY = videoRect.height / webcamFeed.videoHeight;
+
+            gestureZoneIndicator.style.width = `${zoneWidth * scaleX}px`;
+            gestureZoneIndicator.style.height = `${zoneHeight * scaleY}px`;
+            gestureZoneIndicator.style.left = `${videoRect.left - containerRect.left + (zoneLeft * scaleX)}px`;
+            gestureZoneIndicator.style.top = `${videoRect.top - containerRect.top + (zoneTop * scaleY)}px`;
+        }
+
+        /**
+         * Initializes the webcam feed.
+         * Requests camera access and streams it to the video element.
+         */
+        async function startCamera() {
+            try {
+                // Request access to the user's camera
+                mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } }); // Prefer front camera
+                webcamFeed.srcObject = mediaStream;
+                webcamFeed.onloadedmetadata = () => {
+                    webcamFeed.play(); // Start playing the video once metadata is loaded
+                    // Set canvas dimensions to match video feed
+                    gestureCanvas.width = webcamFeed.videoWidth;
+                    gestureCanvas.height = webcamFeed.videoHeight;
+                    prevFrameCanvas.width = webcamFeed.videoWidth;
+                    prevFrameCanvas.height = webcamFeed.videoHeight;
+
+                    messageDisplay.textContent = "Camera active. Toggle 'Continuous Scan' to start detecting gestures.";
+                    startCameraButton.disabled = true;
+                    stopCameraButton.disabled = false;
+                    toggleScanButton.disabled = false;
+
+                    updateGestureZoneIndicator(); // Position the indicator
+                    window.addEventListener('resize', updateGestureZoneIndicator); // Update on resize
+                };
+            } catch (err) {
+                console.error("Error accessing camera:", err);
+                messageDisplay.textContent = "Failed to start camera. Please ensure camera access is granted.";
+                startCameraButton.disabled = false;
+                stopCameraButton.disabled = true;
+                toggleScanButton.disabled = true;
+            }
+        }
+
+        /**
+         * Stops the webcam feed.
+         * Stops all tracks in the media stream and clears the video source.
+         */
+        function stopCamera() {
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                webcamFeed.srcObject = null;
+                mediaStream = null;
+                cancelAnimationFrame(animationFrameId); // Stop the animation loop
+                isScanning = false;
+                toggleScanButton.textContent = 'Start Continuous Scan';
+                toggleScanButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" /> </svg> Start Continuous Scan`;
+                messageDisplay.textContent = "Camera stopped. Click 'Start Camera' to resume.";
+                startCameraButton.disabled = false;
+                stopCameraButton.disabled = true;
+                toggleScanButton.disabled = true;
+                gestureZoneIndicator.style.display = 'none'; // Hide indicator
+                window.removeEventListener('resize', updateGestureZoneIndicator);
+            }
+        }
+
+        /**
+         * Toggles continuous gesture scanning.
+         */
+        function toggleContinuousScan() {
+            if (!mediaStream) {
+                messageDisplay.textContent = "Please start the camera first.";
+                return;
             }
 
-            /**
-             * Fetches videos from the specified YouTube playlist.
-             * It makes two API calls: one to get playlist items and another to get video details.
-             */
-            async function loadVideos() {
-                // Show loading state, but only on initial load or if the user is waiting
-                if (videoData.length === 0) {
-                    videoGrid.innerHTML = '';
-                    loadingIndicator.classList.remove('hidden');
-                }
-                statusMessage.textContent = 'Fetching videos...';
+            isScanning = !isScanning;
+            if (isScanning) {
+                toggleScanButton.textContent = 'Stop Continuous Scan';
+                toggleScanButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /> </svg> Stop Continuous Scan`;
+                messageDisplay.textContent = "Continuous scanning active. Place your hand in the dashed box to launch the app.";
+                gestureZoneIndicator.style.borderColor = '#f6ad55'; // Active color
+                // Capture initial frame for motion detection
+                ctx.drawImage(webcamFeed, 0, 0, gestureCanvas.width, gestureCanvas.height);
+                prevCtx.drawImage(gestureCanvas, 0, 0); // Copy current frame to previous frame canvas
+                startDetectionLoop();
+            } else {
+                toggleScanButton.textContent = 'Start Continuous Scan';
+                toggleScanButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" /> </svg> Start Continuous Scan`;
+                messageDisplay.textContent = "Continuous scanning paused.";
+                cancelAnimationFrame(animationFrameId);
+                gestureZoneIndicator.style.borderColor = '#cbd5e0'; // Paused color
+            }
+        }
 
-                try {
-                    // Step 1: Fetch playlist items to get video IDs and upload dates
-                    const playlistItemsUrl = `${YOUTUBE_API_BASE_URL}playlistItems?part=snippet&maxResults=50&playlistId=${PLAYLIST_ID}&key=${API_KEY}`;
-                    const playlistItemsResponse = await fetch(playlistItemsUrl);
-                    if (!playlistItemsResponse.ok) {
-                        const errorJson = await playlistItemsResponse.json();
-                        throw new Error(errorJson.error.message || `API Error: ${playlistItemsResponse.status}`);
-                    }
-                    const playlistItemsData = await playlistItemsResponse.json();
-                    
-                    if (!playlistItemsData.items || playlistItemsData.items.length === 0) {
-                        statusMessage.textContent = 'No videos found in this playlist.';
-                        loadingIndicator.classList.add('hidden');
-                        return;
-                    }
+        /**
+         * Animation loop for continuous gesture detection.
+         */
+        function startDetectionLoop() {
+            if (!isScanning || gestureDetected) {
+                cancelAnimationFrame(animationFrameId);
+                return;
+            }
 
-                    // Extract video IDs and initial data
-                    const videoIds = playlistItemsData.items.map(item => item.snippet.resourceId.videoId);
-                    const initialVideoData = playlistItemsData.items.map(item => ({
-                        id: item.snippet.resourceId.videoId,
-                        title: item.snippet.title,
-                        channelTitle: item.snippet.channelTitle,
-                        thumbnail: item.snippet.thumbnails.high.url,
-                        publishedAt: item.snippet.publishedAt,
-                        viewCount: null, // Placeholder, to be filled in the next step
-                    }));
+            // Draw current video frame to gesture canvas
+            ctx.drawImage(webcamFeed, 0, 0, gestureCanvas.width, gestureCanvas.height);
 
-                    // Step 2: Fetch video details to get view counts
-                    const videosUrl = `${YOUTUBE_API_BASE_URL}videos?part=statistics&id=${videoIds.join(',')}&key=${API_KEY}`;
-                    const videosResponse = await fetch(videosUrl);
-                    if (!videosResponse.ok) {
-                        const errorJson = await videosResponse.json();
-                        throw new Error(errorJson.error.message || `API Error: ${videosResponse.status}`);
-                    }
-                    const videosData = await videosResponse.json();
+            // Calculate gesture zone coordinates
+            const roiWidth = gestureCanvas.width * GESTURE_ZONE_WIDTH_PERCENT;
+            const roiHeight = gestureCanvas.height * GESTURE_ZONE_HEIGHT_PERCENT;
+            const roiX = (gestureCanvas.width / 2) - (roiWidth / 2);
+            const roiY = (gestureCanvas.height / 2) - (roiHeight / 2);
 
-                    // Combine data from both API calls
-                    const combinedData = initialVideoData.map(video => {
-                        const stats = videosData.items.find(item => item.id === video.id)?.statistics;
-                        return {
-                            ...video,
-                            viewCount: stats ? parseInt(stats.viewCount) : 0
-                        };
-                    });
+            // Get image data for current and previous frames within the ROI
+            const currentFrameData = ctx.getImageData(roiX, roiY, roiWidth, roiHeight).data;
+            const prevFrameData = prevCtx.getImageData(roiX, roiY, roiWidth, roiHeight).data;
 
-                    videoData = combinedData;
+            let motionPixels = 0;
+            const totalROIPixels = roiWidth * roiHeight;
 
-                    statusMessage.textContent = `Last updated: ${new Date().toLocaleTimeString()} | Found ${videoData.length} videos.`;
-                    renderVideos();
+            // Compare pixel data for motion detection
+            for (let i = 0; i < currentFrameData.length; i += 4) {
+                // Calculate average difference for RGB components
+                const diff = Math.abs(currentFrameData[i] - prevFrameData[i]) + // R
+                             Math.abs(currentFrameData[i+1] - prevFrameData[i+1]) + // G
+                             Math.abs(currentFrameData[i+2] - prevFrameData[i+2]); // B
 
-                } catch (error) {
-                    console.error('Failed to load videos:', error);
-                    showError(`Failed to load videos. Details: ${error.message}. Please ensure your API key is valid.`);
-                    statusMessage.textContent = `Failed to load videos. Retrying in ${UPDATE_INTERVAL / 60000} mins.`;
-                } finally {
-                    loadingIndicator.classList.add('hidden');
+                if (diff / 3 > MOTION_THRESHOLD) { // If average difference exceeds threshold
+                    motionPixels++;
                 }
             }
 
-            /**
-             * Renders the video cards to the DOM based on the current sort order.
-             */
-            function renderVideos() {
-                // Get the current sort order from the dropdown
-                const sortBy = sortBySelect.value;
-
-                // Sort the video data
-                let sortedData = [...videoData];
-                if (sortBy === 'date') {
-                    sortedData.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
-                } else if (sortBy === 'views') {
-                    sortedData.sort((a, b) => b.viewCount - a.viewCount);
-                }
-
-                // Clear the existing grid
-                videoGrid.innerHTML = '';
-
-                // Create and append a card for each video
-                sortedData.forEach(video => {
-                    const videoCard = document.createElement('div');
-                    videoCard.className = 'video-card rounded-2xl shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105';
-                    videoCard.innerHTML = `
-                        <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank" rel="noopener noreferrer">
-                            <!-- Thumbnail with fallback image -->
-                            <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-auto object-cover" onerror="this.onerror=null;this.src='https://placehold.co/480x360/1f2937/d1d5db?text=No+Image';">
-                        </a>
-                        <div class="p-4">
-                            <h3 class="text-lg font-semibold text-gray-50 line-clamp-2">${video.title}</h3>
-                            <p class="text-sm text-gray-400 mt-1">${video.channelTitle}</p>
-                            <div class="flex items-center justify-between text-xs text-gray-500 mt-2">
-                                <span class="flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                    ${video.viewCount.toLocaleString()} views
-                                </span>
-                                <span class="flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h.01M16 11h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    ${new Date(video.publishedAt).toLocaleDateString()}
-                                </span>
-                            </div>
-                        </div>
-                    `;
-                    videoGrid.appendChild(videoCard);
-                });
+            // If a significant percentage of pixels show motion, consider it a gesture
+            if (motionPixels / totalROIPixels > MOTION_PIXEL_PERCENT_THRESHOLD) {
+                messageDisplay.textContent = "Gesture detected! Launching My Cool App... 🎉";
+                launchApp();
+                gestureDetected = true; // Prevent further detections until app is closed
             }
 
-            // --- Initialization ---
-            document.addEventListener('DOMContentLoaded', () => {
-                // Initial load when the page is ready
-                loadVideos();
-                // Set an interval to automatically refresh the video list
-                setInterval(loadVideos, UPDATE_INTERVAL);
-            });
-        })();
+            // Copy current frame to previous frame canvas for the next iteration
+            prevCtx.drawImage(gestureCanvas, 0, 0);
+
+            animationFrameId = requestAnimationFrame(startDetectionLoop);
+        }
+
+        /**
+         * Simulates launching an app by switching views.
+         */
+        function launchApp() {
+            cameraView.style.display = 'none';
+            appScreen.style.display = 'flex';
+            cancelAnimationFrame(animationFrameId); // Stop camera loop
+            stopCameraButton.disabled = true;
+            toggleScanButton.disabled = true;
+            isScanning = false;
+        }
+
+        /**
+         * Returns from the simulated app to the camera view.
+         */
+        function returnToCameraView() {
+            appScreen.style.display = 'none';
+            cameraView.style.display = 'block';
+            messageDisplay.textContent = "Returned to camera. Ready to scan again.";
+            stopCameraButton.disabled = false;
+            toggleScanButton.disabled = false;
+            gestureDetected = false; // Reset gesture detection state
+            toggleContinuousScan(); // Automatically resume scanning
+        }
+
+        // Event Listeners for buttons
+        startCameraButton.addEventListener('click', startCamera);
+        stopCameraButton.addEventListener('click', stopCamera);
+        toggleScanButton.addEventListener('click', toggleContinuousScan);
+        backToCameraBtn.addEventListener('click', returnToCameraView);
+
+        // Initial state
+        messageDisplay.textContent = "Click 'Start Camera' to begin.";
+
+        // Ensure the gesture zone indicator is correctly positioned on video load
+        webcamFeed.addEventListener('loadeddata', updateGestureZoneIndicator);
     </script>
-
 </body>
 </html>
